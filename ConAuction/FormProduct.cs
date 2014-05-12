@@ -23,18 +23,18 @@ namespace ConAuction
 			productCurrent = product;
 			customerCurrent = customer;
 
-			comboBoxProductType.Items.Add("rollspel");
-			comboBoxProductType.Items.Add("krigsspel");
-			comboBoxProductType.Items.Add("figurspel");
-			comboBoxProductType.Items.Add("brädspel");
-			comboBoxProductType.Items.Add("kortspel");
-			comboBoxProductType.Items.Add("övrigt");
+			comboBoxProductType.Items.Add("Rollspel");
+			comboBoxProductType.Items.Add("Krigsspel");
+			comboBoxProductType.Items.Add("Figurspel");
+			comboBoxProductType.Items.Add("Brädspel");
+			comboBoxProductType.Items.Add("Kortspel");
+			comboBoxProductType.Items.Add("Övrigt");
 
 			textBoxProductId.Text = product.Id;
 
 			SetProductContents(product);
 
-			buttonCopy.Visible = (mode== OpMode.Receiving) && (customerCurrent.GetLastProduct() != null);
+			//buttonCopy.Visible = (mode== OpMode.Receiving) && (customerCurrent.GetLastProduct() != null);
 			EnableDisableButtons();
 			SetCompletion();
 		}
@@ -60,7 +60,7 @@ namespace ConAuction
 						"Space Marine",
 						"SF-böcker",
 						"Fantasy-böcker",
-						"Urban fanatsy-böcker"
+						"Urban fantasy-böcker"
                     });
 
 			textBoxName.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -110,8 +110,8 @@ namespace ConAuction
 
 		private void buttonCopy_Click(object sender, EventArgs e)
 		{
-			Product productLast = customerCurrent.GetLastProduct();
-			SetProductContents(productLast);
+			//Product productLast = customerCurrent.GetLastProduct();
+			//SetProductContents(productLast);
 		}
 
 		private void comboBoxProductType_SelectedIndexChanged(object sender, EventArgs e)

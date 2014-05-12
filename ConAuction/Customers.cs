@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -20,6 +21,7 @@ namespace ConAuction
 		public OpMode Mode { get; set; }
 
 
+
 		public Customers()
 		{
 			CustomerList = new List<Customer>();
@@ -32,7 +34,30 @@ namespace ConAuction
 			using (TextReader reader = new StreamReader(fileName)) {
 				return (Customers)serializer.Deserialize(reader);
 			}
+
 		}
+
+
+		public void UpdateFromDB(System.Data.DataSet DBDataSet, DataRelation customerProd)
+		{
+
+			CustomerList.Clear();
+			foreach (DataRow rowCustomer in DBDataSet.Tables["Customer"].Rows) {
+				Customer pcustomer = new Customer(rowCustomer.ItemArray[0].ToString(), rowCustomer.ItemArray[1].ToString(), rowCustomer.ItemArray[2].ToString());
+				CustomerList.Add(pcustomer);
+				foreach (DataRow rowProduct in rowCustomer.GetChildRows(customerProd)) {
+					Product prod = new Product(rowProduct.ItemArray[0].ToString(),
+						rowProduct.ItemArray[1].ToString(),
+						rowProduct.ItemArray[2].ToString(),
+						rowProduct.ItemArray[3].ToString(),
+						rowProduct.ItemArray[4].ToString()
+						);
+					pcustomer.ProductList.Add(prod);
+				}
+			}
+		}
+
+
 
 
         public void Sorting()
@@ -50,73 +75,8 @@ namespace ConAuction
 		}
 
 
-		public string ExportCustomersCSV()
-		{
-			StringBuilder sb = new StringBuilder();
+	
 
-			//// The header
-			//foreach (string field in fields)
-			//    sb.Append(field).Append(",");
-			//sb.AppendLine();
-
-			// The rows
-			foreach (Customer customer in this.CustomerList) {
-				sb.Append(customer.ExportCustomerCSV());
-				sb.AppendLine();
-			}
-
-			return sb.ToString();
-		}
-
-		public string ExportProductsCSV()
-		{
-			StringBuilder sb = new StringBuilder();
-
-			//// The header
-			//foreach (string field in fields)
-			//    sb.Append(field).Append(",");
-			//sb.AppendLine();
-
-			// The rows
-			foreach (Customer customer in this.CustomerList) {
-				sb.Append(customer.ExportProductsCSV());
-			}
-
-			return sb.ToString();
-		}
-
-
-
-		/// <summary>
-		/// Exports to a file
-		/// </summary>
-		public void ExportCustomersToFile(string path)
-		{
-			File.WriteAllText(path, ExportCustomersCSV());
-		}
-
-		/// <summary>
-		/// Exports to a file
-		/// </summary>
-		public void ExportProductsToFile(string path)
-		{
-			File.WriteAllText(path, ExportProductsCSV());
-		}
-
-
-		//public void MakeFree()
-		//{
-		//    foreach (Customer customer in CustomerList) {
-		//        if (!customer.IsUsed()) {
-		//            return;
-		//        }
-		//    }
-
-		//    string id = GetNextFreeCustomerId();
-		//    if (id != "") {
-		//        CustomerList.Add(new Customer(id));
-		//    }
-		//}
 
 		public int TotalCount()
 		{

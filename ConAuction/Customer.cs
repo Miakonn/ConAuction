@@ -25,6 +25,16 @@ namespace ConAuction
 			ProductList = new List<Product>();
 		}
 
+
+		public Customer(string id, string name, string phoneno)
+		{
+			Id = id;
+			Name = name;
+			PhoneNo = phoneno;
+			ProductList = new List<Product>();
+		}
+
+
 		#region Properties
 		[XmlArray("Objects")]
 		[XmlArrayItem("Object", typeof(Product))]
@@ -109,36 +119,6 @@ namespace ConAuction
 				return ProductList[ProductList.Count - 1];
 			}
 			return null;
-		}
-
-
-
-		public string ExportCustomerCSV()
-		{
-			StringBuilder sb = new StringBuilder();
-
-			sb.Append(Id);
-			sb.Append(";");
-			sb.Append(Name);
-			sb.Append(";");
-			sb.Append(PhoneNo);
-			sb.Append(";");
-			sb.Append(NoOfProducts);
-			sb.Append(";");
-			sb.Append(Finished);
-			sb.Append(";");
-
-			return sb.ToString();
-		}
-
-		public string ExportProductsCSV()
-		{
-			StringBuilder sb = new StringBuilder();
-			foreach (Product product in ProductList) {
-				sb.Append(product.Export());
-				sb.AppendLine();
-			}
-			return sb.ToString();
 		}
 
 	}

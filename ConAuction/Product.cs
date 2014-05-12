@@ -10,6 +10,15 @@ namespace ConAuction
 	[XmlType("Product")]
 	public class Product
 	{
+		public Product() { }
+		public Product(string id, string type, string name, string desc, string limit) {
+			Id = id;
+			ProductType = type;
+			Name = name;
+			Description = desc;
+			Limit = limit;
+		}	
+
 		public string Id { get; set; }
 		public string ProductType { get; set; }
 		public string Name { get; set; }
