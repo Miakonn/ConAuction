@@ -30,7 +30,7 @@ namespace ConAuction
 			comboBoxProductType.Items.Add("Kortspel");
 			comboBoxProductType.Items.Add("Övrigt");
 
-			textBoxProductId.Text = product.Id;
+			textBoxProductLabel.Text = product.Label;
 
 			SetProductContents(product);
 
@@ -74,20 +74,20 @@ namespace ConAuction
 		void SetProductContents(Product product)
 		{
 			textBoxName.Text = product.Name;
-			comboBoxProductType.Text = product.ProductType;
+			comboBoxProductType.Text = product.Type;
 			textBoxProductDescription.Text = product.Description;
 		}
 
 
 		private void UpdateProduct()
 		{
-			productCurrent.Id = textBoxProductId.Text;
+			//productCurrent.Id = textBoxProductId.Text;
 			productCurrent.Name = textBoxName.Text;
-			productCurrent.ProductType = comboBoxProductType.Text;
+			productCurrent.Type = comboBoxProductType.Text;
 			productCurrent.Description = textBoxProductDescription.Text;
 			//int limit = 0;
 			//Int32.TryParse(, out limit);
-			productCurrent.Limit = textBoxProductLimit.Text;
+			productCurrent.Note = textBoxProductNote.Text;
 		}
 
 		private void EnableDisableButtons()

@@ -32,11 +32,11 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBoxProductLimit = new System.Windows.Forms.TextBox();
+            this.textBoxProductNote = new System.Windows.Forms.TextBox();
             this.buttonSaveProduct = new System.Windows.Forms.Button();
             this.comboBoxProductType = new System.Windows.Forms.ComboBox();
             this.textBoxProductDescription = new System.Windows.Forms.TextBox();
-            this.textBoxProductId = new System.Windows.Forms.TextBox();
+            this.textBoxProductLabel = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.buttonCopy = new System.Windows.Forms.Button();
@@ -95,11 +95,11 @@
             // 
             // textBoxProductLimit
             // 
-            this.textBoxProductLimit.Location = new System.Drawing.Point(616, 139);
-            this.textBoxProductLimit.Margin = new System.Windows.Forms.Padding(4);
-            this.textBoxProductLimit.Name = "textBoxProductLimit";
-            this.textBoxProductLimit.Size = new System.Drawing.Size(82, 26);
-            this.textBoxProductLimit.TabIndex = 3;
+            this.textBoxProductNote.Location = new System.Drawing.Point(616, 139);
+            this.textBoxProductNote.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxProductNote.Name = "textBoxProductLimit";
+            this.textBoxProductNote.Size = new System.Drawing.Size(82, 26);
+            this.textBoxProductNote.TabIndex = 3;
             // 
             // buttonSaveProduct
             // 
@@ -136,12 +136,12 @@
             // 
             // textBoxProductId
             // 
-            this.textBoxProductId.Location = new System.Drawing.Point(51, 67);
-            this.textBoxProductId.Margin = new System.Windows.Forms.Padding(4);
-            this.textBoxProductId.Name = "textBoxProductId";
-            this.textBoxProductId.ReadOnly = true;
-            this.textBoxProductId.Size = new System.Drawing.Size(80, 26);
-            this.textBoxProductId.TabIndex = 0;
+            this.textBoxProductLabel.Location = new System.Drawing.Point(51, 67);
+            this.textBoxProductLabel.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxProductLabel.Name = "textBoxProductId";
+            this.textBoxProductLabel.ReadOnly = true;
+            this.textBoxProductLabel.Size = new System.Drawing.Size(80, 26);
+            this.textBoxProductLabel.TabIndex = 0;
             // 
             // label1
             // 
@@ -185,12 +185,12 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBoxProductDescription);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBoxProductId);
+            this.Controls.Add(this.textBoxProductLabel);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.comboBoxProductType);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.buttonSaveProduct);
-            this.Controls.Add(this.textBoxProductLimit);
+            this.Controls.Add(this.textBoxProductNote);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormProduct";
@@ -207,11 +207,11 @@
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox textBoxProductLimit;
+		private System.Windows.Forms.TextBox textBoxProductNote;
 		private System.Windows.Forms.Button buttonSaveProduct;
 		private System.Windows.Forms.ComboBox comboBoxProductType;
 		private System.Windows.Forms.TextBox textBoxProductDescription;
-		private System.Windows.Forms.TextBox textBoxProductId;
+		private System.Windows.Forms.TextBox textBoxProductLabel;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox textBoxName;
 		private System.Windows.Forms.Button buttonCopy;

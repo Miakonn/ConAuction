@@ -75,7 +75,6 @@
 			this.buttonSave.Size = new System.Drawing.Size(97, 33);
 			this.buttonSave.TabIndex = 7;
 			this.buttonSave.Text = "Spara";
-			this.toolTip1.SetToolTip(this.buttonSave, "Skapa ny kund, F2 för att editera");
 			this.buttonSave.UseVisualStyleBackColor = true;
 			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
 			// 
