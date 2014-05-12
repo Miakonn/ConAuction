@@ -69,10 +69,10 @@
 			// buttonSave
 			// 
 			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSave.Location = new System.Drawing.Point(8, 15);
+			this.buttonSave.Location = new System.Drawing.Point(8, 73);
 			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSave.Name = "buttonSave";
-			this.buttonSave.Size = new System.Drawing.Size(112, 40);
+			this.buttonSave.Size = new System.Drawing.Size(97, 33);
 			this.buttonSave.TabIndex = 7;
 			this.buttonSave.Text = "Spara";
 			this.toolTip1.SetToolTip(this.buttonSave, "Skapa ny kund, F2 för att editera");
@@ -90,11 +90,11 @@
 			this.dataGridViewProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewProducts.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
 			this.dataGridViewProducts.GridColor = System.Drawing.SystemColors.ControlLight;
-			this.dataGridViewProducts.Location = new System.Drawing.Point(4, 52);
+			this.dataGridViewProducts.Location = new System.Drawing.Point(4, 7);
 			this.dataGridViewProducts.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewProducts.Name = "dataGridViewProducts";
 			this.dataGridViewProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewProducts.Size = new System.Drawing.Size(918, 442);
+			this.dataGridViewProducts.Size = new System.Drawing.Size(918, 554);
 			this.dataGridViewProducts.TabIndex = 13;
 			this.dataGridViewProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellDoubleClick);
 			this.dataGridViewProducts.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellValueChanged);
@@ -111,12 +111,12 @@
 			this.dataGridViewCustomers.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.RaisedVertical;
 			this.dataGridViewCustomers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewCustomers.GridColor = System.Drawing.SystemColors.ControlLight;
-			this.dataGridViewCustomers.Location = new System.Drawing.Point(-5, 49);
+			this.dataGridViewCustomers.Location = new System.Drawing.Point(9, 4);
 			this.dataGridViewCustomers.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewCustomers.MultiSelect = false;
 			this.dataGridViewCustomers.Name = "dataGridViewCustomers";
 			this.dataGridViewCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewCustomers.Size = new System.Drawing.Size(444, 447);
+			this.dataGridViewCustomers.Size = new System.Drawing.Size(444, 572);
 			this.dataGridViewCustomers.TabIndex = 14;
 			this.dataGridViewCustomers.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCustomers_CellValueChanged);
 			this.dataGridViewCustomers.SelectionChanged += new System.EventHandler(this.dataGridViewCustomers_SelectionChanged);
@@ -208,7 +208,7 @@
 			this.groupBox1.Controls.Add(this.label3);
 			this.groupBox1.Controls.Add(this.textBoxNetAmount);
 			this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLight;
-			this.groupBox1.Location = new System.Drawing.Point(4, 504);
+			this.groupBox1.Location = new System.Drawing.Point(5, 569);
 			this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
@@ -240,7 +240,7 @@
 			// buttonSaveProduct
 			// 
 			this.buttonSaveProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSaveProduct.Location = new System.Drawing.Point(1092, 171);
+			this.buttonSaveProduct.Location = new System.Drawing.Point(766, 119);
 			this.buttonSaveProduct.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSaveProduct.Name = "buttonSaveProduct";
 			this.buttonSaveProduct.Size = new System.Drawing.Size(112, 44);
@@ -254,7 +254,7 @@
 			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainer1.Location = new System.Drawing.Point(18, 228);
+			this.splitContainer1.Location = new System.Drawing.Point(18, 178);
 			this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainer1.Name = "splitContainer1";
 			// 
@@ -268,7 +268,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.dataGridViewProducts);
 			this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
-			this.splitContainer1.Size = new System.Drawing.Size(1396, 644);
+			this.splitContainer1.Size = new System.Drawing.Size(1396, 694);
 			this.splitContainer1.SplitterDistance = 463;
 			this.splitContainer1.SplitterWidth = 6;
 			this.splitContainer1.TabIndex = 23;
@@ -284,7 +284,7 @@
 			this.groupBox2.Controls.Add(this.buttonSave);
 			this.groupBox2.Controls.Add(this.label6);
 			this.groupBox2.Controls.Add(this.textBoxTotalCount);
-			this.groupBox2.Location = new System.Drawing.Point(0, 504);
+			this.groupBox2.Location = new System.Drawing.Point(9, 569);
 			this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
@@ -295,10 +295,10 @@
 			// buttonUpdate
 			// 
 			this.buttonUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonUpdate.Location = new System.Drawing.Point(89, 65);
+			this.buttonUpdate.Location = new System.Drawing.Point(120, 73);
 			this.buttonUpdate.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonUpdate.Name = "buttonUpdate";
-			this.buttonUpdate.Size = new System.Drawing.Size(112, 40);
+			this.buttonUpdate.Size = new System.Drawing.Size(97, 33);
 			this.buttonUpdate.TabIndex = 27;
 			this.buttonUpdate.Text = "Uppdatera";
 			this.toolTip1.SetToolTip(this.buttonUpdate, "Skapa ny kund, F2 för att editera");
@@ -411,7 +411,7 @@
 			this.pictureBoxLogo.Location = new System.Drawing.Point(27, 19);
 			this.pictureBoxLogo.Margin = new System.Windows.Forms.Padding(4);
 			this.pictureBoxLogo.Name = "pictureBoxLogo";
-			this.pictureBoxLogo.Size = new System.Drawing.Size(171, 200);
+			this.pictureBoxLogo.Size = new System.Drawing.Size(139, 144);
 			this.pictureBoxLogo.TabIndex = 32;
 			this.pictureBoxLogo.TabStop = false;
 			// 
