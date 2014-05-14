@@ -7,8 +7,6 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
-using System.Xml;
-using System.Xml.Serialization;
 using System.Configuration;
 using System.Reflection;
 using MySql.Data.MySqlClient;
@@ -36,17 +34,22 @@ namespace ConAuction
 		public MainForm()
 		{
 			InitializeComponent();
+			LoadImage();
 
 			if (!InitDB()) {
 				Application.Exit();
 				return;
 			}
 
-			LoadFromFile();
+			UpdateFromDB();
 
 			dataGridViewCustomers.ClearSelection();
 			dataGridViewCustomers.CurrentCell = null;
+			radioButton2.Checked = true;
+		}
 
+		private void LoadImage()
+		{
 			Stream _imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConAuction.LinconAuktionLiten.png");
 			Bitmap bitmapLogo = new Bitmap(_imageStream);
 			pictureBoxLogo.Image = bitmapLogo;
@@ -54,7 +57,7 @@ namespace ConAuction
 			this.Icon = Icon.FromHandle(bitmapLogo.GetHicon());
 		}
 
-		public bool InitDB()
+		private bool InitDB()
 		{
 			try {
 				//Initialize mysql connection
@@ -148,7 +151,7 @@ namespace ConAuction
 					"UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, CustomerId=@CustomerId, Timestamp=Now() WHERE id=@id;",
 					DBconnection);
 				DBadapterProduct.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-				DBadapterProduct.UpdateCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 200, "Description");
+				DBadapterProduct.UpdateCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
 				DBadapterProduct.UpdateCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
 				DBadapterProduct.UpdateCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
 				DBadapterProduct.UpdateCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
@@ -163,7 +166,7 @@ namespace ConAuction
 					DBconnection);
 				DBadapterProduct.InsertCommand.Parameters.Add("@Label", MySqlDbType.VarChar, 100, "Label");
 				DBadapterProduct.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 100, "Name");
-				DBadapterProduct.InsertCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 100, "Description");
+				DBadapterProduct.InsertCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
 				DBadapterProduct.InsertCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
 				DBadapterProduct.InsertCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
 				DBadapterProduct.InsertCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
@@ -280,8 +283,6 @@ namespace ConAuction
 			}
 		}
 
-
-
 		public void UpdateFromDB()
 		{
 			fUpdatingCustomerList = true;
@@ -298,7 +299,7 @@ namespace ConAuction
 
 		private void UpdateProductListHiding()
 		{
-			if (fUpdatingCustomerList) {
+			if (fUpdatingCustomerList || Mode == OpMode.Paying || Mode == OpMode.Showing) {
 				return;
 			}
 			DataGridViewRow selectedCustomerRow = GetSelectedCustomerRow();
@@ -324,25 +325,6 @@ namespace ConAuction
 				{}
 			}
 
-		}
-
-		private void LoadFromFile()
-		{
-			UpdateFromDB();
-			UpdateCustomerList();
-			UpdateRadioButtons();
-
-			Refresh();
-		}
-
-		private void UpdateRadioButtons()
-		{
-			switch (Mode) {
-				case OpMode.Receiving: radioButton1.Checked = true; break;
-				case OpMode.Showing: radioButton1.Checked = true; break;
-				case OpMode.Selling: radioButton1.Checked = true; break;
-				case OpMode.Paying: radioButton1.Checked = true; break;
-			}
 		}
 
 		private DataGridViewRow  GetSelectedCustomerRow()
@@ -393,8 +375,9 @@ namespace ConAuction
 
 
 				dataGridViewCustomers.Columns["id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-				dataGridViewCustomers.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+				dataGridViewCustomers.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewCustomers.Columns["Phone"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+				dataGridViewCustomers.Columns["Comment"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 				dataGridViewCustomers.Columns["Done"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
 				dataGridViewCustomers.Columns["Done"].Visible = (Mode == OpMode.Paying);
@@ -441,12 +424,12 @@ namespace ConAuction
 				dataGridViewProducts.Columns["Note"].HeaderText = "Not";
 				dataGridViewProducts.Columns["Price"].HeaderText = "Pris";
 
-				dataGridViewProducts.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-				dataGridViewProducts.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-				dataGridViewProducts.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-				dataGridViewProducts.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-				dataGridViewProducts.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-				dataGridViewProducts.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+				dataGridViewProducts.Columns["Label"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+				dataGridViewProducts.Columns["Type"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+				dataGridViewProducts.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+				dataGridViewProducts.Columns["Description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+				dataGridViewProducts.Columns["Note"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+				dataGridViewProducts.Columns["Price"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
 				dataGridViewProducts.Columns["Label"].ReadOnly = true;
 				dataGridViewProducts.Columns["id"].Visible= false;
@@ -515,7 +498,7 @@ namespace ConAuction
 			}
 		}
 
-		private void buttonSaveProduct_Click(object sender, EventArgs e)
+		private void buttonNewProduct_Click(object sender, EventArgs e)
 		{
 			DataGridViewRow rowCustomer= GetSelectedCustomerRow();
 			if (rowCustomer != null) {
@@ -625,6 +608,14 @@ namespace ConAuction
 			}
 
 			UpdateFromDB();
+		}
+
+		private void buttonProductDisplay_Click(object sender, EventArgs e)
+		{
+			FormProductDisplay form = new FormProductDisplay(DBDataSetProduct.Tables[0]);
+
+			form.ShowDialog();
+
 		}
 
 	}

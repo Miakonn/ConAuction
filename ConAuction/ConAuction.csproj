@@ -48,12 +48,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Customers.cs"/>
+    <Compile Include="Customers.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormProduct.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormProduct.Designer.cs">
       <DependentUpon>FormProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormProductDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormProductDisplay.Designer.cs">
+      <DependentUpon>FormProductDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -67,6 +75,9 @@
     <Compile Include="XmlFormatter.cs" />
     <EmbeddedResource Include="FormProduct.resx">
       <DependentUpon>FormProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormProductDisplay.resx">
+      <DependentUpon>FormProductDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

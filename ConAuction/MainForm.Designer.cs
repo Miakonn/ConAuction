@@ -55,6 +55,7 @@
 			this.groupBoxRadio = new System.Windows.Forms.GroupBox();
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.buttonProductDisplay = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -247,7 +248,7 @@
 			this.buttonSaveProduct.TabIndex = 12;
 			this.buttonSaveProduct.Text = "Nytt objekt";
 			this.buttonSaveProduct.UseVisualStyleBackColor = true;
-			this.buttonSaveProduct.Click += new System.EventHandler(this.buttonSaveProduct_Click);
+			this.buttonSaveProduct.Click += new System.EventHandler(this.buttonNewProduct_Click);
 			// 
 			// splitContainer1
 			// 
@@ -417,12 +418,25 @@
 			this.pictureBoxLogo.TabIndex = 32;
 			this.pictureBoxLogo.TabStop = false;
 			// 
+			// buttonProductDisplay
+			// 
+			this.buttonProductDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonProductDisplay.Location = new System.Drawing.Point(766, 38);
+			this.buttonProductDisplay.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonProductDisplay.Name = "buttonProductDisplay";
+			this.buttonProductDisplay.Size = new System.Drawing.Size(112, 44);
+			this.buttonProductDisplay.TabIndex = 33;
+			this.buttonProductDisplay.Text = "OH-visning";
+			this.buttonProductDisplay.UseVisualStyleBackColor = true;
+			this.buttonProductDisplay.Click += new System.EventHandler(this.buttonProductDisplay_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.Black;
 			this.ClientSize = new System.Drawing.Size(1432, 881);
+			this.Controls.Add(this.buttonProductDisplay);
 			this.Controls.Add(this.pictureBoxLogo);
 			this.Controls.Add(this.groupBoxRadio);
 			this.Controls.Add(this.buttonSaveProduct);
@@ -480,6 +494,7 @@
 		private System.Windows.Forms.TextBox textBoxSoldCount;
 		private System.Windows.Forms.Button buttonUpdate;
 		private System.Windows.Forms.Button buttonSaveProduct;
+		private System.Windows.Forms.Button buttonProductDisplay;
 	}
 }
 
