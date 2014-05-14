@@ -503,7 +503,7 @@ namespace ConAuction
 			DataGridViewRow rowCustomer= GetSelectedCustomerRow();
 			if (rowCustomer != null) {
 				Product productNew = new Product();
-				FormProduct form = new FormProduct(productNew, null, Mode);
+				FormEditProduct form = new FormEditProduct(productNew, null, Mode);
 
 				if (form.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
 
@@ -526,7 +526,7 @@ namespace ConAuction
 				}
 				else {
 
-					FormProduct form = new FormProduct(productCurrent, null, Mode);
+					FormEditProduct form = new FormEditProduct(productCurrent, null, Mode);
 
 					if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
 						UpdateProductToDB(productCurrent);

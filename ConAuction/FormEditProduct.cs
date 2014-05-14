@@ -10,13 +10,13 @@ using ConAuction;
 
 namespace ConAuction
 {
-	public partial class FormProduct : Form
+	public partial class FormEditProduct : Form
 	{
 
 		private Product productCurrent= null;
 		private Product productLast = null;
 
-		public FormProduct(Product product, Product productLastT, OpMode mode)
+		public FormEditProduct(Product product, Product productLastT, OpMode mode)
 		{
 			InitializeComponent();
 

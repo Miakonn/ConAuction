@@ -1,6 +1,6 @@
 ﻿namespace ConAuction
 {
-	partial class FormProduct
+	partial class FormEditProduct
 	{
 		/// <summary>
 		/// Required designer variable.
