@@ -14,17 +14,18 @@ using System.Diagnostics;
 
 namespace ConAuction
 {
-	public enum OpMode { Receiving, Showing, Selling, Paying};
+	public enum OpMode { Initializing, Receiving, Showing, Selling, Paying};
 
 	public partial class MainForm : Form
 	{
 
-		private OpMode Mode = OpMode.Showing;
+		private OpMode Mode = OpMode.Initializing;
 
 		string ConnectionString = ConfigurationManager.AppSettings["ConnectionString"];
 		MySqlConnection DBconnection;
 
 		MySqlDataAdapter DBadapterCustomer;
+		MySqlDataAdapter DBadapterProduct;
 		DataTable DataTableCustomer = null;
 		DataTable DataTableProduct = null;
 
@@ -45,6 +46,7 @@ namespace ConAuction
 			dataGridViewCustomers.ClearSelection();
 			dataGridViewCustomers.CurrentCell = null;
 			radioButton2.Checked = true;
+			Mode = OpMode.Showing;
 		}
 
 		private void LoadImage()
@@ -133,7 +135,7 @@ namespace ConAuction
 				//prepare adapter to run query
 				string query = "select id, Label, Name, Type, Description, Note, Price, CustomerId from Product";
 
-				MySqlDataAdapter DBadapterProduct = new MySqlDataAdapter(query, DBconnection);
+				DBadapterProduct = new MySqlDataAdapter(query, DBconnection);
 				DataSet DBDataSetProduct = new DataSet();
 				//get query results in dataset
 				DBadapterProduct.Fill(DBDataSetProduct);
@@ -143,36 +145,35 @@ namespace ConAuction
 
 				// Set the UPDATE command and parameters.
 				DBadapterProduct.UpdateCommand = new MySqlCommand(
-					"UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, CustomerId=@CustomerId, Timestamp=Now() WHERE id=@id;",
+					"UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, Timestamp=Now() WHERE id=@id;",
 					DBconnection);
-				DBadapterProduct.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
+				DBadapterProduct.UpdateCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 45, "name");
 				DBadapterProduct.UpdateCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
 				DBadapterProduct.UpdateCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
 				DBadapterProduct.UpdateCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
 				DBadapterProduct.UpdateCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
-				DBadapterProduct.UpdateCommand.Parameters.Add("@Done", MySqlDbType.Int16, 10, "Done");
+				DBadapterProduct.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
 				//DBadapter.UpdateCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 10, "Timestamp");
 				DBadapterProduct.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
 
 				// Set the INSERT command and parameter.
-				DBadapterProduct.InsertCommand = new MySqlCommand(
-					"INSERT INTO Product (Label, Name, Description,Type,  Note, Price, CustomerId, Year, timestamp)" +
-				"VALUES (@Label, @Name, @Description, @Type, @Note,@price, @CustomerId, 2014, Now());",
-					DBconnection);
-				DBadapterProduct.InsertCommand.Parameters.Add("@Label", MySqlDbType.VarChar, 100, "Label");
-				DBadapterProduct.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 100, "Name");
-				DBadapterProduct.InsertCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
-				DBadapterProduct.InsertCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
-				DBadapterProduct.InsertCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
-				DBadapterProduct.InsertCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
-				DBadapterProduct.InsertCommand.Parameters.Add("@CustomerId", MySqlDbType.Int16, 10, "CustomerId");
-				DBadapterProduct.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
+				//DBadapterProduct.InsertCommand = new MySqlCommand(
+				//    "INSERT INTO Product (Name, Description,Type,  Note, Price, CustomerId, Year, timestamp)" +
+				//"VALUES (@Name, @Description, @Type, @Note,@price, @CustomerId, 2014, Now());",
+				//    DBconnection);
+				//DBadapterProduct.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 45, "Name");
+				//DBadapterProduct.InsertCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
+				//DBadapterProduct.InsertCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
+				//DBadapterProduct.InsertCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
+				//DBadapterProduct.InsertCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
+				//DBadapterProduct.InsertCommand.Parameters.Add("@CustomerId", MySqlDbType.Int16, 10, "CustomerId");
+				//DBadapterProduct.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
 
 				// Set the DELETE command and parameter.
-				DBadapterProduct.DeleteCommand = new MySqlCommand(
-					"DELETE FROM Product WHERE Id=@id;", DBconnection);
-				DBadapterProduct.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-				DBadapterProduct.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
+				//DBadapterProduct.DeleteCommand = new MySqlCommand(
+				//    "DELETE FROM Product WHERE Id=@id;", DBconnection);
+				//DBadapterProduct.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
+				//DBadapterProduct.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
 			}
 			catch (MySql.Data.MySqlClient.MySqlException ex) {
 					MessageBox.Show(ex.Message);
@@ -238,6 +239,7 @@ namespace ConAuction
 
 				// Commit the transaction.
 				sqlTran.Commit();
+				Trace.WriteLine("Update Product : SUCCESS!");
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.Message);
@@ -252,10 +254,7 @@ namespace ConAuction
 
 		private void UpdateProductPriceToDB(int id, int price)
 		{
-			MySqlTransaction sqlTran = DBconnection.BeginTransaction();
-
 			MySqlCommand command = DBconnection.CreateCommand();
-			command.Transaction = sqlTran;
 			command.Connection = DBconnection;
 			try {
 				command.CommandText = "UPDATE Product SET Price=@Price, Timestamp=Now() WHERE id=@id;";
@@ -264,17 +263,26 @@ namespace ConAuction
 				command.UpdatedRowSource = UpdateRowSource.None;
 				command.ExecuteNonQuery();
 
-				// Commit the transaction.
-				sqlTran.Commit();
+				Trace.WriteLine("Update Price : SUCCESS!");
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.Message);
-				try {
-					sqlTran.Rollback();
-				}
-				catch (Exception exRollback) {
-					MessageBox.Show(exRollback.Message);
-				}
+			}
+		}
+
+		private void DeleteProductToDB(int id) {
+			MySqlCommand command = DBconnection.CreateCommand();
+			command.Connection = DBconnection;
+			try {
+				command.CommandText = "DELETE FROM Product WHERE Id=@id;";
+				command.Parameters.AddWithValue("@id", id);
+				command.UpdatedRowSource = UpdateRowSource.None;
+				command.ExecuteNonQuery();
+
+				Trace.WriteLine("Delete Product : SUCCESS!");
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
 			}
 		}
 
@@ -289,9 +297,9 @@ namespace ConAuction
 
 			fUpdatingCustomerList = true;
 			UpdateCustomerFromDB();
-			UpdateCustomerList();
+			FormatCustomerList();
 			UpdateProductFromDB();
-			UpdateProductList();
+			FormatProductList();
 
 			fUpdatingCustomerList = false;
 			UpdateAuctionSummary();
@@ -358,7 +366,7 @@ namespace ConAuction
 			return null;
 		}
 
-		private void UpdateCustomerList()
+		private void FormatCustomerList()
 		{
 			try {
 				dataGridViewCustomers.Invalidate();
@@ -383,8 +391,6 @@ namespace ConAuction
 				dataGridViewCustomers.Columns["Done"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
 				dataGridViewCustomers.Columns["Done"].Visible = (Mode == OpMode.Paying);
-
-				UpdateAuctionSummary();
 			}
 			catch (Exception ex){
 				MessageBox.Show("Error " + ex.Message);
@@ -429,7 +435,7 @@ namespace ConAuction
 			return false;
 		}
 
-		private void UpdateProductList()
+		private void FormatProductList()
 		{
 			try {
 				dataGridViewProducts.Invalidate();
@@ -452,6 +458,7 @@ namespace ConAuction
 
 				dataGridViewProducts.Columns["Label"].ReadOnly = true;
 				dataGridViewProducts.Columns["id"].Visible= false;
+				dataGridViewProducts.Columns["CustomerId"].Visible = false;
 				//dataGridViewProducts.Columns[1].ReadOnly = true;
 				//dataGridViewProducts.Columns[2].ReadOnly = true;
 				//dataGridViewProducts.Columns[3].ReadOnly = true;
@@ -464,7 +471,6 @@ namespace ConAuction
 
 				//dataGridViewProducts.EditMode = (Mode == OpMode.Selling) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
 
-				UpdateProductSummary();
 				}
 			catch (Exception ex) {
 				MessageBox.Show("Error " + ex.Message);
@@ -571,18 +577,16 @@ namespace ConAuction
 			if (e.KeyCode == Keys.F2 && Mode == OpMode.Selling) {
 			    dataGridViewProducts.BeginEdit(false);
 			}
-			if (e.KeyCode == Keys.Tab && Mode == OpMode.Selling) {
-
-			}
 		}
 
 		private void dataGridViewProducts_CellValueChanged(object sender, DataGridViewCellEventArgs e)
 		{
-			//UpdateProductSummary();
-			if (Mode == OpMode.Selling) {
-				
+			if (Mode == OpMode.Selling && DataTableProduct != null && DataTableProduct.Columns[e.ColumnIndex].ColumnName=="Price") {
+				Trace.WriteLine("CellValueChanged row=" + e.RowIndex.ToString() + " col=" + e.ColumnIndex.ToString());
+
+				DataRow row = DataTableProduct.Rows[e.RowIndex];
+				UpdateProductPriceToDB((int)row["id"], (int)row["Price"]);
 			}
-			
 		}
 
 		private void dataGridViewCustomers_CellValueChanged(object sender, DataGridViewCellEventArgs e)

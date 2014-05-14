@@ -94,6 +94,7 @@
 			this.dataGridViewProducts.GridColor = System.Drawing.SystemColors.ControlLight;
 			this.dataGridViewProducts.Location = new System.Drawing.Point(4, 7);
 			this.dataGridViewProducts.Margin = new System.Windows.Forms.Padding(4);
+			this.dataGridViewProducts.MultiSelect = false;
 			this.dataGridViewProducts.Name = "dataGridViewProducts";
 			this.dataGridViewProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridViewProducts.Size = new System.Drawing.Size(918, 554);

@@ -78,6 +78,16 @@ namespace ConAuction
 			return net;
 		}
 
+
+		public static bool IsDirty(this DataTable table) {
+			DataTable changes = table.GetChanges();
+
+			if (changes != null && changes.Rows.Count > 0) {
+				return true;
+			}
+			return false;
+		}
+
 	}
 
 }
