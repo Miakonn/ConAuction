@@ -14,14 +14,13 @@ namespace ConAuction
 	{
 
 		private Product productCurrent= null;
-		private Customer customerCurrent = null;
+		private Product productLast = null;
 
-		public FormProduct(Customer customer, Product product, OpMode mode)
+		public FormProduct(Product product, Product productLastT, OpMode mode)
 		{
 			InitializeComponent();
 
 			productCurrent = product;
-			customerCurrent = customer;
 
 			comboBoxProductType.Items.Add("Rollspel");
 			comboBoxProductType.Items.Add("Krigsspel");
@@ -34,7 +33,8 @@ namespace ConAuction
 
 			SetProductContents(product);
 
-			//buttonCopy.Visible = (mode== OpMode.Receiving) && (customerCurrent.GetLastProduct() != null);
+			productLast = productLastT;
+			buttonCopy.Visible = (mode == OpMode.Receiving) && (productLast != null);
 			EnableDisableButtons();
 			SetCompletion();
 		}
@@ -110,8 +110,7 @@ namespace ConAuction
 
 		private void buttonCopy_Click(object sender, EventArgs e)
 		{
-			//Product productLast = customerCurrent.GetLastProduct();
-			//SetProductContents(productLast);
+			SetProductContents(productLast);
 		}
 
 		private void comboBoxProductType_SelectedIndexChanged(object sender, EventArgs e)

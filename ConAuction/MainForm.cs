@@ -21,24 +21,31 @@ namespace ConAuction
 	public partial class MainForm : Form
 	{
 
-		private Customers BaseCustomers = new Customers();
 		private OpMode Mode = OpMode.Showing;
 
 		string ConnectionString = ConfigurationManager.AppSettings["ConnectionString"];
 		MySqlConnection DBconnection;
+
 		MySqlDataAdapter DBadapterCustomer;
 		System.Data.DataSet DBDataSetCustomer;
 		MySqlDataAdapter DBadapterProduct;
 		System.Data.DataSet DBDataSetProduct;
-		
- 
+
+		bool fUpdatingCustomerList = false;
+
 		public MainForm()
 		{
 			InitializeComponent();
 
-			InitDB();
+			if (!InitDB()) {
+				Application.Exit();
+				return;
+			}
 
 			LoadFromFile();
+
+			dataGridViewCustomers.ClearSelection();
+			dataGridViewCustomers.CurrentCell = null;
 
 			Stream _imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ConAuction.LinconAuktionLiten.png");
 			Bitmap bitmapLogo = new Bitmap(_imageStream);
@@ -47,70 +54,77 @@ namespace ConAuction
 			this.Icon = Icon.FromHandle(bitmapLogo.GetHicon());
 		}
 
-		public void InitDB()
+		public bool InitDB()
 		{
 			try {
 				//Initialize mysql connection
 				DBconnection = new MySqlConnection(ConnectionString);
 				DBconnection.Open();
+				bool fOk = DBconnection.Ping();
+				if (!fOk) {
+					MessageBox.Show("Cannot connect to server.");
+					return false;
+				}
 
 			}
 			catch (MySql.Data.MySqlClient.MySqlException ex) {
-				switch (ex.Number) {
-					case 0:
-						MessageBox.Show("Cannot connect to server.  Contact administrator");
-						break;
-					case 1045:
-						MessageBox.Show("Invalid username/password, please try again");
-						break;
-				}
+				MessageBox.Show(ex.Message);
+				return false;
 			}
+			return true;
 		}
-
 
 		public void UpdateCustomerFromDB()
 		{
-			//prepare adapter to run query
-			string query = "select id,name,phone,comment,done from Customer;";
+			fUpdatingCustomerList = true;
+			try {
+				//prepare adapter to run query
+				string query = "select id,name,phone,comment,done from Customer;";
 
-			DBadapterCustomer = new MySqlDataAdapter(query, DBconnection);
-			DBDataSetCustomer = new DataSet();
-			//get query results in dataset
-			DBadapterCustomer.Fill(DBDataSetCustomer);
+				DBadapterCustomer = new MySqlDataAdapter(query, DBconnection);
+				DBDataSetCustomer = new DataSet();
+				//get query results in dataset
+				DBadapterCustomer.Fill(DBDataSetCustomer);
 
-			DBDataSetCustomer.Tables[0].TableName = "Customer";
+				DBDataSetCustomer.Tables[0].TableName = "Customer";
 
-			//DBRelationCustomerProd = this.DBDataSetCustomer.Relations.Add("CustProd", DBDataSetCustomer.Tables["customer"].Columns["id"],
-			//    DBDataSetCustomer.Tables["product"].Columns["CustomerId"]);
+				//DBRelationCustomerProd = this.DBDataSetCustomer.Relations.Add("CustProd", DBDataSetCustomer.Tables["customer"].Columns["id"],
+				//    DBDataSetCustomer.Tables["product"].Columns["CustomerId"]);
 
-			// Set the UPDATE command and parameters.
-			DBadapterCustomer.UpdateCommand = new MySqlCommand(
-				"UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=NOW(), Done=@Done, Timestamp=Now() WHERE id=@id;",
-				DBconnection);
-			DBadapterCustomer.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-			DBadapterCustomer.UpdateCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 30, "Name");
-			DBadapterCustomer.UpdateCommand.Parameters.Add("@Phone", MySqlDbType.VarChar, 15, "Phone");
-			DBadapterCustomer.UpdateCommand.Parameters.Add("@Comment", MySqlDbType.VarChar, 100, "Comment");
-			DBadapterCustomer.UpdateCommand.Parameters.Add("@Done", MySqlDbType.VarChar, 10, "Done");
-			//DBadapter.UpdateCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 10, "Timestamp");
-			DBadapterCustomer.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
+				// Set the UPDATE command and parameters.
+				DBadapterCustomer.UpdateCommand = new MySqlCommand(
+					"UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=NOW(), Done=@Done, Timestamp=Now() WHERE id=@id;",
+					DBconnection);
+				DBadapterCustomer.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
+				DBadapterCustomer.UpdateCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 30, "Name");
+				DBadapterCustomer.UpdateCommand.Parameters.Add("@Phone", MySqlDbType.VarChar, 15, "Phone");
+				DBadapterCustomer.UpdateCommand.Parameters.Add("@Comment", MySqlDbType.VarChar, 100, "Comment");
+				DBadapterCustomer.UpdateCommand.Parameters.Add("@Done", MySqlDbType.VarChar, 10, "Done");
+				//DBadapter.UpdateCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 10, "Timestamp");
+				DBadapterCustomer.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
 
-			// Set the INSERT command and parameter.
-			DBadapterCustomer.InsertCommand = new MySqlCommand(
-				"INSERT INTO customer VALUES (NULL,@Name,@Phone,Now(),@Comment,Now());",
-				DBconnection);
-			DBadapterCustomer.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 30, "Name");
-			DBadapterCustomer.InsertCommand.Parameters.Add("@Comment", MySqlDbType.VarChar, 100, "Comment");
-			DBadapterCustomer.InsertCommand.Parameters.Add("@Phone", MySqlDbType.VarChar, 15, "Phone");
+				// Set the INSERT command and parameter.
+				DBadapterCustomer.InsertCommand = new MySqlCommand(
+					"INSERT INTO customer (Name, Phone, Comment, Date, TimeStamp) VALUES (@Name,@Phone,@Comment,Now(),Now());",
+					DBconnection);
+				DBadapterCustomer.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 30, "Name");
+				DBadapterCustomer.InsertCommand.Parameters.Add("@Phone", MySqlDbType.VarChar, 15, "Phone");
+				DBadapterCustomer.InsertCommand.Parameters.Add("@Comment", MySqlDbType.VarChar, 100, "Comment");
 
-			DBadapterCustomer.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
+				DBadapterCustomer.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
 
-			// Set the DELETE command and parameter.
-			DBadapterCustomer.DeleteCommand = new MySqlCommand(
-				"DELETE FROM customer WHERE Id=@id;", DBconnection);
-			DBadapterCustomer.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-			//DBadapterCustomer.DeleteCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 4, "Timestamp");
-			DBadapterCustomer.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
+				// Set the DELETE command and parameter.
+				DBadapterCustomer.DeleteCommand = new MySqlCommand(
+					"DELETE FROM customer WHERE Id=@id;", DBconnection);
+				DBadapterCustomer.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
+				//DBadapterCustomer.DeleteCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 4, "Timestamp");
+				DBadapterCustomer.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
+			}
+			catch (MySql.Data.MySqlClient.MySqlException ex) {
+				MessageBox.Show(ex.Message);
+			}
+			fUpdatingCustomerList = false;
+
 		}
 
 		public void UpdateProductFromDB()
@@ -163,10 +177,8 @@ namespace ConAuction
 				DBadapterProduct.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
 			}
 			catch (MySql.Data.MySqlClient.MySqlException ex) {
-					MessageBox.Show("SQL error" + ex.ToString());
+					MessageBox.Show(ex.Message);
 			}
-
-
 		}
 
 		private void InsertNewProductToDB(Product prod, int customerid)
@@ -215,7 +227,7 @@ namespace ConAuction
 			MySqlCommand command = DBconnection.CreateCommand();
 			command.Transaction = sqlTran;
 			command.Connection = DBconnection;
-		//	try {
+			try {
 				command.CommandText = "UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, Timestamp=Now() WHERE id=@id;";
 				command.Parameters.AddWithValue("@Name", prod.Name);
 				command.Parameters.AddWithValue("@Description", prod.Description);
@@ -226,33 +238,69 @@ namespace ConAuction
 				command.UpdatedRowSource = UpdateRowSource.None;
 				command.ExecuteNonQuery();
 
-		//        // Commit the transaction.
-		//        sqlTran.Commit();
-		//    }
-		//    catch (Exception ex) {
-		//        MessageBox.Show(ex.Message);
-		//        try {
-		//            sqlTran.Rollback();
-		//        }
-		//        catch (Exception exRollback) {
-		//            MessageBox.Show(exRollback.Message);
-		//        }
-		//    }
+				// Commit the transaction.
+				sqlTran.Commit();
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
+				try {
+					sqlTran.Rollback();
+				}
+				catch (Exception exRollback) {
+					MessageBox.Show(exRollback.Message);
+				}
+			}
 		}
+
+		private void UpdateProductPriceToDB(int id, int price)
+		{
+			MySqlTransaction sqlTran = DBconnection.BeginTransaction();
+
+			MySqlCommand command = DBconnection.CreateCommand();
+			command.Transaction = sqlTran;
+			command.Connection = DBconnection;
+			try {
+				command.CommandText = "UPDATE Product SET Price=@Price, Timestamp=Now() WHERE id=@id;";
+				command.Parameters.AddWithValue("@Price", price);
+				command.Parameters.AddWithValue("@id", id);
+				command.UpdatedRowSource = UpdateRowSource.None;
+				command.ExecuteNonQuery();
+
+				// Commit the transaction.
+				sqlTran.Commit();
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
+				try {
+					sqlTran.Rollback();
+				}
+				catch (Exception exRollback) {
+					MessageBox.Show(exRollback.Message);
+				}
+			}
+		}
+
 
 
 		public void UpdateFromDB()
 		{
+			fUpdatingCustomerList = true;
 			UpdateCustomerFromDB();
 			UpdateCustomerList();
 			UpdateProductFromDB();
 			UpdateProductList();
-			UpdateProductListHiding();
-		}
 
+			fUpdatingCustomerList = false;
+			UpdateCustomerSummary();
+			UpdateProductListHiding();
+			UpdateProductSummary();
+		}
 
 		private void UpdateProductListHiding()
 		{
+			if (fUpdatingCustomerList) {
+				return;
+			}
 			DataGridViewRow selectedCustomerRow = GetSelectedCustomerRow();
 
 			dataGridViewProducts.ClearSelection();
@@ -278,7 +326,6 @@ namespace ConAuction
 
 		}
 
-
 		private void LoadFromFile()
 		{
 			UpdateFromDB();
@@ -298,23 +345,6 @@ namespace ConAuction
 			}
 		}
 
-
-		private Customer GetSelectedCustomer()
-		{
-			DataGridViewSelectedRowCollection rows = dataGridViewCustomers.SelectedRows;
-			try
-			{
-				if (rows != null && rows.Count > 0)
-				{
-					string id = rows[0].Cells[0].Value.ToString();
-					Customer foundCustomer = BaseCustomers.CustomerList.Find(x => x.Id == id);
-					return foundCustomer;
-				}
-			}
-			catch { }
-			return null;
-		}
-
 		private DataGridViewRow  GetSelectedCustomerRow()
 		{
 			DataGridViewSelectedRowCollection rows = dataGridViewCustomers.SelectedRows;
@@ -324,10 +354,19 @@ namespace ConAuction
 			return null;
 		}
 
+		private int GetSelectedCustomerId()
+		{
+			DataGridViewSelectedRowCollection rows = dataGridViewCustomers.SelectedRows;
+			if (rows != null && rows.Count == 1 && rows[0].Cells["id"].Value != DBNull.Value && rows[0].Cells["id"].Value != null) {
+				return (int)rows[0].Cells["id"].Value;
+			}
+			return 0;
+		}
+
 		private Product GetSelectedProduct()
 		{
 			DataGridViewSelectedRowCollection rows = dataGridViewProducts.SelectedRows;
-			Customer currentCustomer = GetSelectedCustomer();
+			//int currentCustomer = GetSelectedCustomerId();
 
 			if (rows != null && rows.Count > 0) {
 				return new Product(rows[0]);
@@ -338,12 +377,14 @@ namespace ConAuction
 		private void UpdateCustomerList()
 		{
 			try {
-
-				dataGridViewCustomers.DataSource = DBDataSetCustomer.Tables["Customer"];
-				// dataGridViewCustomers.DataSource = BaseCustomers.CustomerList;
 				dataGridViewCustomers.Invalidate();
 				dataGridViewCustomers.Refresh();
+				dataGridViewCustomers.DataSource = DBDataSetCustomer.Tables["Customer"];
+				// dataGridViewCustomers.DataSource = BaseCustomers.CustomerList;
 
+				if (dataGridViewCustomers.ColumnCount < 5) {
+					return;
+				}
 				dataGridViewCustomers.Columns["id"].HeaderText = "Id";
 				dataGridViewCustomers.Columns["id"].ReadOnly = true;
 				dataGridViewCustomers.Columns["Name"].HeaderText = "Namn";
@@ -367,11 +408,20 @@ namespace ConAuction
 
 		private void UpdateCustomerSummary()
 		{
-			textBoxTotalCount.Text = BaseCustomers.TotalCount().ToString();
+			if (fUpdatingCustomerList) {
+				return;
+			}
+
+			if (DBDataSetProduct == null) {
+				return;
+			}
+			int totalcount = ProductTotalCount(DBDataSetProduct.Tables[0]);
+			textBoxTotalCount.Text = totalcount.ToString();
 
 			textBoxSoldCount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
 			labelSoldCount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-			textBoxSoldCount.Text = BaseCustomers.TotalSoldCount().ToString();
+			int totalSoldCount = TotalSoldCount(DBDataSetProduct.Tables[0]);
+			textBoxSoldCount.Text = totalSoldCount.ToString();
 
 
 			buttonSave.Visible = (Mode == OpMode.Receiving);
@@ -421,12 +471,23 @@ namespace ConAuction
 
 		private void UpdateProductSummary()
 		{
-			Customer foundCustomer = GetSelectedCustomer();
-			if (foundCustomer != null) {
-				textBoxTotalAmount.Text = foundCustomer.TotalAmount().ToString();
-				textBoxNetAmount.Text = foundCustomer.NetAmount().ToString();
-				textBoxUnsold.Text = foundCustomer.NoOfUnsoldProducts().ToString();
+			int foundCustomer = GetSelectedCustomerId();
+			try {
+				if (foundCustomer > 0) {
+					int totalAmount = TotalAmountForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					textBoxTotalAmount.Text = totalAmount.ToString();
+					int netAmount = NetAmountForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					textBoxNetAmount.Text = netAmount.ToString();
+					int noOfUnsold = NoOfUnsoldProductsForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					textBoxUnsold.Text = noOfUnsold.ToString();
+				}
 			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show("Error " + ex.Message);
+			}
+			
+
 			buttonSaveProduct.Visible = (Mode == OpMode.Receiving);
 		}
 
@@ -434,9 +495,10 @@ namespace ConAuction
 
 		private void dataGridViewCustomers_SelectionChanged(object sender, EventArgs e)
 		{
-			//UpdateProductList();
-			UpdateProductListHiding();
-			// Serialize();
+			if (!fUpdatingCustomerList) {
+				UpdateProductListHiding();
+				UpdateProductSummary();
+			}
 		}
 
 		private void buttonSave_Click(object sender, EventArgs e)
@@ -453,13 +515,12 @@ namespace ConAuction
 			}
 		}
 
-
 		private void buttonSaveProduct_Click(object sender, EventArgs e)
 		{
 			DataGridViewRow rowCustomer= GetSelectedCustomerRow();
 			if (rowCustomer != null) {
 				Product productNew = new Product();
-				FormProduct form = new FormProduct(null, productNew, Mode);
+				FormProduct form = new FormProduct(productNew, null, Mode);
 
 				if (form.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
 
@@ -482,7 +543,7 @@ namespace ConAuction
 				}
 				else {
 
-					FormProduct form = new FormProduct(null, productCurrent,  Mode);
+					FormProduct form = new FormProduct(productCurrent, null, Mode);
 
 					if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
 						UpdateProductToDB(productCurrent);
@@ -501,14 +562,21 @@ namespace ConAuction
 
 		private void dataGridViewProducts_KeyDown(object sender, KeyEventArgs e)
 		{
-			//if (e.KeyCode == Keys.F2) {
-			//    dataGridViewProducts.BeginEdit(false);
-			//}
+			if (e.KeyCode == Keys.F2 && Mode == OpMode.Selling) {
+			    dataGridViewProducts.BeginEdit(false);
+			}
+			if (e.KeyCode == Keys.Tab && Mode == OpMode.Selling) {
+
+			}
 		}
 
 		private void dataGridViewProducts_CellValueChanged(object sender, DataGridViewCellEventArgs e)
 		{
-			UpdateProductSummary();
+			//UpdateProductSummary();
+			if (Mode == OpMode.Selling) {
+				
+			}
+			
 		}
 
 		private void dataGridViewCustomers_CellValueChanged(object sender, DataGridViewCellEventArgs e)

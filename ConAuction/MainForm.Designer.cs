@@ -109,13 +109,14 @@
 			this.dataGridViewCustomers.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridViewCustomers.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.RaisedVertical;
 			this.dataGridViewCustomers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewCustomers.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
 			this.dataGridViewCustomers.GridColor = System.Drawing.SystemColors.ControlLight;
 			this.dataGridViewCustomers.Location = new System.Drawing.Point(9, 4);
 			this.dataGridViewCustomers.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewCustomers.MultiSelect = false;
 			this.dataGridViewCustomers.Name = "dataGridViewCustomers";
 			this.dataGridViewCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewCustomers.Size = new System.Drawing.Size(444, 572);
+			this.dataGridViewCustomers.Size = new System.Drawing.Size(444, 557);
 			this.dataGridViewCustomers.TabIndex = 14;
 			this.dataGridViewCustomers.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCustomers_CellValueChanged);
 			this.dataGridViewCustomers.SelectionChanged += new System.EventHandler(this.dataGridViewCustomers_SelectionChanged);
@@ -308,6 +309,7 @@
 			// 
 			this.labelSoldCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelSoldCount.AutoSize = true;
+			this.labelSoldCount.ForeColor = System.Drawing.SystemColors.ControlLight;
 			this.labelSoldCount.Location = new System.Drawing.Point(225, 79);
 			this.labelSoldCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelSoldCount.Name = "labelSoldCount";
@@ -329,6 +331,7 @@
 			// 
 			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label6.AutoSize = true;
+			this.label6.ForeColor = System.Drawing.SystemColors.ControlLight;
 			this.label6.Location = new System.Drawing.Point(225, 31);
 			this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label6.Name = "label6";

@@ -95,23 +95,6 @@ namespace ConAuction
 			return net;
 		}
 
-		public string GetNextFreeProductId()
-		{
-			for (char id = 'A'; id < 'L'; id++) {
-				bool found = false;
-				foreach (Product product in ProductList) {
-					if (product.Id.EndsWith(id.ToString())) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					return (Id + id.ToString());
-				}
-			}
-			MessageBox.Show("Slut på ID-nummer!");
-			return "";
-		}
 
 		public Product GetLastProduct()
 		{

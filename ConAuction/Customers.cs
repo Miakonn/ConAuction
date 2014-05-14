@@ -4,123 +4,105 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Xml.Serialization;
 using System.Configuration;
 using System.Windows.Forms;
 
 namespace ConAuction
 {
-	[XmlRoot("Customers")]
-	[XmlInclude(typeof(Customer))] 
-	public class Customers
+
+	public partial class MainForm : Form
 	{
-		[XmlArray("Customers")]
-		[XmlArrayItem("Customer", typeof(Customer))]
-		public List<Customer> CustomerList { get; set; }
 
-		public OpMode Mode { get; set; }
-
-
-
-		public Customers()
+		public int ProductTotalCount(DataTable tableProducts)
 		{
-			CustomerList = new List<Customer>();
-		}
-
-
-		public static Customers Load(string fileName)
-		{
-			var serializer = new XmlSerializer(typeof(Customers));
-			using (TextReader reader = new StreamReader(fileName)) {
-				return (Customers)serializer.Deserialize(reader);
+			if (tableProducts != null) {
+				return tableProducts.Rows.Count;
 			}
-
+			return 0;
 		}
 
-
-		public void UpdateFromDB(System.Data.DataSet DBDataSet, DataRelation customerProd)
+		public int TotalSoldCount(DataTable tableProducts)
 		{
-
-			CustomerList.Clear();
-			foreach (DataRow rowCustomer in DBDataSet.Tables["Customer"].Rows) {
-				Customer pcustomer = new Customer(rowCustomer.ItemArray[0].ToString(), rowCustomer.ItemArray[1].ToString(), rowCustomer.ItemArray[2].ToString());
-				CustomerList.Add(pcustomer);
-				foreach (DataRow rowProduct in rowCustomer.GetChildRows(customerProd)) {
-					Product prod = new Product(rowProduct.ItemArray[0].ToString(),
-						rowProduct.ItemArray[1].ToString(),
-						rowProduct.ItemArray[2].ToString(),
-						rowProduct.ItemArray[3].ToString(),
-						rowProduct.ItemArray[4].ToString()
-						);
-					pcustomer.ProductList.Add(prod);
+			int count = 0;
+			if (tableProducts != null) {
+				foreach (DataRow row in tableProducts.Rows) {
+					if (row["Price"] != DBNull.Value) {
+						int price = (int)row["Price"];
+						if (price > 0) {
+							count++;
+						}
+					}
 				}
 			}
+			return count;
 		}
 
 
-
-
-        public void Sorting()
-        {
-            CustomerList.Sort((x,y) => string.Compare(x.Id, y.Id));
-        }
-
-		public void Save(string fileName)
-		{
-			var serializer = new XmlSerializer(typeof(Customers));
-			using (TextWriter writer = new StreamWriter(fileName)) {
-				serializer.Serialize(writer, this);
-			}
-			//MakeFree();
-		}
-
-
-	
-
-
-		public int TotalCount()
+		public int NoOfUnsoldProductsForCustomer(int customerId, DataTable tableProducts)
 		{
 			int count = 0;
-			foreach (Customer customer in CustomerList) {
-				count += customer.ProductList.Count;
+			foreach (DataRow row in tableProducts.Rows) {
+				int rowCustomerid = (int)row["CustomerId"];
+				if (customerId == rowCustomerid) {
+					if (row["Price"] == DBNull.Value) {
+						count++;
+					}
+					else {
+						int price = (int)row["Price"];
+						if (price == 0) {
+							count++;
+						}
+					}
+				}
 			}
 			return count;
 		}
 
-		public int TotalSoldCount()
+
+		public int NoOfProductsForCustomer(int customerId, DataTable tableProducts)
 		{
 			int count = 0;
-			foreach (Customer customer in CustomerList) {
-				count += customer.NoOfUnsoldProducts() - customer.ProductList.Count;
+			if (tableProducts != null) {
+				foreach (DataRow row in tableProducts.Rows) {
+					int rowCustomerid = (int)row["CustomerId"];
+					if (customerId == rowCustomerid ) {
+						count++;
+					}
+				}
 			}
 			return count;
+
 		}
 
-		public string GetNextFreeCustomerId()
+		public int TotalAmountForCustomer(int customerId, DataTable tableProducts)
 		{
-			int SettingStartId = 1;
-			int SettingEndId = 99;
+			int sum = 0;
+			if (tableProducts != null) {
+				foreach (DataRow row in tableProducts.Rows) {
+					int rowCustomerid = (int)row["CustomerId"];
+					if (customerId == rowCustomerid && row["Price"] != DBNull.Value) {
+						int price = (int)row["Price"];
+						if (price > 0) {
+							sum+= price;
+						}
+					}
+				}
+			}
+			return sum;
+		}
+
+		public int NetAmountForCustomer(int customerId, DataTable tableProducts)
+		{
+			int SettingCost = 10;
 			try {
-				SettingStartId = Int32.Parse(ConfigurationManager.AppSettings["StartId"]);
-				SettingEndId = Int32.Parse(ConfigurationManager.AppSettings["EndId"]);
+				SettingCost = Int32.Parse(ConfigurationManager.AppSettings["Cost"]);
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.Message);
 			}
 
-			for (int id = SettingStartId; id < SettingEndId; id++) {
-				bool found = false;
-				foreach (Customer customer in CustomerList) {
-					if (id.ToString() == customer.Id) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					return id.ToString();
-				}
-			}
-			return "";
+			int net = TotalAmountForCustomer(customerId, tableProducts) - NoOfProductsForCustomer(customerId, tableProducts) * SettingCost;
+			return net;
 		}
 
 	}
