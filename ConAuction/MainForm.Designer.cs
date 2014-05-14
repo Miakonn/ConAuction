@@ -44,6 +44,8 @@
 			this.buttonSaveProduct = new System.Windows.Forms.Button();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.labelSoldAmount = new System.Windows.Forms.Label();
+			this.textBoxAmount = new System.Windows.Forms.TextBox();
 			this.buttonUpdate = new System.Windows.Forms.Button();
 			this.labelSoldCount = new System.Windows.Forms.Label();
 			this.textBoxSoldCount = new System.Windows.Forms.TextBox();
@@ -56,8 +58,6 @@
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.buttonProductDisplay = new System.Windows.Forms.Button();
-			this.labelSoldAmount = new System.Windows.Forms.Label();
-			this.textBoxAmount = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -87,7 +87,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridViewProducts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-			this.dataGridViewProducts.BackgroundColor = System.Drawing.Color.Black;
+			this.dataGridViewProducts.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
 			this.dataGridViewProducts.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridViewProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewProducts.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -108,7 +108,7 @@
 			this.dataGridViewCustomers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewCustomers.BackgroundColor = System.Drawing.Color.Black;
+			this.dataGridViewCustomers.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
 			this.dataGridViewCustomers.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridViewCustomers.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.RaisedVertical;
 			this.dataGridViewCustomers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -203,7 +203,7 @@
 			// 
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox1.BackColor = System.Drawing.Color.Black;
+			this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
 			this.groupBox1.Controls.Add(this.textBoxUnsold);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.textBoxTotalAmount);
@@ -234,6 +234,7 @@
 			// 
 			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label5.AutoSize = true;
+			this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.label5.Location = new System.Drawing.Point(648, 72);
 			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label5.Name = "label5";
@@ -282,7 +283,7 @@
 			// 
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox2.BackColor = System.Drawing.Color.Black;
+			this.groupBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
 			this.groupBox2.Controls.Add(this.labelSoldAmount);
 			this.groupBox2.Controls.Add(this.textBoxAmount);
 			this.groupBox2.Controls.Add(this.buttonUpdate);
@@ -298,6 +299,28 @@
 			this.groupBox2.Size = new System.Drawing.Size(440, 121);
 			this.groupBox2.TabIndex = 18;
 			this.groupBox2.TabStop = false;
+			// 
+			// labelSoldAmount
+			// 
+			this.labelSoldAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelSoldAmount.AutoSize = true;
+			this.labelSoldAmount.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.labelSoldAmount.Location = new System.Drawing.Point(13, 76);
+			this.labelSoldAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelSoldAmount.Name = "labelSoldAmount";
+			this.labelSoldAmount.Size = new System.Drawing.Size(100, 20);
+			this.labelSoldAmount.TabIndex = 29;
+			this.labelSoldAmount.Text = "Total summa";
+			// 
+			// textBoxAmount
+			// 
+			this.textBoxAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxAmount.Location = new System.Drawing.Point(121, 68);
+			this.textBoxAmount.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxAmount.Name = "textBoxAmount";
+			this.textBoxAmount.ReadOnly = true;
+			this.textBoxAmount.Size = new System.Drawing.Size(57, 26);
+			this.textBoxAmount.TabIndex = 28;
 			// 
 			// buttonUpdate
 			// 
@@ -316,7 +339,7 @@
 			// 
 			this.labelSoldCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelSoldCount.AutoSize = true;
-			this.labelSoldCount.ForeColor = System.Drawing.SystemColors.ControlLight;
+			this.labelSoldCount.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.labelSoldCount.Location = new System.Drawing.Point(225, 79);
 			this.labelSoldCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelSoldCount.Name = "labelSoldCount";
@@ -338,7 +361,7 @@
 			// 
 			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label6.AutoSize = true;
-			this.label6.ForeColor = System.Drawing.SystemColors.ControlLight;
+			this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.label6.Location = new System.Drawing.Point(225, 31);
 			this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label6.Name = "label6";
@@ -349,6 +372,7 @@
 			// radioButton1
 			// 
 			this.radioButton1.AutoSize = true;
+			this.radioButton1.ForeColor = System.Drawing.Color.Black;
 			this.radioButton1.Location = new System.Drawing.Point(32, 39);
 			this.radioButton1.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButton1.Name = "radioButton1";
@@ -362,6 +386,7 @@
 			// radioButton3
 			// 
 			this.radioButton3.AutoSize = true;
+			this.radioButton3.ForeColor = System.Drawing.Color.Black;
 			this.radioButton3.Location = new System.Drawing.Point(32, 92);
 			this.radioButton3.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButton3.Name = "radioButton3";
@@ -375,6 +400,7 @@
 			// radioButton4
 			// 
 			this.radioButton4.AutoSize = true;
+			this.radioButton4.ForeColor = System.Drawing.Color.Black;
 			this.radioButton4.Location = new System.Drawing.Point(172, 92);
 			this.radioButton4.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButton4.Name = "radioButton4";
@@ -388,6 +414,7 @@
 			// radioButton2
 			// 
 			this.radioButton2.AutoSize = true;
+			this.radioButton2.ForeColor = System.Drawing.Color.Black;
 			this.radioButton2.Location = new System.Drawing.Point(172, 39);
 			this.radioButton2.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButton2.Name = "radioButton2";
@@ -401,7 +428,7 @@
 			// groupBoxRadio
 			// 
 			this.groupBoxRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBoxRadio.BackColor = System.Drawing.Color.Black;
+			this.groupBoxRadio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
 			this.groupBoxRadio.Controls.Add(this.radioButton2);
 			this.groupBoxRadio.Controls.Add(this.radioButton1);
 			this.groupBoxRadio.Controls.Add(this.radioButton4);
@@ -436,33 +463,11 @@
 			this.buttonProductDisplay.UseVisualStyleBackColor = true;
 			this.buttonProductDisplay.Click += new System.EventHandler(this.buttonProductDisplay_Click);
 			// 
-			// labelSoldAmount
-			// 
-			this.labelSoldAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelSoldAmount.AutoSize = true;
-			this.labelSoldAmount.ForeColor = System.Drawing.SystemColors.ControlLight;
-			this.labelSoldAmount.Location = new System.Drawing.Point(13, 76);
-			this.labelSoldAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelSoldAmount.Name = "labelSoldAmount";
-			this.labelSoldAmount.Size = new System.Drawing.Size(100, 20);
-			this.labelSoldAmount.TabIndex = 29;
-			this.labelSoldAmount.Text = "Total summa";
-			// 
-			// textBoxAmount
-			// 
-			this.textBoxAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxAmount.Location = new System.Drawing.Point(121, 68);
-			this.textBoxAmount.Margin = new System.Windows.Forms.Padding(4);
-			this.textBoxAmount.Name = "textBoxAmount";
-			this.textBoxAmount.ReadOnly = true;
-			this.textBoxAmount.Size = new System.Drawing.Size(57, 26);
-			this.textBoxAmount.TabIndex = 28;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.Color.Black;
+			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
 			this.ClientSize = new System.Drawing.Size(1432, 881);
 			this.Controls.Add(this.buttonProductDisplay);
 			this.Controls.Add(this.pictureBoxLogo);
