@@ -56,6 +56,8 @@
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.buttonProductDisplay = new System.Windows.Forms.Button();
+			this.labelSoldAmount = new System.Windows.Forms.Label();
+			this.textBoxAmount = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -70,7 +72,7 @@
 			// buttonSave
 			// 
 			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSave.Location = new System.Drawing.Point(8, 73);
+			this.buttonSave.Location = new System.Drawing.Point(8, 25);
 			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSave.Name = "buttonSave";
 			this.buttonSave.Size = new System.Drawing.Size(97, 33);
@@ -205,6 +207,7 @@
 			this.groupBox1.Controls.Add(this.textBoxUnsold);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.textBoxTotalAmount);
+			this.groupBox1.Controls.Add(this.buttonSaveProduct);
 			this.groupBox1.Controls.Add(this.label4);
 			this.groupBox1.Controls.Add(this.label3);
 			this.groupBox1.Controls.Add(this.textBoxNetAmount);
@@ -241,12 +244,13 @@
 			// buttonSaveProduct
 			// 
 			this.buttonSaveProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSaveProduct.Location = new System.Drawing.Point(766, 119);
+			this.buttonSaveProduct.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.buttonSaveProduct.Location = new System.Drawing.Point(26, 25);
 			this.buttonSaveProduct.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSaveProduct.Name = "buttonSaveProduct";
-			this.buttonSaveProduct.Size = new System.Drawing.Size(112, 44);
+			this.buttonSaveProduct.Size = new System.Drawing.Size(106, 33);
 			this.buttonSaveProduct.TabIndex = 12;
-			this.buttonSaveProduct.Text = "Nytt objekt";
+			this.buttonSaveProduct.Text = "Nytt objekt...";
 			this.buttonSaveProduct.UseVisualStyleBackColor = true;
 			this.buttonSaveProduct.Click += new System.EventHandler(this.buttonNewProduct_Click);
 			// 
@@ -279,6 +283,8 @@
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox2.BackColor = System.Drawing.Color.Black;
+			this.groupBox2.Controls.Add(this.labelSoldAmount);
+			this.groupBox2.Controls.Add(this.textBoxAmount);
 			this.groupBox2.Controls.Add(this.buttonUpdate);
 			this.groupBox2.Controls.Add(this.labelSoldCount);
 			this.groupBox2.Controls.Add(this.textBoxSoldCount);
@@ -296,7 +302,7 @@
 			// buttonUpdate
 			// 
 			this.buttonUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonUpdate.Location = new System.Drawing.Point(120, 73);
+			this.buttonUpdate.Location = new System.Drawing.Point(120, 25);
 			this.buttonUpdate.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonUpdate.Name = "buttonUpdate";
 			this.buttonUpdate.Size = new System.Drawing.Size(97, 33);
@@ -426,9 +432,31 @@
 			this.buttonProductDisplay.Name = "buttonProductDisplay";
 			this.buttonProductDisplay.Size = new System.Drawing.Size(112, 44);
 			this.buttonProductDisplay.TabIndex = 33;
-			this.buttonProductDisplay.Text = "OH-visning";
+			this.buttonProductDisplay.Text = "OH-visning...";
 			this.buttonProductDisplay.UseVisualStyleBackColor = true;
 			this.buttonProductDisplay.Click += new System.EventHandler(this.buttonProductDisplay_Click);
+			// 
+			// labelSoldAmount
+			// 
+			this.labelSoldAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelSoldAmount.AutoSize = true;
+			this.labelSoldAmount.ForeColor = System.Drawing.SystemColors.ControlLight;
+			this.labelSoldAmount.Location = new System.Drawing.Point(13, 76);
+			this.labelSoldAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelSoldAmount.Name = "labelSoldAmount";
+			this.labelSoldAmount.Size = new System.Drawing.Size(100, 20);
+			this.labelSoldAmount.TabIndex = 29;
+			this.labelSoldAmount.Text = "Total summa";
+			// 
+			// textBoxAmount
+			// 
+			this.textBoxAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxAmount.Location = new System.Drawing.Point(121, 68);
+			this.textBoxAmount.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxAmount.Name = "textBoxAmount";
+			this.textBoxAmount.ReadOnly = true;
+			this.textBoxAmount.Size = new System.Drawing.Size(57, 26);
+			this.textBoxAmount.TabIndex = 28;
 			// 
 			// MainForm
 			// 
@@ -439,7 +467,6 @@
 			this.Controls.Add(this.buttonProductDisplay);
 			this.Controls.Add(this.pictureBoxLogo);
 			this.Controls.Add(this.groupBoxRadio);
-			this.Controls.Add(this.buttonSaveProduct);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.label1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -495,6 +522,8 @@
 		private System.Windows.Forms.Button buttonUpdate;
 		private System.Windows.Forms.Button buttonSaveProduct;
 		private System.Windows.Forms.Button buttonProductDisplay;
+		private System.Windows.Forms.Label labelSoldAmount;
+		private System.Windows.Forms.TextBox textBoxAmount;
 	}
 }
 

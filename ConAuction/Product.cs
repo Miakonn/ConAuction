@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using System.Data;
 using System.Windows.Forms;
 
 namespace ConAuction
 {
-	[Serializable]
-	[XmlType("Product")]
 	public class Product
 	{
 		public string Id { get; set; }
@@ -44,6 +42,19 @@ namespace ConAuction
 			}
 		}
 
+		public Product(DataRow row) {
+			Id = ((int)row["id"]).ToString();
+			Label = ((int)row["Label"]).ToString();
+			Type = (string)row["Type"];
+			Name = (string)row["Name"];
+			Description = (string)row["Description"];
+			if (row["Note"] != null) {
+				Note = (string)row["Note"];
+			}
+			if (row["Price"] != null) {
+				Price = (int)row["Price"];
+			}
+		}
 
 
 		public bool IsSold()

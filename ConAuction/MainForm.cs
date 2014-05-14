@@ -11,7 +11,6 @@ using System.Configuration;
 using System.Reflection;
 using MySql.Data.MySqlClient;
 
-
 namespace ConAuction
 {
 	public enum OpMode { Receiving, Showing, Selling, Paying};
@@ -28,6 +27,10 @@ namespace ConAuction
 		System.Data.DataSet DBDataSetCustomer;
 		MySqlDataAdapter DBadapterProduct;
 		System.Data.DataSet DBDataSetProduct;
+
+		//DataTable DataTableCustomer;
+		//DataTable DataTableProduct;
+
 
 		bool fUpdatingCustomerList = false;
 
@@ -90,9 +93,6 @@ namespace ConAuction
 				DBadapterCustomer.Fill(DBDataSetCustomer);
 
 				DBDataSetCustomer.Tables[0].TableName = "Customer";
-
-				//DBRelationCustomerProd = this.DBDataSetCustomer.Relations.Add("CustProd", DBDataSetCustomer.Tables["customer"].Columns["id"],
-				//    DBDataSetCustomer.Tables["product"].Columns["CustomerId"]);
 
 				// Set the UPDATE command and parameters.
 				DBadapterCustomer.UpdateCommand = new MySqlCommand(
@@ -292,14 +292,14 @@ namespace ConAuction
 			UpdateProductList();
 
 			fUpdatingCustomerList = false;
-			UpdateCustomerSummary();
+			UpdateAuctionSummary();
 			UpdateProductListHiding();
 			UpdateProductSummary();
 		}
 
 		private void UpdateProductListHiding()
 		{
-			if (fUpdatingCustomerList || Mode == OpMode.Paying || Mode == OpMode.Showing) {
+			if (fUpdatingCustomerList || Mode == OpMode.Selling || Mode == OpMode.Showing) {
 				return;
 			}
 			DataGridViewRow selectedCustomerRow = GetSelectedCustomerRow();
@@ -382,15 +382,21 @@ namespace ConAuction
 
 				dataGridViewCustomers.Columns["Done"].Visible = (Mode == OpMode.Paying);
 
-				UpdateCustomerSummary();
+				UpdateAuctionSummary();
 			}
 			catch (Exception ex){
 				MessageBox.Show("Error " + ex.Message);
 			}
 		}
 
-		private void UpdateCustomerSummary()
+		private void UpdateAuctionSummary()
 		{
+			textBoxSoldCount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+			labelSoldCount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+			textBoxAmount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+			labelSoldAmount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+			buttonSave.Visible = (Mode == OpMode.Receiving);
+
 			if (fUpdatingCustomerList) {
 				return;
 			}
@@ -398,16 +404,17 @@ namespace ConAuction
 			if (DBDataSetProduct == null) {
 				return;
 			}
-			int totalcount = ProductTotalCount(DBDataSetProduct.Tables[0]);
+
+			int totalcount = ProductTable.TotalCount(DBDataSetProduct.Tables[0]);
 			textBoxTotalCount.Text = totalcount.ToString();
 
-			textBoxSoldCount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-			labelSoldCount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-			int totalSoldCount = TotalSoldCount(DBDataSetProduct.Tables[0]);
-			textBoxSoldCount.Text = totalSoldCount.ToString();
+			if (Mode == OpMode.Selling || Mode == OpMode.Paying) {
+				int totalSoldCount = ProductTable.TotalSoldCount(DBDataSetProduct.Tables[0]);
+				textBoxSoldCount.Text = totalSoldCount.ToString();
+				int totalSoldAmount = ProductTable.TotalSoldAmount(DBDataSetProduct.Tables[0]);
+				textBoxAmount.Text = totalSoldAmount.ToString();
+			}
 
-
-			buttonSave.Visible = (Mode == OpMode.Receiving);
 		}
 
 		private void UpdateProductList()
@@ -457,11 +464,11 @@ namespace ConAuction
 			int foundCustomer = GetSelectedCustomerId();
 			try {
 				if (foundCustomer > 0) {
-					int totalAmount = TotalAmountForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					int totalAmount = ProductTable.TotalAmountForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
 					textBoxTotalAmount.Text = totalAmount.ToString();
-					int netAmount = NetAmountForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					int netAmount = ProductTable.NetAmountForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
 					textBoxNetAmount.Text = netAmount.ToString();
-					int noOfUnsold = NoOfUnsoldProductsForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					int noOfUnsold = ProductTable.NoOfUnsoldForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
 					textBoxUnsold.Text = noOfUnsold.ToString();
 				}
 			}
@@ -500,14 +507,21 @@ namespace ConAuction
 
 		private void buttonNewProduct_Click(object sender, EventArgs e)
 		{
-			DataGridViewRow rowCustomer= GetSelectedCustomerRow();
-			if (rowCustomer != null) {
+			int customerId = GetSelectedCustomerId();
+			if (customerId > 0) {
+				int productIdLast = ProductTable.GetLastProductIdForCustomer(customerId, DBDataSetProduct.Tables[0]);
+				Product productLast = null;
+				if (productIdLast > 0) {
+					productLast = new Product(ProductTable.GetRowForProductId(productIdLast, DBDataSetProduct.Tables[0]));
+					
+				}
+
 				Product productNew = new Product();
-				FormEditProduct form = new FormEditProduct(productNew, null, Mode);
+				FormEditProduct form = new FormEditProduct(productNew, productLast, Mode);
 
 				if (form.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) {
 
-					InsertNewProductToDB(productNew, (int)rowCustomer.Cells["id"].Value);
+					InsertNewProductToDB(productNew, customerId);
 					UpdateFromDB();
 
 					// Set selected customer
@@ -518,16 +532,13 @@ namespace ConAuction
 		private void dataGridViewProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
 		{
 			Product productCurrent = GetSelectedProduct();
-			//Customer customerCurrent = GetSelectedCustomer();
 
 			if (productCurrent != null) {
 				if ((Mode == OpMode.Selling)) {
 					dataGridViewProducts.BeginEdit(true);
 				}
 				else {
-
 					FormEditProduct form = new FormEditProduct(productCurrent, null, Mode);
-
 					if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
 						UpdateProductToDB(productCurrent);
 						UpdateFromDB();
@@ -564,7 +575,7 @@ namespace ConAuction
 
 		private void dataGridViewCustomers_CellValueChanged(object sender, DataGridViewCellEventArgs e)
 		{
-			UpdateCustomerSummary();
+			UpdateAuctionSummary();
 		}
 
 		private void radioButton1_CheckedChanged(object sender, EventArgs e)
