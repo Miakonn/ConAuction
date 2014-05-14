@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Configuration;
 using System.Reflection;
 using MySql.Data.MySqlClient;
+using System.Diagnostics;
 
 namespace ConAuction
 {
@@ -24,13 +25,8 @@ namespace ConAuction
 		MySqlConnection DBconnection;
 
 		MySqlDataAdapter DBadapterCustomer;
-		//System.Data.DataSet DBDataSetCustomer;
-		//MySqlDataAdapter DBadapterProduct;
-		//System.Data.DataSet DBDataSetProduct;
-
 		DataTable DataTableCustomer = null;
 		DataTable DataTableProduct = null;
-
 
 		bool fUpdatingCustomerList = false;
 
@@ -284,6 +280,13 @@ namespace ConAuction
 
 		public void UpdateFromDB()
 		{
+			if (IsCustomerTableDirty()) {
+				DialogResult res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", "DB", MessageBoxButtons.YesNo);
+				if (res == DialogResult.Yes) {
+					DBadapterCustomer.Update(DataTableCustomer);
+				}
+			}
+
 			fUpdatingCustomerList = true;
 			UpdateCustomerFromDB();
 			UpdateCustomerList();
@@ -404,16 +407,26 @@ namespace ConAuction
 				return;
 			}
 
-			int totalcount = ProductTable.TotalCount(DataTableProduct);
+			int totalcount = DataTableProduct.TotalCount();
 			textBoxTotalCount.Text = totalcount.ToString();
 
 			if (Mode == OpMode.Selling || Mode == OpMode.Paying) {
-				int totalSoldCount = ProductTable.TotalSoldCount(DataTableProduct);
+				int totalSoldCount = DataTableProduct.TotalSoldCount();
 				textBoxSoldCount.Text = totalSoldCount.ToString();
-				int totalSoldAmount = ProductTable.TotalSoldAmount(DataTableProduct);
+				int totalSoldAmount = DataTableProduct.TotalSoldAmount();
 				textBoxAmount.Text = totalSoldAmount.ToString();
 			}
+		}
 
+		private bool IsCustomerTableDirty() {
+			if (DataTableCustomer != null) {
+				DataTable changes = DataTableCustomer.GetChanges();
+
+				if (changes != null && changes.Rows.Count > 0) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		private void UpdateProductList()
@@ -462,12 +475,12 @@ namespace ConAuction
 		{
 			int foundCustomer = GetSelectedCustomerId();
 			try {
-				if (foundCustomer > 0) {
-					int totalAmount = ProductTable.TotalAmountForCustomer(foundCustomer, DataTableProduct);
+				if (foundCustomer > 0 && DataTableProduct != null) {
+					int totalAmount = DataTableProduct.TotalAmountForCustomer(foundCustomer);
 					textBoxTotalAmount.Text = totalAmount.ToString();
-					int netAmount = ProductTable.NetAmountForCustomer(foundCustomer, DataTableProduct);
+					int netAmount = DataTableProduct.NetAmountForCustomer(foundCustomer);
 					textBoxNetAmount.Text = netAmount.ToString();
-					int noOfUnsold = ProductTable.NoOfUnsoldForCustomer(foundCustomer, DataTableProduct);
+					int noOfUnsold = DataTableProduct.NoOfUnsoldForCustomer(foundCustomer);
 					textBoxUnsold.Text = noOfUnsold.ToString();
 				}
 			}
@@ -507,11 +520,11 @@ namespace ConAuction
 		private void buttonNewProduct_Click(object sender, EventArgs e)
 		{
 			int customerId = GetSelectedCustomerId();
-			if (customerId > 0) {
-				int productIdLast = ProductTable.GetLastProductIdForCustomer(customerId, DataTableProduct);
+			if (customerId > 0 && DataTableProduct != null) {
+				int productIdLast = DataTableProduct.GetLastProductIdForCustomer(customerId);
 				Product productLast = null;
 				if (productIdLast > 0) {
-					productLast = new Product(ProductTable.GetRowForProductId(productIdLast, DataTableProduct));
+					productLast = new Product(DataTableProduct.GetRowForProductId(productIdLast));
 					
 				}
 
@@ -608,15 +621,6 @@ namespace ConAuction
 
 		private void buttonUpdate_Click(object sender, EventArgs e)
 		{
-			var changes = DataTableCustomer.GetChanges();
-
-			if (changes != null && changes.Rows.Count > 0) {
-				DialogResult res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", "DB", MessageBoxButtons.YesNo);
-				if (res == DialogResult.Yes) {
-					DBadapterCustomer.Update(DataTableCustomer);
-				}
-			}
-
 			UpdateFromDB();
 		}
 
