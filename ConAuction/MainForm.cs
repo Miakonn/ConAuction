@@ -457,19 +457,19 @@ namespace ConAuction
 				dataGridViewProducts.Columns["Price"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
 				dataGridViewProducts.Columns["Label"].ReadOnly = true;
-				dataGridViewProducts.Columns["id"].Visible= false;
+				dataGridViewProducts.Columns["Type"].ReadOnly = true;
+				dataGridViewProducts.Columns["Name"].ReadOnly = true;
+				dataGridViewProducts.Columns["Description"].ReadOnly = true;
+				dataGridViewProducts.Columns["Note"].ReadOnly = true;
+				dataGridViewProducts.Columns["Note"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+				dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Selling);
+				dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+				dataGridViewProducts.Columns["id"].ReadOnly = true;
+				dataGridViewProducts.Columns["id"].Visible = false;
 				dataGridViewProducts.Columns["CustomerId"].Visible = false;
-				//dataGridViewProducts.Columns[1].ReadOnly = true;
-				//dataGridViewProducts.Columns[2].ReadOnly = true;
-				//dataGridViewProducts.Columns[3].ReadOnly = true;
-				//dataGridViewProducts.Columns[4].ReadOnly = true;
-				//dataGridViewProducts.Columns[5].ReadOnly = !(Mode == OpMode.Selling);
+				dataGridViewProducts.Columns["CustomerId"].ReadOnly = true;
 
-
-				//dataGridViewProducts.Columns[4].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-				//dataGridViewProducts.Columns[5].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-
-				//dataGridViewProducts.EditMode = (Mode == OpMode.Selling) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
+				dataGridViewProducts.EditMode = (Mode == OpMode.Selling) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
 
 				}
 			catch (Exception ex) {

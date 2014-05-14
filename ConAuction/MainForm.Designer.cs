@@ -83,6 +83,7 @@
 			// 
 			// dataGridViewProducts
 			// 
+			this.dataGridViewProducts.AllowUserToAddRows = false;
 			this.dataGridViewProducts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -94,7 +95,6 @@
 			this.dataGridViewProducts.GridColor = System.Drawing.SystemColors.ControlLight;
 			this.dataGridViewProducts.Location = new System.Drawing.Point(4, 7);
 			this.dataGridViewProducts.Margin = new System.Windows.Forms.Padding(4);
-			this.dataGridViewProducts.MultiSelect = false;
 			this.dataGridViewProducts.Name = "dataGridViewProducts";
 			this.dataGridViewProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.dataGridViewProducts.Size = new System.Drawing.Size(918, 554);
@@ -212,7 +212,7 @@
 			this.groupBox1.Controls.Add(this.label4);
 			this.groupBox1.Controls.Add(this.label3);
 			this.groupBox1.Controls.Add(this.textBoxNetAmount);
-			this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLight;
+			this.groupBox1.ForeColor = System.Drawing.Color.Black;
 			this.groupBox1.Location = new System.Drawing.Point(5, 569);
 			this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBox1.Name = "groupBox1";
@@ -434,7 +434,7 @@
 			this.groupBoxRadio.Controls.Add(this.radioButton1);
 			this.groupBoxRadio.Controls.Add(this.radioButton4);
 			this.groupBoxRadio.Controls.Add(this.radioButton3);
-			this.groupBoxRadio.ForeColor = System.Drawing.SystemColors.ControlLight;
+			this.groupBoxRadio.ForeColor = System.Drawing.Color.Black;
 			this.groupBoxRadio.Location = new System.Drawing.Point(904, 19);
 			this.groupBoxRadio.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBoxRadio.Name = "groupBoxRadio";
