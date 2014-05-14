@@ -24,12 +24,12 @@ namespace ConAuction
 		MySqlConnection DBconnection;
 
 		MySqlDataAdapter DBadapterCustomer;
-		System.Data.DataSet DBDataSetCustomer;
-		MySqlDataAdapter DBadapterProduct;
-		System.Data.DataSet DBDataSetProduct;
+		//System.Data.DataSet DBDataSetCustomer;
+		//MySqlDataAdapter DBadapterProduct;
+		//System.Data.DataSet DBDataSetProduct;
 
-		//DataTable DataTableCustomer;
-		//DataTable DataTableProduct;
+		DataTable DataTableCustomer = null;
+		DataTable DataTableProduct = null;
 
 
 		bool fUpdatingCustomerList = false;
@@ -88,11 +88,12 @@ namespace ConAuction
 				string query = "select id,name,phone,comment,done from Customer;";
 
 				DBadapterCustomer = new MySqlDataAdapter(query, DBconnection);
-				DBDataSetCustomer = new DataSet();
+				DataSet DBDataSetCustomer = new DataSet();
 				//get query results in dataset
 				DBadapterCustomer.Fill(DBDataSetCustomer);
 
 				DBDataSetCustomer.Tables[0].TableName = "Customer";
+				DataTableCustomer = DBDataSetCustomer.Tables[0];
 
 				// Set the UPDATE command and parameters.
 				DBadapterCustomer.UpdateCommand = new MySqlCommand(
@@ -136,15 +137,13 @@ namespace ConAuction
 				//prepare adapter to run query
 				string query = "select id, Label, Name, Type, Description, Note, Price, CustomerId from Product";
 
-				DBadapterProduct = new MySqlDataAdapter(query, DBconnection);
-				DBDataSetProduct = new DataSet();
+				MySqlDataAdapter DBadapterProduct = new MySqlDataAdapter(query, DBconnection);
+				DataSet DBDataSetProduct = new DataSet();
 				//get query results in dataset
 				DBadapterProduct.Fill(DBDataSetProduct);
 
-				DBDataSetProduct.Tables[0].TableName = "Product";
-
-				//DBRelationProductProd = this.DBDataSetProduct.Relations.Add("CustProd", DBDataSetProduct.Tables["Product"].Columns["id"],
-				//    DBDataSetProduct.Tables["product"].Columns["ProductId"]);
+				DataTableProduct = DBDataSetProduct.Tables[0];
+				DataTableProduct.TableName = "Product";
 
 				// Set the UPDATE command and parameters.
 				DBadapterProduct.UpdateCommand = new MySqlCommand(
@@ -361,7 +360,7 @@ namespace ConAuction
 			try {
 				dataGridViewCustomers.Invalidate();
 				dataGridViewCustomers.Refresh();
-				dataGridViewCustomers.DataSource = DBDataSetCustomer.Tables["Customer"];
+				dataGridViewCustomers.DataSource = DataTableCustomer;
 				// dataGridViewCustomers.DataSource = BaseCustomers.CustomerList;
 
 				if (dataGridViewCustomers.ColumnCount < 5) {
@@ -401,17 +400,17 @@ namespace ConAuction
 				return;
 			}
 
-			if (DBDataSetProduct == null) {
+			if (DataTableProduct == null) {
 				return;
 			}
 
-			int totalcount = ProductTable.TotalCount(DBDataSetProduct.Tables[0]);
+			int totalcount = ProductTable.TotalCount(DataTableProduct);
 			textBoxTotalCount.Text = totalcount.ToString();
 
 			if (Mode == OpMode.Selling || Mode == OpMode.Paying) {
-				int totalSoldCount = ProductTable.TotalSoldCount(DBDataSetProduct.Tables[0]);
+				int totalSoldCount = ProductTable.TotalSoldCount(DataTableProduct);
 				textBoxSoldCount.Text = totalSoldCount.ToString();
-				int totalSoldAmount = ProductTable.TotalSoldAmount(DBDataSetProduct.Tables[0]);
+				int totalSoldAmount = ProductTable.TotalSoldAmount(DataTableProduct);
 				textBoxAmount.Text = totalSoldAmount.ToString();
 			}
 
@@ -422,7 +421,7 @@ namespace ConAuction
 			try {
 				dataGridViewProducts.Invalidate();
 				dataGridViewProducts.Refresh();
-				dataGridViewProducts.DataSource = DBDataSetProduct.Tables["Product"];
+				dataGridViewProducts.DataSource = DataTableProduct;
 
 				dataGridViewProducts.Columns["Label"].HeaderText = "Label";
 				dataGridViewProducts.Columns["Type"].HeaderText = "Typ";
@@ -464,11 +463,11 @@ namespace ConAuction
 			int foundCustomer = GetSelectedCustomerId();
 			try {
 				if (foundCustomer > 0) {
-					int totalAmount = ProductTable.TotalAmountForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					int totalAmount = ProductTable.TotalAmountForCustomer(foundCustomer, DataTableProduct);
 					textBoxTotalAmount.Text = totalAmount.ToString();
-					int netAmount = ProductTable.NetAmountForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					int netAmount = ProductTable.NetAmountForCustomer(foundCustomer, DataTableProduct);
 					textBoxNetAmount.Text = netAmount.ToString();
-					int noOfUnsold = ProductTable.NoOfUnsoldForCustomer(foundCustomer, DBDataSetProduct.Tables[0]);
+					int noOfUnsold = ProductTable.NoOfUnsoldForCustomer(foundCustomer, DataTableProduct);
 					textBoxUnsold.Text = noOfUnsold.ToString();
 				}
 			}
@@ -495,7 +494,7 @@ namespace ConAuction
 		{
 			try {
 				//Save records in database using DTItems which is datasource for Grid
-				DBadapterCustomer.Update(DBDataSetCustomer.Tables["Customer"]);
+				DBadapterCustomer.Update(DataTableCustomer);
 				UpdateFromDB();
 				
 				MessageBox.Show("Items saved successfully...");
@@ -509,10 +508,10 @@ namespace ConAuction
 		{
 			int customerId = GetSelectedCustomerId();
 			if (customerId > 0) {
-				int productIdLast = ProductTable.GetLastProductIdForCustomer(customerId, DBDataSetProduct.Tables[0]);
+				int productIdLast = ProductTable.GetLastProductIdForCustomer(customerId, DataTableProduct);
 				Product productLast = null;
 				if (productIdLast > 0) {
-					productLast = new Product(ProductTable.GetRowForProductId(productIdLast, DBDataSetProduct.Tables[0]));
+					productLast = new Product(ProductTable.GetRowForProductId(productIdLast, DataTableProduct));
 					
 				}
 
@@ -609,12 +608,12 @@ namespace ConAuction
 
 		private void buttonUpdate_Click(object sender, EventArgs e)
 		{
-			var changes = DBDataSetCustomer.Tables[0].GetChanges();
+			var changes = DataTableCustomer.GetChanges();
 
 			if (changes != null && changes.Rows.Count > 0) {
 				DialogResult res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", "DB", MessageBoxButtons.YesNo);
 				if (res == DialogResult.Yes) {
-					DBadapterCustomer.Update(DBDataSetCustomer.Tables["Customer"]);
+					DBadapterCustomer.Update(DataTableCustomer);
 				}
 			}
 
@@ -623,7 +622,7 @@ namespace ConAuction
 
 		private void buttonProductDisplay_Click(object sender, EventArgs e)
 		{
-			FormProductDisplay form = new FormProductDisplay(DBDataSetProduct.Tables[0]);
+			FormProductDisplay form = new FormProductDisplay(DataTableProduct);
 
 			form.ShowDialog();
 
