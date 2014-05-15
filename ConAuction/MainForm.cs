@@ -47,7 +47,6 @@ namespace ConAuction
 			dataGridViewCustomers.ClearSelection();
 			dataGridViewCustomers.CurrentCell = null;
 			radioButton2.Checked = true;
-			Mode = OpMode.Showing;
 		}
 
 		private void LoadImage()
@@ -289,6 +288,8 @@ namespace ConAuction
 
 		public void UpdateFromDB()
 		{
+			int customerId = GetSelectedCustomerId();
+
 			if (fDataGridCustomerIsChanged && Mode != OpMode.Initializing) {
 				DialogResult res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", "DB", MessageBoxButtons.YesNo);
 				if (res == DialogResult.Yes) {
@@ -307,6 +308,8 @@ namespace ConAuction
 			UpdateProductListHiding();
 			UpdateProductSummary();
 			fDataGridCustomerIsChanged = false;
+
+			SelectCustomerRow(customerId);
 		}
 
 		private void UpdateProductListHiding()
@@ -368,11 +371,15 @@ namespace ConAuction
 		}
 
 		private void SelectCustomerRow(int customerId) {
-			foreach (DataGridViewRow row in dataGridViewCustomers.Rows) {
-				int rowId = (int)row.Cells["id"].Value;
-				if (customerId == rowId) {
-					row.Selected = true;
-					break;
+			if (Mode != OpMode.Initializing) {
+				foreach (DataGridViewRow row in dataGridViewCustomers.Rows) {
+					if (row.Cells["id"].Value != null) {
+						int rowId = (int)row.Cells["id"].Value;
+						if (customerId == rowId) {
+							row.Selected = true;
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -380,12 +387,18 @@ namespace ConAuction
 		private Product GetSelectedProduct()
 		{
 			DataGridViewSelectedRowCollection rows = dataGridViewProducts.SelectedRows;
-			//int currentCustomer = GetSelectedCustomerId();
-
 			if (rows != null && rows.Count > 0) {
 				return new Product(rows[0]);
 			}
 			return null;
+		}
+
+		private int GetSelectedProductId() {
+			DataGridViewSelectedRowCollection rows = dataGridViewProducts.SelectedRows;
+			if (rows != null && rows.Count == 1) {
+				return (int)rows[0].Cells["id"].Value;
+			}
+			return -1;
 		}
 
 		private void FormatCustomerList()
@@ -510,13 +523,15 @@ namespace ConAuction
 					textBoxUnsold.Text = noOfUnsold.ToString();
 				}
 			}
-			catch (System.Exception ex)
-			{
+			catch (System.Exception ex)	{
 				MessageBox.Show("Error " + ex.Message);
 			}
 
 			buttonNewProduct.Visible = (Mode == OpMode.Receiving);
 			buttonNewProduct.Enabled = !fDataGridCustomerIsChanged;
+
+			buttonDeleteProduct.Visible = (Mode == OpMode.Receiving);
+			buttonDeleteProduct.Enabled = (!fDataGridCustomerIsChanged && GetSelectedProductId() > 0);
 		}
 
 		#region  Event handling
@@ -569,7 +584,7 @@ namespace ConAuction
 					InsertNewProductToDB(productNew, customerId);
 					UpdateFromDB();
 
-					SelectCustomerRow(customerId);
+					//SelectCustomerRow(customerId);
 				}
 			}
 		}
@@ -654,6 +669,20 @@ namespace ConAuction
 
 			form.ShowDialog();
 
+		}
+
+		private void buttonDeleteProduct_Click(object sender, EventArgs e) {
+			int productId = GetSelectedProductId();
+			if (productId > 0) {
+				DialogResult res = MessageBox.Show("Är du säker på att du vill radera produkten?", "ConAuction", MessageBoxButtons.YesNo);
+				if (res == DialogResult.Yes) {
+					DeleteProductToDB(productId);
+				}
+			}
+		}
+
+		private void dataGridViewProducts_SelectionChanged(object sender, EventArgs e) {
+			UpdateProductSummary();
 		}
 
 	}

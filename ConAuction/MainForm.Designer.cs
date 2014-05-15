@@ -39,6 +39,7 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.textBoxNetAmount = new System.Windows.Forms.TextBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.buttonDeleteProduct = new System.Windows.Forms.Button();
 			this.textBoxUnsold = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.buttonNewProduct = new System.Windows.Forms.Button();
@@ -101,6 +102,7 @@
 			this.dataGridViewProducts.TabIndex = 13;
 			this.dataGridViewProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellDoubleClick);
 			this.dataGridViewProducts.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellValueChanged);
+			this.dataGridViewProducts.SelectionChanged += new System.EventHandler(this.dataGridViewProducts_SelectionChanged);
 			this.dataGridViewProducts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewProducts_KeyDown);
 			// 
 			// dataGridViewCustomers
@@ -205,6 +207,7 @@
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
+			this.groupBox1.Controls.Add(this.buttonDeleteProduct);
 			this.groupBox1.Controls.Add(this.textBoxUnsold);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.textBoxTotalAmount);
@@ -220,6 +223,19 @@
 			this.groupBox1.Size = new System.Drawing.Size(918, 121);
 			this.groupBox1.TabIndex = 22;
 			this.groupBox1.TabStop = false;
+			// 
+			// buttonDeleteProduct
+			// 
+			this.buttonDeleteProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonDeleteProduct.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.buttonDeleteProduct.Location = new System.Drawing.Point(26, 76);
+			this.buttonDeleteProduct.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonDeleteProduct.Name = "buttonDeleteProduct";
+			this.buttonDeleteProduct.Size = new System.Drawing.Size(106, 33);
+			this.buttonDeleteProduct.TabIndex = 24;
+			this.buttonDeleteProduct.Text = "Radera objekt";
+			this.buttonDeleteProduct.UseVisualStyleBackColor = true;
+			this.buttonDeleteProduct.Click += new System.EventHandler(this.buttonDeleteProduct_Click);
 			// 
 			// textBoxUnsold
 			// 
@@ -530,6 +546,7 @@
 		private System.Windows.Forms.Button buttonProductDisplay;
 		private System.Windows.Forms.Label labelSoldAmount;
 		private System.Windows.Forms.TextBox textBoxAmount;
+		private System.Windows.Forms.Button buttonDeleteProduct;
 	}
 }
 
