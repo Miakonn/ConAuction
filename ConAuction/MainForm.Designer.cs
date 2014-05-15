@@ -41,7 +41,7 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.textBoxUnsold = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
-			this.buttonSaveProduct = new System.Windows.Forms.Button();
+			this.buttonNewProduct = new System.Windows.Forms.Button();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.labelSoldAmount = new System.Windows.Forms.Label();
@@ -208,7 +208,7 @@
 			this.groupBox1.Controls.Add(this.textBoxUnsold);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.textBoxTotalAmount);
-			this.groupBox1.Controls.Add(this.buttonSaveProduct);
+			this.groupBox1.Controls.Add(this.buttonNewProduct);
 			this.groupBox1.Controls.Add(this.label4);
 			this.groupBox1.Controls.Add(this.label3);
 			this.groupBox1.Controls.Add(this.textBoxNetAmount);
@@ -243,18 +243,18 @@
 			this.label5.TabIndex = 23;
 			this.label5.Text = "Osålda";
 			// 
-			// buttonSaveProduct
+			// buttonNewProduct
 			// 
-			this.buttonSaveProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSaveProduct.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.buttonSaveProduct.Location = new System.Drawing.Point(26, 25);
-			this.buttonSaveProduct.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonSaveProduct.Name = "buttonSaveProduct";
-			this.buttonSaveProduct.Size = new System.Drawing.Size(106, 33);
-			this.buttonSaveProduct.TabIndex = 12;
-			this.buttonSaveProduct.Text = "Nytt objekt...";
-			this.buttonSaveProduct.UseVisualStyleBackColor = true;
-			this.buttonSaveProduct.Click += new System.EventHandler(this.buttonNewProduct_Click);
+			this.buttonNewProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonNewProduct.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.buttonNewProduct.Location = new System.Drawing.Point(26, 25);
+			this.buttonNewProduct.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonNewProduct.Name = "buttonNewProduct";
+			this.buttonNewProduct.Size = new System.Drawing.Size(106, 33);
+			this.buttonNewProduct.TabIndex = 12;
+			this.buttonNewProduct.Text = "Nytt objekt...";
+			this.buttonNewProduct.UseVisualStyleBackColor = true;
+			this.buttonNewProduct.Click += new System.EventHandler(this.buttonNewProduct_Click);
 			// 
 			// splitContainer1
 			// 
@@ -526,7 +526,7 @@
 		private System.Windows.Forms.Label labelSoldCount;
 		private System.Windows.Forms.TextBox textBoxSoldCount;
 		private System.Windows.Forms.Button buttonUpdate;
-		private System.Windows.Forms.Button buttonSaveProduct;
+		private System.Windows.Forms.Button buttonNewProduct;
 		private System.Windows.Forms.Button buttonProductDisplay;
 		private System.Windows.Forms.Label labelSoldAmount;
 		private System.Windows.Forms.TextBox textBoxAmount;
