@@ -367,6 +367,16 @@ namespace ConAuction
 			return 0;
 		}
 
+		private void SelectCustomerRow(int customerId) {
+			foreach (DataGridViewRow row in dataGridViewCustomers.Rows) {
+				int rowId = (int)row.Cells["id"].Value;
+				if (customerId == rowId) {
+					row.Selected = true;
+					break;
+				}
+			}
+		}
+
 		private Product GetSelectedProduct()
 		{
 			DataGridViewSelectedRowCollection rows = dataGridViewProducts.SelectedRows;
@@ -398,6 +408,7 @@ namespace ConAuction
 				dataGridViewCustomers.Columns["id"].ReadOnly = true;
 				dataGridViewCustomers.Columns["Name"].HeaderText = "Namn";
 				dataGridViewCustomers.Columns["Phone"].HeaderText = "Telefon";
+				dataGridViewCustomers.Columns["Comment"].HeaderText = "Not";
 				dataGridViewCustomers.Columns["Done"].HeaderText = "OK";
 
 
@@ -450,7 +461,7 @@ namespace ConAuction
 				dataGridViewProducts.Refresh();
 				dataGridViewProducts.DataSource = DataTableProduct;
 
-				dataGridViewProducts.Columns["Label"].HeaderText = "Label";
+				dataGridViewProducts.Columns["Label"].HeaderText = "Id";
 				dataGridViewProducts.Columns["Type"].HeaderText = "Typ";
 				dataGridViewProducts.Columns["Name"].HeaderText = "Namn";
 				dataGridViewProducts.Columns["Description"].HeaderText = "Beskr.";
@@ -558,7 +569,7 @@ namespace ConAuction
 					InsertNewProductToDB(productNew, customerId);
 					UpdateFromDB();
 
-					// Set selected customer TODO
+					SelectCustomerRow(customerId);
 				}
 			}
 		}
