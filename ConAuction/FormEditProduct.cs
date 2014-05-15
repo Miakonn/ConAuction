@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ConAuction;
+using System.IO;
 
 namespace ConAuction
 {
 	public partial class FormEditProduct : Form
 	{
-
 		private Product productCurrent= null;
 		private Product productLast = null;
 
@@ -39,37 +39,23 @@ namespace ConAuction
 			SetCompletion();
 		}
 
-
 		void SetCompletion ()
 		{
 			var source = new AutoCompleteStringCollection();
-			source.AddRange(new string[]
-                    {
-                        "Böcker",
-                        "Warhammer 40k",
-                        "Warhammer fantasy",
-                        "Magic",
-                        "Sagan om ringen",
-						"AD&D",
-						"Yu-Gi-Oh!",
-						"Middle Earth",
-						"Drakar & demoner",
-						"Werewolf",
-						"Star wars",
-						"Shadowrun",
-						"Space Marine",
-						"SF-böcker",
-						"Fantasy-böcker",
-						"Urban fantasy-böcker"
-                    });
+			try {
+				using (StreamReader reader = new StreamReader("ConAuctionDictionary.txt")) {
+					while (!reader.EndOfStream) {
+						string line = reader.ReadLine();
+						source.Add(line);
+					}
+				}
+			}
+			catch {}
 
 			textBoxName.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
 			textBoxName.AutoCompleteSource = AutoCompleteSource.CustomSource;
 			textBoxName.AutoCompleteCustomSource = source;
-
 		}
-
-
 
 		void SetProductContents(Product product)
 		{
@@ -77,7 +63,6 @@ namespace ConAuction
 			comboBoxProductType.Text = product.Type;
 			textBoxProductDescription.Text = product.Description;
 		}
-
 
 		private void UpdateProduct()
 		{
@@ -124,7 +109,6 @@ namespace ConAuction
 			EnableDisableButtons();
 
 		}
-
 
 	}
 }
