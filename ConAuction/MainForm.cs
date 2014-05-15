@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace ConAuction
 {
-	public enum OpMode { Initializing, Receiving, Showing, Selling, Paying};
+	public enum OpMode { Initializing=0, Receiving=1, Showing=2, Selling=3, Paying=4, Overhead=5};
 
 	public partial class MainForm : Form
 	{
@@ -46,7 +46,18 @@ namespace ConAuction
 
 			dataGridViewCustomers.ClearSelection();
 			dataGridViewCustomers.CurrentCell = null;
-			radioButton2.Checked = true;
+			InitComboBoxMode();
+		}
+
+
+		private void InitComboBoxMode() {
+			comboBoxMode.Items.Add("Välj mode!");
+			comboBoxMode.Items.Add("Inlämning");
+			comboBoxMode.Items.Add("Visning");
+			comboBoxMode.Items.Add("Auktion");
+			comboBoxMode.Items.Add("Utlämning");
+			comboBoxMode.Items.Add("OH-projektor");
+			comboBoxMode.SelectedIndex = (int)OpMode.Initializing;
 		}
 
 		private void LoadImage()
@@ -314,32 +325,36 @@ namespace ConAuction
 
 		private void UpdateProductListHiding()
 		{
-			if (fUpdatingCustomerList || Mode == OpMode.Selling || Mode == OpMode.Showing) {
+			int selectedCustomerId = GetSelectedCustomerId();
+			if (fUpdatingCustomerList) {
 				return;
 			}
-			DataGridViewRow selectedCustomerRow = GetSelectedCustomerRow();
 
 			dataGridViewProducts.ClearSelection();
 			dataGridViewProducts.CurrentCell = null;
 
-			foreach (DataGridViewRow productRow in dataGridViewProducts.Rows) {
-				productRow.Selected = false;
-				try {
-					if (selectedCustomerRow == null) {
-						productRow.Visible = false;
-					}
-					else {
-						string s1 = selectedCustomerRow.Cells["id"].Value.ToString();
-						if (productRow.Cells["CustomerId"].Value != null) {
-							string s2 = productRow.Cells["CustomerId"].Value.ToString();
-							productRow.Visible = (String.Compare(s1, s2) == 0);
+			if (Mode == OpMode.Selling || Mode == OpMode.Showing) {
+				foreach (DataGridViewRow productRow in dataGridViewProducts.Rows) {
+					productRow.Visible = true;
+				}
+			}
+			else {
+				foreach (DataGridViewRow productRow in dataGridViewProducts.Rows) {
+					productRow.Selected = false;
+					try {
+						if (selectedCustomerId < 1) {
+							productRow.Visible = false;
+						}
+						else {
+							int productCustomerId = (int)productRow.Cells["CustomerId"].Value;
+							productRow.Visible = (selectedCustomerId == productCustomerId);
 						}
 					}
+					catch {
+						Trace.WriteLine("Internal error");
+					}
 				}
-				catch 
-				{}
 			}
-
 		}
 
 		void SaveCustomerToDB() {
@@ -539,7 +554,7 @@ namespace ConAuction
 		private void dataGridViewCustomers_SelectionChanged(object sender, EventArgs e)
 		{
 			if (Mode != OpMode.Initializing) {
-				/*if (!fUpdatingCustomerList) */{
+				if (!fUpdatingCustomerList){
 				 
 					UpdateProductListHiding();
 					UpdateProductSummary();
@@ -624,30 +639,6 @@ namespace ConAuction
 			}
 		}
 
-		private void radioButton1_CheckedChanged(object sender, EventArgs e)
-		{
-			Mode = OpMode.Receiving;
-			UpdateFromDB();
-		}
-
-		private void radioButton2_CheckedChanged(object sender, EventArgs e)
-		{
-			Mode = OpMode.Showing;
-			UpdateFromDB();
-		}
-
-		private void radioButton3_CheckedChanged(object sender, EventArgs e)
-		{
-			Mode = OpMode.Selling;
-			UpdateFromDB();
-		}
-
-		private void radioButton4_CheckedChanged(object sender, EventArgs e)
-		{
-			Mode = OpMode.Paying;
-			UpdateFromDB();
-		}
-
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (fDataGridCustomerIsChanged) {
@@ -663,13 +654,6 @@ namespace ConAuction
 			UpdateFromDB();
 		}
 
-		private void buttonProductDisplay_Click(object sender, EventArgs e)
-		{
-			FormProductDisplay form = new FormProductDisplay(DataTableProduct);
-
-			form.ShowDialog();
-
-		}
 
 		private void buttonDeleteProduct_Click(object sender, EventArgs e) {
 			int productId = GetSelectedProductId();
@@ -683,6 +667,17 @@ namespace ConAuction
 
 		private void dataGridViewProducts_SelectionChanged(object sender, EventArgs e) {
 			UpdateProductSummary();
+		}
+
+		private void comboBoxMode_SelectedIndexChanged(object sender, EventArgs e) {
+			Mode = (ConAuction.OpMode) comboBoxMode.SelectedIndex;
+			if (Mode == OpMode.Overhead) {
+				FormProductDisplay form = new FormProductDisplay(DataTableProduct);
+				form.ShowDialog();
+				Mode = OpMode.Initializing;
+				comboBoxMode.SelectedIndex = (int) OpMode.Initializing;
+			}
+			UpdateFromDB();
 		}
 
 	}

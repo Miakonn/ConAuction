@@ -51,14 +51,9 @@
 			this.labelSoldCount = new System.Windows.Forms.Label();
 			this.textBoxSoldCount = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
-			this.radioButton1 = new System.Windows.Forms.RadioButton();
-			this.radioButton3 = new System.Windows.Forms.RadioButton();
-			this.radioButton4 = new System.Windows.Forms.RadioButton();
-			this.radioButton2 = new System.Windows.Forms.RadioButton();
-			this.groupBoxRadio = new System.Windows.Forms.GroupBox();
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.buttonProductDisplay = new System.Windows.Forms.Button();
+			this.comboBoxMode = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -66,7 +61,6 @@
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
-			this.groupBoxRadio.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -386,79 +380,6 @@
 			this.label6.TabIndex = 24;
 			this.label6.Text = "Totalt antal objekt";
 			// 
-			// radioButton1
-			// 
-			this.radioButton1.AutoSize = true;
-			this.radioButton1.ForeColor = System.Drawing.Color.Black;
-			this.radioButton1.Location = new System.Drawing.Point(32, 39);
-			this.radioButton1.Margin = new System.Windows.Forms.Padding(4);
-			this.radioButton1.Name = "radioButton1";
-			this.radioButton1.Size = new System.Drawing.Size(96, 24);
-			this.radioButton1.TabIndex = 24;
-			this.radioButton1.TabStop = true;
-			this.radioButton1.Text = "Inlämning";
-			this.radioButton1.UseVisualStyleBackColor = true;
-			this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-			// 
-			// radioButton3
-			// 
-			this.radioButton3.AutoSize = true;
-			this.radioButton3.ForeColor = System.Drawing.Color.Black;
-			this.radioButton3.Location = new System.Drawing.Point(32, 92);
-			this.radioButton3.Margin = new System.Windows.Forms.Padding(4);
-			this.radioButton3.Name = "radioButton3";
-			this.radioButton3.Size = new System.Drawing.Size(81, 24);
-			this.radioButton3.TabIndex = 25;
-			this.radioButton3.TabStop = true;
-			this.radioButton3.Text = "Auktion";
-			this.radioButton3.UseVisualStyleBackColor = true;
-			this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
-			// 
-			// radioButton4
-			// 
-			this.radioButton4.AutoSize = true;
-			this.radioButton4.ForeColor = System.Drawing.Color.Black;
-			this.radioButton4.Location = new System.Drawing.Point(172, 92);
-			this.radioButton4.Margin = new System.Windows.Forms.Padding(4);
-			this.radioButton4.Name = "radioButton4";
-			this.radioButton4.Size = new System.Drawing.Size(109, 24);
-			this.radioButton4.TabIndex = 26;
-			this.radioButton4.TabStop = true;
-			this.radioButton4.Text = "Utbetalning";
-			this.radioButton4.UseVisualStyleBackColor = true;
-			this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
-			// 
-			// radioButton2
-			// 
-			this.radioButton2.AutoSize = true;
-			this.radioButton2.ForeColor = System.Drawing.Color.Black;
-			this.radioButton2.Location = new System.Drawing.Point(172, 39);
-			this.radioButton2.Margin = new System.Windows.Forms.Padding(4);
-			this.radioButton2.Name = "radioButton2";
-			this.radioButton2.Size = new System.Drawing.Size(79, 24);
-			this.radioButton2.TabIndex = 27;
-			this.radioButton2.TabStop = true;
-			this.radioButton2.Text = "Visning";
-			this.radioButton2.UseVisualStyleBackColor = true;
-			this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
-			// 
-			// groupBoxRadio
-			// 
-			this.groupBoxRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBoxRadio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
-			this.groupBoxRadio.Controls.Add(this.radioButton2);
-			this.groupBoxRadio.Controls.Add(this.radioButton1);
-			this.groupBoxRadio.Controls.Add(this.radioButton4);
-			this.groupBoxRadio.Controls.Add(this.radioButton3);
-			this.groupBoxRadio.ForeColor = System.Drawing.Color.Black;
-			this.groupBoxRadio.Location = new System.Drawing.Point(904, 19);
-			this.groupBoxRadio.Margin = new System.Windows.Forms.Padding(4);
-			this.groupBoxRadio.Name = "groupBoxRadio";
-			this.groupBoxRadio.Padding = new System.Windows.Forms.Padding(4);
-			this.groupBoxRadio.Size = new System.Drawing.Size(300, 144);
-			this.groupBoxRadio.TabIndex = 28;
-			this.groupBoxRadio.TabStop = false;
-			// 
 			// pictureBoxLogo
 			// 
 			this.pictureBoxLogo.Location = new System.Drawing.Point(27, 19);
@@ -468,17 +389,16 @@
 			this.pictureBoxLogo.TabIndex = 32;
 			this.pictureBoxLogo.TabStop = false;
 			// 
-			// buttonProductDisplay
+			// comboBoxMode
 			// 
-			this.buttonProductDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonProductDisplay.Location = new System.Drawing.Point(766, 38);
-			this.buttonProductDisplay.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonProductDisplay.Name = "buttonProductDisplay";
-			this.buttonProductDisplay.Size = new System.Drawing.Size(112, 44);
-			this.buttonProductDisplay.TabIndex = 33;
-			this.buttonProductDisplay.Text = "OH-visning...";
-			this.buttonProductDisplay.UseVisualStyleBackColor = true;
-			this.buttonProductDisplay.Click += new System.EventHandler(this.buttonProductDisplay_Click);
+			this.comboBoxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.comboBoxMode.FormattingEnabled = true;
+			this.comboBoxMode.Location = new System.Drawing.Point(1161, 60);
+			this.comboBoxMode.Name = "comboBoxMode";
+			this.comboBoxMode.Size = new System.Drawing.Size(219, 33);
+			this.comboBoxMode.TabIndex = 34;
+			this.comboBoxMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxMode_SelectedIndexChanged);
 			// 
 			// MainForm
 			// 
@@ -486,9 +406,8 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
 			this.ClientSize = new System.Drawing.Size(1432, 881);
-			this.Controls.Add(this.buttonProductDisplay);
+			this.Controls.Add(this.comboBoxMode);
 			this.Controls.Add(this.pictureBoxLogo);
-			this.Controls.Add(this.groupBoxRadio);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.label1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -506,8 +425,6 @@
 			this.splitContainer1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
-			this.groupBoxRadio.ResumeLayout(false);
-			this.groupBoxRadio.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -528,11 +445,6 @@
 		private System.Windows.Forms.TextBox textBoxNetAmount;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.RadioButton radioButton1;
-		private System.Windows.Forms.RadioButton radioButton3;
-		private System.Windows.Forms.RadioButton radioButton4;
-		private System.Windows.Forms.RadioButton radioButton2;
-		private System.Windows.Forms.GroupBox groupBoxRadio;
 		private System.Windows.Forms.TextBox textBoxUnsold;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.GroupBox groupBox2;
@@ -543,10 +455,10 @@
 		private System.Windows.Forms.TextBox textBoxSoldCount;
 		private System.Windows.Forms.Button buttonUpdate;
 		private System.Windows.Forms.Button buttonNewProduct;
-		private System.Windows.Forms.Button buttonProductDisplay;
 		private System.Windows.Forms.Label labelSoldAmount;
 		private System.Windows.Forms.TextBox textBoxAmount;
 		private System.Windows.Forms.Button buttonDeleteProduct;
+		private System.Windows.Forms.ComboBox comboBoxMode;
 	}
 }
 
