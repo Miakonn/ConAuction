@@ -94,7 +94,7 @@ namespace ConAuction
 			fUpdatingCustomerList = true;
 			try {
 				//prepare adapter to run query
-				string query = "select id,name,phone,comment,done,timestamp from Customer;";
+				string query = "select id,name,phone,comment,finished,timestamp from Customer;";
 
 				DBadapterCustomer = new MySqlDataAdapter(query, DBconnection);
 				DataSet DBDataSetCustomer = new DataSet();
@@ -106,13 +106,13 @@ namespace ConAuction
 
 				// Set the UPDATE command and parameters.
 				DBadapterCustomer.UpdateCommand = new MySqlCommand(
-					"UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=NOW(), Done=@Done, Timestamp=Now() WHERE id=@id and timestamp=@Timestamp;",
+					"UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=NOW(), Finished=@Finished, Timestamp=Now() WHERE id=@id and timestamp=@Timestamp;",
 					DBconnection);
 				DBadapterCustomer.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
 				DBadapterCustomer.UpdateCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 30, "Name");
 				DBadapterCustomer.UpdateCommand.Parameters.Add("@Phone", MySqlDbType.VarChar, 15, "Phone");
 				DBadapterCustomer.UpdateCommand.Parameters.Add("@Comment", MySqlDbType.VarChar, 100, "Comment");
-				DBadapterCustomer.UpdateCommand.Parameters.Add("@Done", MySqlDbType.VarChar, 10, "Done");
+				DBadapterCustomer.UpdateCommand.Parameters.Add("@Finished", MySqlDbType.UByte, 1, "Finished");
 				DBadapterCustomer.UpdateCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 10, "Timestamp");
 				DBadapterCustomer.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
 
@@ -127,10 +127,8 @@ namespace ConAuction
 				DBadapterCustomer.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
 
 				// Set the DELETE command and parameter.
-				DBadapterCustomer.DeleteCommand = new MySqlCommand(
-					"DELETE FROM customer WHERE Id=@id;", DBconnection);
+				DBadapterCustomer.DeleteCommand = new MySqlCommand("DELETE FROM customer WHERE Id=@id;", DBconnection);
 				DBadapterCustomer.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-				//DBadapterCustomer.DeleteCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 4, "Timestamp");
 				DBadapterCustomer.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
 			}
 			catch (MySql.Data.MySqlClient.MySqlException ex) {
@@ -437,16 +435,16 @@ namespace ConAuction
 				dataGridViewCustomers.Columns["Name"].HeaderText = "Namn";
 				dataGridViewCustomers.Columns["Phone"].HeaderText = "Telefon";
 				dataGridViewCustomers.Columns["Comment"].HeaderText = "Not";
-				dataGridViewCustomers.Columns["Done"].HeaderText = "OK";
+				dataGridViewCustomers.Columns["Finished"].HeaderText = "Klar";
 
 
 				dataGridViewCustomers.Columns["id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewCustomers.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewCustomers.Columns["Phone"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewCustomers.Columns["Comment"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-				dataGridViewCustomers.Columns["Done"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+				dataGridViewCustomers.Columns["Finished"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-				dataGridViewCustomers.Columns["Done"].Visible = (Mode == OpMode.Paying);
+				dataGridViewCustomers.Columns["Finished"].Visible = (Mode == OpMode.Paying);
 				dataGridViewCustomers.Columns["TimeStamp"].Visible = false;
 			}
 			catch (Exception ex){
@@ -572,6 +570,22 @@ namespace ConAuction
 			fDataGridCustomerIsChanged = true;
 			UpdateAuctionSummary();
 			UpdateProductSummary();
+		}
+
+		private void dataGridViewCustomers_CellClick(object sender, DataGridViewCellEventArgs e) {
+			if (Mode == OpMode.Paying) {
+				DataGridViewCell cell = dataGridViewCustomers.Rows[e.RowIndex].Cells[e.ColumnIndex];
+				if (cell.ValueType == typeof(bool)) {
+					if (cell.Value == DBNull.Value) {
+						cell.Value = new bool();
+						cell.Value = true;
+					}
+					else {
+						cell.Value = !(bool)cell.Value;
+					}
+					SaveCustomerToDB();
+				}
+			}
 		}
 
 		private void buttonSave_Click(object sender, EventArgs e)
