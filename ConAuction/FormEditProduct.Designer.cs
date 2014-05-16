@@ -66,7 +66,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(46, 40);
+			this.label5.Location = new System.Drawing.Point(46, 42);
 			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(23, 20);
@@ -95,10 +95,10 @@
 			// 
 			// textBoxProductNote
 			// 
-			this.textBoxProductNote.Location = new System.Drawing.Point(616, 139);
+			this.textBoxProductNote.Location = new System.Drawing.Point(595, 139);
 			this.textBoxProductNote.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxProductNote.Name = "textBoxProductNote";
-			this.textBoxProductNote.Size = new System.Drawing.Size(82, 26);
+			this.textBoxProductNote.Size = new System.Drawing.Size(103, 26);
 			this.textBoxProductNote.TabIndex = 3;
 			// 
 			// buttonSaveProduct
@@ -116,7 +116,7 @@
 			// 
 			this.comboBoxProductType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxProductType.FormattingEnabled = true;
-			this.comboBoxProductType.Location = new System.Drawing.Point(180, 67);
+			this.comboBoxProductType.Location = new System.Drawing.Point(180, 68);
 			this.comboBoxProductType.Margin = new System.Windows.Forms.Padding(4);
 			this.comboBoxProductType.Name = "comboBoxProductType";
 			this.comboBoxProductType.Size = new System.Drawing.Size(121, 28);
@@ -136,7 +136,7 @@
 			// 
 			// textBoxProductLabel
 			// 
-			this.textBoxProductLabel.Location = new System.Drawing.Point(51, 67);
+			this.textBoxProductLabel.Location = new System.Drawing.Point(51, 68);
 			this.textBoxProductLabel.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxProductLabel.Name = "textBoxProductLabel";
 			this.textBoxProductLabel.ReadOnly = true;
@@ -147,7 +147,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(348, 41);
+			this.label1.Location = new System.Drawing.Point(348, 42);
 			this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(51, 20);
@@ -156,7 +156,7 @@
 			// 
 			// textBoxName
 			// 
-			this.textBoxName.Location = new System.Drawing.Point(352, 64);
+			this.textBoxName.Location = new System.Drawing.Point(352, 68);
 			this.textBoxName.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxName.Name = "textBoxName";
 			this.textBoxName.Size = new System.Drawing.Size(356, 26);
@@ -168,7 +168,7 @@
 			this.buttonCopy.Location = new System.Drawing.Point(51, 380);
 			this.buttonCopy.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCopy.Name = "buttonCopy";
-			this.buttonCopy.Size = new System.Drawing.Size(112, 36);
+			this.buttonCopy.Size = new System.Drawing.Size(175, 36);
 			this.buttonCopy.TabIndex = 6;
 			this.buttonCopy.Text = "Kopiera föregående";
 			this.buttonCopy.UseVisualStyleBackColor = true;
