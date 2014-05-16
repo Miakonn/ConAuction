@@ -308,9 +308,12 @@ namespace ConAuction
 
 			fUpdatingCustomerList = true;
 			UpdateCustomerFromDB();
-			FormatCustomerList();
+			if (Mode == OpMode.Initializing) InitCustomerList();
+			SetVisibleCustomerList();
+
 			UpdateProductFromDB();
-			FormatProductList();
+			if (Mode == OpMode.Initializing) InitProductList();
+			SetVisibleProductList();
 
 			fUpdatingCustomerList = false;
 			UpdateAuctionSummary();
@@ -414,20 +417,13 @@ namespace ConAuction
 			return -1;
 		}
 
-		private void FormatCustomerList()
+		private void InitCustomerList()
 		{
 			try {
-				dataGridViewCustomers.Invalidate();
-				dataGridViewCustomers.Refresh();
 				dataGridViewCustomers.DataSource = DataTableCustomer;
-				// dataGridViewCustomers.DataSource = BaseCustomers.CustomerList;
 
 				if (dataGridViewCustomers.ColumnCount < 5) {
 					return;
-				}
-
-				if (dataGridViewCustomers.Columns["Phone"].HeaderText != "Telefon") {
-					Trace.WriteLine("HeaderText != Telefon");
 				}
 
 				dataGridViewCustomers.Columns["id"].HeaderText = "Id";
@@ -437,19 +433,22 @@ namespace ConAuction
 				dataGridViewCustomers.Columns["Comment"].HeaderText = "Not";
 				dataGridViewCustomers.Columns["Finished"].HeaderText = "Klar";
 
-
 				dataGridViewCustomers.Columns["id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewCustomers.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewCustomers.Columns["Phone"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewCustomers.Columns["Comment"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 				dataGridViewCustomers.Columns["Finished"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-				dataGridViewCustomers.Columns["Finished"].Visible = (Mode == OpMode.Paying);
+
 				dataGridViewCustomers.Columns["TimeStamp"].Visible = false;
 			}
 			catch (Exception ex){
 				MessageBox.Show("Error " + ex.Message);
 			}
+		}
+
+		private void SetVisibleCustomerList() {
+				dataGridViewCustomers.Columns["Finished"].Visible = (Mode == OpMode.Paying);
 		}
 
 		private void UpdateAuctionSummary()
@@ -480,16 +479,14 @@ namespace ConAuction
 			}
 		}
 
-		private void FormatProductList()
+		private void InitProductList()
 		{
 			try {
-				dataGridViewProducts.Invalidate();
-				dataGridViewProducts.Refresh();
 				dataGridViewProducts.DataSource = DataTableProduct;
 
 				dataGridViewProducts.Columns["Label"].HeaderText = "Id";
-				dataGridViewProducts.Columns["Type"].HeaderText = "Typ";
 				dataGridViewProducts.Columns["Name"].HeaderText = "Namn";
+				dataGridViewProducts.Columns["Type"].HeaderText = "Typ";
 				dataGridViewProducts.Columns["Description"].HeaderText = "Beskr.";
 				dataGridViewProducts.Columns["Note"].HeaderText = "Not";
 				dataGridViewProducts.Columns["Price"].HeaderText = "Pris";
@@ -506,21 +503,22 @@ namespace ConAuction
 				dataGridViewProducts.Columns["Name"].ReadOnly = true;
 				dataGridViewProducts.Columns["Description"].ReadOnly = true;
 				dataGridViewProducts.Columns["Note"].ReadOnly = true;
-				dataGridViewProducts.Columns["Note"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-				dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Selling);
-				dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
 				dataGridViewProducts.Columns["id"].ReadOnly = true;
 				dataGridViewProducts.Columns["id"].Visible = false;
 				dataGridViewProducts.Columns["CustomerId"].Visible = false;
 				dataGridViewProducts.Columns["CustomerId"].ReadOnly = true;
 				dataGridViewProducts.Columns["TimeStamp"].Visible = false;
-
-				dataGridViewProducts.EditMode = (Mode == OpMode.Selling) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
-
 				}
 			catch (Exception ex) {
 				MessageBox.Show("Error " + ex.Message);
 			}
+		}
+
+		private void SetVisibleProductList() {
+			dataGridViewProducts.Columns["Note"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+			dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Selling);
+			dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+			dataGridViewProducts.EditMode = (Mode == OpMode.Selling) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
 		}
 
 		private void UpdateProductSummary()
@@ -573,7 +571,7 @@ namespace ConAuction
 		}
 
 		private void dataGridViewCustomers_CellClick(object sender, DataGridViewCellEventArgs e) {
-			if (Mode == OpMode.Paying) {
+			if (Mode == OpMode.Paying && e.RowIndex >= 0 && e.ColumnIndex >= 0) {
 				DataGridViewCell cell = dataGridViewCustomers.Rows[e.RowIndex].Cells[e.ColumnIndex];
 				if (cell.ValueType == typeof(bool)) {
 					if (cell.Value == DBNull.Value) {

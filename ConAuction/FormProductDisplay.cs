@@ -45,6 +45,7 @@ namespace ConAuction
 				currentRowId = 0;
 			}
 			if (currentRowId >= tableProducts.Rows.Count) {
+				currentRowId = tableProducts.Rows.Count;
 				labelLabel.Text = "";
 				labelType.Text = "";
 				labelName.Text = "";
@@ -67,14 +68,24 @@ namespace ConAuction
 		private void FormProductDisplay_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.PageDown || e.KeyCode == Keys.Down || e.KeyCode == Keys.Space) {
-				currentRowId ++;
+				if (e.Modifiers == Keys.Control) {
+					currentRowId += 10;
+				}
+				else {
+					currentRowId++;
+				}
 				DisplayCurrentProduct();				
 			}
 			else if (e.KeyCode == Keys.PageUp || e.KeyCode == Keys.Up) {
-				currentRowId --;
+				if (e.Modifiers == Keys.Control) {
+					currentRowId -= 10;
+				}
+				else {
+					currentRowId--;
+				}
 				DisplayCurrentProduct();
 			}
-			if (e.KeyCode == Keys.Escape) {
+			else if (e.KeyCode == Keys.Escape) {
 				this.Close();
 			}
 		}

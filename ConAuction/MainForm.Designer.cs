@@ -82,7 +82,6 @@
 			this.dataGridViewProducts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.dataGridViewProducts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridViewProducts.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
 			this.dataGridViewProducts.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.dataGridViewProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -392,10 +391,11 @@
 			// 
 			// comboBoxMode
 			// 
+			this.comboBoxMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.comboBoxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxMode.FormattingEnabled = true;
-			this.comboBoxMode.Location = new System.Drawing.Point(1161, 60);
+			this.comboBoxMode.Location = new System.Drawing.Point(1181, 61);
 			this.comboBoxMode.Name = "comboBoxMode";
 			this.comboBoxMode.Size = new System.Drawing.Size(219, 33);
 			this.comboBoxMode.TabIndex = 34;
