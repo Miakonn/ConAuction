@@ -37,10 +37,18 @@ namespace ConAuction
 			InitializeComponent();
 			LoadImage();
 
-			if (!InitDB()) {
-				Application.Exit();
-				return;
-			}
+			bool fStarted;
+			do {
+				fStarted = InitDB();
+				if (!fStarted) {
+					DialogResult res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null, MessageBoxButtons.RetryCancel);
+					if (res != DialogResult.Retry) {
+						Application.Exit();
+						System.Environment.Exit(-1);
+						return;
+					}
+				}
+			} while (!fStarted);
 
 			UpdateFromDB();
 
@@ -300,7 +308,7 @@ namespace ConAuction
 			int customerId = GetSelectedCustomerId();
 
 			if (fDataGridCustomerIsChanged && Mode != OpMode.Initializing) {
-				DialogResult res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", "DB", MessageBoxButtons.YesNo);
+				DialogResult res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", null, MessageBoxButtons.YesNo);
 				if (res == DialogResult.Yes) {
 					SaveCustomerToDB();
 				}
