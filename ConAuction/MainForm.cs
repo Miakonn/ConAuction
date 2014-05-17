@@ -397,7 +397,7 @@ namespace ConAuction
 		private void SelectCustomerRow(int customerId) {
 			if (Mode != OpMode.Initializing) {
 				foreach (DataGridViewRow row in dataGridViewCustomers.Rows) {
-					if (row.Cells["id"].Value != null) {
+					if (row.Cells["id"].Value != null && row.Cells["id"].Value != DBNull.Value) {
 						int rowId = (int)row.Cells["id"].Value;
 						if (customerId == rowId) {
 							row.Selected = true;

@@ -38,19 +38,19 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.labelSoldAmount = new System.Windows.Forms.Label();
 			this.textBoxAmount = new System.Windows.Forms.TextBox();
-			this.buttonUpdate = new System.Windows.Forms.Button();
 			this.labelSoldCount = new System.Windows.Forms.Label();
+			this.buttonUpdate = new System.Windows.Forms.Button();
 			this.textBoxSoldCount = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
+			this.textBoxUnsold = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.textBoxTotalAmount = new System.Windows.Forms.TextBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.textBoxNetAmount = new System.Windows.Forms.TextBox();
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.comboBoxMode = new System.Windows.Forms.ComboBox();
-			this.textBoxNetAmount = new System.Windows.Forms.TextBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
-			this.textBoxTotalAmount = new System.Windows.Forms.TextBox();
-			this.label5 = new System.Windows.Forms.Label();
-			this.textBoxUnsold = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -61,8 +61,9 @@
 			// 
 			// buttonSave
 			// 
-			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSave.Location = new System.Drawing.Point(17, 594);
+			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonSave.Location = new System.Drawing.Point(17, 587);
 			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSave.Name = "buttonSave";
 			this.buttonSave.Size = new System.Drawing.Size(106, 33);
@@ -81,11 +82,11 @@
 			this.dataGridViewProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewProducts.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
 			this.dataGridViewProducts.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
-			this.dataGridViewProducts.Location = new System.Drawing.Point(4, 7);
+			this.dataGridViewProducts.Location = new System.Drawing.Point(4, 4);
 			this.dataGridViewProducts.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewProducts.Name = "dataGridViewProducts";
 			this.dataGridViewProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewProducts.Size = new System.Drawing.Size(918, 554);
+			this.dataGridViewProducts.Size = new System.Drawing.Size(918, 557);
 			this.dataGridViewProducts.TabIndex = 13;
 			this.dataGridViewProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellDoubleClick);
 			this.dataGridViewProducts.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellValueChanged);
@@ -102,12 +103,12 @@
 			this.dataGridViewCustomers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewCustomers.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
 			this.dataGridViewCustomers.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(216)))), ((int)(((byte)(0)))));
-			this.dataGridViewCustomers.Location = new System.Drawing.Point(9, 4);
+			this.dataGridViewCustomers.Location = new System.Drawing.Point(4, 4);
 			this.dataGridViewCustomers.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewCustomers.MultiSelect = false;
 			this.dataGridViewCustomers.Name = "dataGridViewCustomers";
 			this.dataGridViewCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewCustomers.Size = new System.Drawing.Size(444, 557);
+			this.dataGridViewCustomers.Size = new System.Drawing.Size(457, 557);
 			this.dataGridViewCustomers.TabIndex = 14;
 			this.dataGridViewCustomers.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCustomers_CellClick);
 			this.dataGridViewCustomers.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCustomers_CellValueChanged);
@@ -128,7 +129,7 @@
 			// textBoxTotalCount
 			// 
 			this.textBoxTotalCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxTotalCount.Location = new System.Drawing.Point(371, 585);
+			this.textBoxTotalCount.Location = new System.Drawing.Point(379, 585);
 			this.textBoxTotalCount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxTotalCount.Name = "textBoxTotalCount";
 			this.textBoxTotalCount.ReadOnly = true;
@@ -137,9 +138,10 @@
 			// 
 			// buttonDeleteProduct
 			// 
-			this.buttonDeleteProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonDeleteProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonDeleteProduct.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonDeleteProduct.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.buttonDeleteProduct.Location = new System.Drawing.Point(27, 645);
+			this.buttonDeleteProduct.Location = new System.Drawing.Point(27, 638);
 			this.buttonDeleteProduct.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonDeleteProduct.Name = "buttonDeleteProduct";
 			this.buttonDeleteProduct.Size = new System.Drawing.Size(106, 33);
@@ -150,9 +152,10 @@
 			// 
 			// buttonNewProduct
 			// 
-			this.buttonNewProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonNewProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonNewProduct.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonNewProduct.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.buttonNewProduct.Location = new System.Drawing.Point(27, 594);
+			this.buttonNewProduct.Location = new System.Drawing.Point(27, 587);
 			this.buttonNewProduct.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonNewProduct.Name = "buttonNewProduct";
 			this.buttonNewProduct.Size = new System.Drawing.Size(106, 33);
@@ -202,28 +205,43 @@
 			// 
 			this.labelSoldAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelSoldAmount.AutoSize = true;
+			this.labelSoldAmount.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelSoldAmount.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.labelSoldAmount.Location = new System.Drawing.Point(228, 660);
+			this.labelSoldAmount.Location = new System.Drawing.Point(245, 655);
 			this.labelSoldAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelSoldAmount.Name = "labelSoldAmount";
-			this.labelSoldAmount.Size = new System.Drawing.Size(100, 20);
+			this.labelSoldAmount.Size = new System.Drawing.Size(100, 21);
 			this.labelSoldAmount.TabIndex = 29;
 			this.labelSoldAmount.Text = "Total summa";
 			// 
 			// textBoxAmount
 			// 
 			this.textBoxAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxAmount.Location = new System.Drawing.Point(371, 654);
+			this.textBoxAmount.Location = new System.Drawing.Point(379, 654);
 			this.textBoxAmount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxAmount.Name = "textBoxAmount";
 			this.textBoxAmount.ReadOnly = true;
 			this.textBoxAmount.Size = new System.Drawing.Size(57, 26);
 			this.textBoxAmount.TabIndex = 28;
 			// 
+			// labelSoldCount
+			// 
+			this.labelSoldCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelSoldCount.AutoSize = true;
+			this.labelSoldCount.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelSoldCount.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.labelSoldCount.Location = new System.Drawing.Point(210, 621);
+			this.labelSoldCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelSoldCount.Name = "labelSoldCount";
+			this.labelSoldCount.Size = new System.Drawing.Size(133, 21);
+			this.labelSoldCount.TabIndex = 26;
+			this.labelSoldCount.Text = "Antal sålda objekt";
+			// 
 			// buttonUpdate
 			// 
-			this.buttonUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonUpdate.Location = new System.Drawing.Point(17, 645);
+			this.buttonUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonUpdate.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonUpdate.Location = new System.Drawing.Point(17, 638);
 			this.buttonUpdate.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonUpdate.Name = "buttonUpdate";
 			this.buttonUpdate.Size = new System.Drawing.Size(106, 33);
@@ -233,22 +251,10 @@
 			this.buttonUpdate.UseVisualStyleBackColor = true;
 			this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
 			// 
-			// labelSoldCount
-			// 
-			this.labelSoldCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelSoldCount.AutoSize = true;
-			this.labelSoldCount.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.labelSoldCount.Location = new System.Drawing.Point(228, 626);
-			this.labelSoldCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelSoldCount.Name = "labelSoldCount";
-			this.labelSoldCount.Size = new System.Drawing.Size(135, 20);
-			this.labelSoldCount.TabIndex = 26;
-			this.labelSoldCount.Text = "Antal sålda objekt";
-			// 
 			// textBoxSoldCount
 			// 
 			this.textBoxSoldCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxSoldCount.Location = new System.Drawing.Point(371, 620);
+			this.textBoxSoldCount.Location = new System.Drawing.Point(379, 620);
 			this.textBoxSoldCount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxSoldCount.Name = "textBoxSoldCount";
 			this.textBoxSoldCount.ReadOnly = true;
@@ -259,13 +265,84 @@
 			// 
 			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label6.AutoSize = true;
+			this.label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.label6.Location = new System.Drawing.Point(228, 594);
+			this.label6.Location = new System.Drawing.Point(210, 588);
 			this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(135, 20);
+			this.label6.Size = new System.Drawing.Size(134, 21);
 			this.label6.TabIndex = 24;
 			this.label6.Text = "Totalt antal objekt";
+			// 
+			// textBoxUnsold
+			// 
+			this.textBoxUnsold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxUnsold.Location = new System.Drawing.Point(622, 588);
+			this.textBoxUnsold.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxUnsold.Name = "textBoxUnsold";
+			this.textBoxUnsold.ReadOnly = true;
+			this.textBoxUnsold.Size = new System.Drawing.Size(57, 26);
+			this.textBoxUnsold.TabIndex = 22;
+			// 
+			// label5
+			// 
+			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.label5.AutoSize = true;
+			this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.label5.Location = new System.Drawing.Point(555, 593);
+			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(58, 21);
+			this.label5.TabIndex = 23;
+			this.label5.Text = "Osålda";
+			this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// textBoxTotalAmount
+			// 
+			this.textBoxTotalAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxTotalAmount.Location = new System.Drawing.Point(803, 587);
+			this.textBoxTotalAmount.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxTotalAmount.Name = "textBoxTotalAmount";
+			this.textBoxTotalAmount.ReadOnly = true;
+			this.textBoxTotalAmount.Size = new System.Drawing.Size(57, 26);
+			this.textBoxTotalAmount.TabIndex = 18;
+			// 
+			// label4
+			// 
+			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.label4.AutoSize = true;
+			this.label4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(747, 638);
+			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(49, 21);
+			this.label4.TabIndex = 21;
+			this.label4.Text = "Netto";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// label3
+			// 
+			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.label3.AutoSize = true;
+			this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Location = new System.Drawing.Point(745, 591);
+			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(49, 21);
+			this.label3.TabIndex = 19;
+			this.label3.Text = "Saldo";
+			this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// textBoxNetAmount
+			// 
+			this.textBoxNetAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxNetAmount.Location = new System.Drawing.Point(803, 635);
+			this.textBoxNetAmount.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxNetAmount.Name = "textBoxNetAmount";
+			this.textBoxNetAmount.ReadOnly = true;
+			this.textBoxNetAmount.Size = new System.Drawing.Size(57, 26);
+			this.textBoxNetAmount.TabIndex = 20;
 			// 
 			// pictureBoxLogo
 			// 
@@ -280,77 +357,13 @@
 			// 
 			this.comboBoxMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.comboBoxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.comboBoxMode.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.comboBoxMode.FormattingEnabled = true;
 			this.comboBoxMode.Location = new System.Drawing.Point(1181, 61);
 			this.comboBoxMode.Name = "comboBoxMode";
-			this.comboBoxMode.Size = new System.Drawing.Size(219, 33);
+			this.comboBoxMode.Size = new System.Drawing.Size(219, 38);
 			this.comboBoxMode.TabIndex = 34;
 			this.comboBoxMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxMode_SelectedIndexChanged);
-			// 
-			// textBoxNetAmount
-			// 
-			this.textBoxNetAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxNetAmount.Location = new System.Drawing.Point(803, 635);
-			this.textBoxNetAmount.Margin = new System.Windows.Forms.Padding(4);
-			this.textBoxNetAmount.Name = "textBoxNetAmount";
-			this.textBoxNetAmount.ReadOnly = true;
-			this.textBoxNetAmount.Size = new System.Drawing.Size(57, 26);
-			this.textBoxNetAmount.TabIndex = 20;
-			// 
-			// label3
-			// 
-			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(743, 591);
-			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(50, 20);
-			this.label3.TabIndex = 19;
-			this.label3.Text = "Saldo";
-			// 
-			// label4
-			// 
-			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(743, 639);
-			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(48, 20);
-			this.label4.TabIndex = 21;
-			this.label4.Text = "Netto";
-			// 
-			// textBoxTotalAmount
-			// 
-			this.textBoxTotalAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxTotalAmount.Location = new System.Drawing.Point(803, 587);
-			this.textBoxTotalAmount.Margin = new System.Windows.Forms.Padding(4);
-			this.textBoxTotalAmount.Name = "textBoxTotalAmount";
-			this.textBoxTotalAmount.ReadOnly = true;
-			this.textBoxTotalAmount.Size = new System.Drawing.Size(57, 26);
-			this.textBoxTotalAmount.TabIndex = 18;
-			// 
-			// label5
-			// 
-			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.label5.AutoSize = true;
-			this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.label5.Location = new System.Drawing.Point(562, 592);
-			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(59, 20);
-			this.label5.TabIndex = 23;
-			this.label5.Text = "Osålda";
-			// 
-			// textBoxUnsold
-			// 
-			this.textBoxUnsold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxUnsold.Location = new System.Drawing.Point(622, 588);
-			this.textBoxUnsold.Margin = new System.Windows.Forms.Padding(4);
-			this.textBoxUnsold.Name = "textBoxUnsold";
-			this.textBoxUnsold.ReadOnly = true;
-			this.textBoxUnsold.Size = new System.Drawing.Size(57, 26);
-			this.textBoxUnsold.TabIndex = 22;
 			// 
 			// MainForm
 			// 
