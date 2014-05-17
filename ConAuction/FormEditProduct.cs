@@ -33,6 +33,7 @@ namespace ConAuction
 
 			productLast = productLastT;
 			buttonCopy.Visible = (mode == OpMode.Receiving) && (productLast != null);
+			buttonSaveProduct.Visible = (mode == OpMode.Receiving);
 			EnableDisableButtons();
 			SetCompletion();
 		}

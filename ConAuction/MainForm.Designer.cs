@@ -43,10 +43,10 @@
 			this.textBoxSoldCount = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.textBoxUnsold = new System.Windows.Forms.TextBox();
-			this.label5 = new System.Windows.Forms.Label();
+			this.labelUnsoldPerCustomer = new System.Windows.Forms.Label();
 			this.textBoxTotalAmount = new System.Windows.Forms.TextBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
+			this.labelNetPerCustomer = new System.Windows.Forms.Label();
+			this.labelTotalPerCustomer = new System.Windows.Forms.Label();
 			this.textBoxNetAmount = new System.Windows.Forms.TextBox();
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -189,11 +189,11 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.textBoxUnsold);
 			this.splitContainer1.Panel2.Controls.Add(this.buttonDeleteProduct);
-			this.splitContainer1.Panel2.Controls.Add(this.label5);
+			this.splitContainer1.Panel2.Controls.Add(this.labelUnsoldPerCustomer);
 			this.splitContainer1.Panel2.Controls.Add(this.dataGridViewProducts);
 			this.splitContainer1.Panel2.Controls.Add(this.textBoxTotalAmount);
-			this.splitContainer1.Panel2.Controls.Add(this.label4);
-			this.splitContainer1.Panel2.Controls.Add(this.label3);
+			this.splitContainer1.Panel2.Controls.Add(this.labelNetPerCustomer);
+			this.splitContainer1.Panel2.Controls.Add(this.labelTotalPerCustomer);
 			this.splitContainer1.Panel2.Controls.Add(this.buttonNewProduct);
 			this.splitContainer1.Panel2.Controls.Add(this.textBoxNetAmount);
 			this.splitContainer1.Size = new System.Drawing.Size(1396, 694);
@@ -284,19 +284,19 @@
 			this.textBoxUnsold.Size = new System.Drawing.Size(57, 26);
 			this.textBoxUnsold.TabIndex = 22;
 			// 
-			// label5
+			// labelUnsoldPerCustomer
 			// 
-			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.label5.Location = new System.Drawing.Point(554, 593);
-			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(58, 21);
-			this.label5.TabIndex = 23;
-			this.label5.Text = "Osålda";
-			this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.labelUnsoldPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelUnsoldPerCustomer.AutoSize = true;
+			this.labelUnsoldPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelUnsoldPerCustomer.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.labelUnsoldPerCustomer.Location = new System.Drawing.Point(554, 593);
+			this.labelUnsoldPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelUnsoldPerCustomer.Name = "labelUnsoldPerCustomer";
+			this.labelUnsoldPerCustomer.Size = new System.Drawing.Size(58, 21);
+			this.labelUnsoldPerCustomer.TabIndex = 23;
+			this.labelUnsoldPerCustomer.Text = "Osålda";
+			this.labelUnsoldPerCustomer.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// textBoxTotalAmount
 			// 
@@ -308,31 +308,31 @@
 			this.textBoxTotalAmount.Size = new System.Drawing.Size(57, 26);
 			this.textBoxTotalAmount.TabIndex = 18;
 			// 
-			// label4
+			// labelNetPerCustomer
 			// 
-			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(746, 638);
-			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(49, 21);
-			this.label4.TabIndex = 21;
-			this.label4.Text = "Netto";
-			this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.labelNetPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelNetPerCustomer.AutoSize = true;
+			this.labelNetPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelNetPerCustomer.Location = new System.Drawing.Point(746, 638);
+			this.labelNetPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelNetPerCustomer.Name = "labelNetPerCustomer";
+			this.labelNetPerCustomer.Size = new System.Drawing.Size(49, 21);
+			this.labelNetPerCustomer.TabIndex = 21;
+			this.labelNetPerCustomer.Text = "Netto";
+			this.labelNetPerCustomer.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
-			// label3
+			// labelTotalPerCustomer
 			// 
-			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(744, 591);
-			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(49, 21);
-			this.label3.TabIndex = 19;
-			this.label3.Text = "Saldo";
-			this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.labelTotalPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelTotalPerCustomer.AutoSize = true;
+			this.labelTotalPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelTotalPerCustomer.Location = new System.Drawing.Point(744, 591);
+			this.labelTotalPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelTotalPerCustomer.Name = "labelTotalPerCustomer";
+			this.labelTotalPerCustomer.Size = new System.Drawing.Size(49, 21);
+			this.labelTotalPerCustomer.TabIndex = 19;
+			this.labelTotalPerCustomer.Text = "Saldo";
+			this.labelTotalPerCustomer.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// textBoxNetAmount
 			// 
@@ -413,10 +413,10 @@
 		private System.Windows.Forms.Button buttonDeleteProduct;
 		private System.Windows.Forms.ComboBox comboBoxMode;
 		private System.Windows.Forms.TextBox textBoxUnsold;
-		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label labelUnsoldPerCustomer;
 		private System.Windows.Forms.TextBox textBoxTotalAmount;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label labelNetPerCustomer;
+		private System.Windows.Forms.Label labelTotalPerCustomer;
 		private System.Windows.Forms.TextBox textBoxNetAmount;
 	}
 }

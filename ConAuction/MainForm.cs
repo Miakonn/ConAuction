@@ -59,7 +59,7 @@ namespace ConAuction
 
 
 		private void InitComboBoxMode() {
-			comboBoxMode.Items.Add("Välj mode!");
+			comboBoxMode.Items.Add("Välj läge!");
 			comboBoxMode.Items.Add("Inlämning");
 			comboBoxMode.Items.Add("Visning");
 			comboBoxMode.Items.Add("Auktion");
@@ -329,7 +329,7 @@ namespace ConAuction
 			fUpdatingCustomerList = false;
 			UpdateAuctionSummary();
 			UpdateProductListHiding();
-			UpdateProductSummary();
+			UpdateSummaryPerCustomer();
 			fDataGridCustomerIsChanged = false;
 
 			SelectCustomerRow(customerId);
@@ -532,23 +532,33 @@ namespace ConAuction
 			dataGridViewProducts.EditMode = (Mode == OpMode.Auctioning) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
 		}
 
-		private void UpdateProductSummary()
+		private void UpdateSummaryPerCustomer()
 		{
-			int foundCustomer = GetSelectedCustomerId();
-			try {
-				if (foundCustomer > 0 && DataTableProduct != null) {
-					int totalAmount = DataTableProduct.TotalAmountForCustomer(foundCustomer);
-					textBoxTotalAmount.Text = totalAmount.ToString();
-					int netAmount = DataTableProduct.NetAmountForCustomer(foundCustomer);
-					textBoxNetAmount.Text = netAmount.ToString();
-					int noOfUnsold = DataTableProduct.NoOfUnsoldForCustomer(foundCustomer);
-					textBoxUnsold.Text = noOfUnsold.ToString();
+			bool fShowSummary = (Mode == OpMode.Paying);
+
+			textBoxTotalAmount.Visible = fShowSummary;
+			labelTotalPerCustomer.Visible = fShowSummary;
+			textBoxNetAmount.Visible = fShowSummary;
+			labelNetPerCustomer.Visible = fShowSummary;
+			textBoxUnsold.Visible = fShowSummary;
+			labelUnsoldPerCustomer.Visible = fShowSummary;
+
+			if (fShowSummary) {
+				int foundCustomer = GetSelectedCustomerId();
+				try {
+					if (foundCustomer > 0 && DataTableProduct != null) {
+						int totalAmount = DataTableProduct.TotalAmountForCustomer(foundCustomer);
+						textBoxTotalAmount.Text = totalAmount.ToString();
+						int netAmount = DataTableProduct.NetAmountForCustomer(foundCustomer);
+						textBoxNetAmount.Text = netAmount.ToString();
+						int noOfUnsold = DataTableProduct.NoOfUnsoldForCustomer(foundCustomer);
+						textBoxUnsold.Text = noOfUnsold.ToString();
+					}
+				}
+				catch (System.Exception ex) {
+					MessageBox.Show("Error in UpdateSummaryPerCustomer: " + ex.Message);
 				}
 			}
-			catch (System.Exception ex)	{
-				MessageBox.Show("Error " + ex.Message);
-			}
-
 			buttonNewProduct.Visible = (Mode == OpMode.Receiving);
 			buttonNewProduct.Enabled = !fDataGridCustomerIsChanged;
 
@@ -564,7 +574,7 @@ namespace ConAuction
 				if (!fUpdatingCustomerList){
 				 
 					UpdateProductListHiding();
-					UpdateProductSummary();
+					UpdateSummaryPerCustomer();
 				}
 			}
 		}
@@ -578,7 +588,7 @@ namespace ConAuction
 		private void dataGridViewCustomers_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
 			fDataGridCustomerIsChanged = true;
 			UpdateAuctionSummary();
-			UpdateProductSummary();
+			UpdateSummaryPerCustomer();
 		}
 
 		private void dataGridViewCustomers_CellClick(object sender, DataGridViewCellEventArgs e) {
@@ -689,7 +699,7 @@ namespace ConAuction
 		}
 
 		private void dataGridViewProducts_SelectionChanged(object sender, EventArgs e) {
-			UpdateProductSummary();
+			UpdateSummaryPerCustomer();
 		}
 
 		private void comboBoxMode_SelectedIndexChanged(object sender, EventArgs e) {
