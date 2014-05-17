@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace ConAuction
 {
-	public enum OpMode { Initializing=0, Receiving=1, Showing=2, Selling=3, Paying=4, Overhead=5};
+	public enum OpMode { Initializing=0, Receiving=1, Showing=2, Auctioning=3, Paying=4, Overhead=5};
 
 	public partial class MainForm : Form
 	{
@@ -205,13 +205,16 @@ namespace ConAuction
 			command.Transaction = sqlTran;
 			command.Connection = DBconnection;
 			try {
-				command.CommandText = "select max(Label) from Product where Year=2014";
-				int maxlabel = (int)command.ExecuteScalar();
-				int nextlabel = maxlabel + 1;
+				command.CommandText = "select max(Label) from Product where Year=" + ConfigurationManager.AppSettings["Year"];
+				object result = command.ExecuteScalar();
+				int nextLabel = 1;
+				if (result != DBNull.Value) {
+					nextLabel = (int)command.ExecuteScalar() + 1;
+				}
 
 				command.CommandText ="INSERT INTO Product (Label, Name, Description,Type,  Note, Price, CustomerId, Year, timestamp)" +
 								"VALUES (@Label, @Name, @Description, @Type, @Note,@price, @CustomerId, 2014, Now());";
-				command.Parameters.AddWithValue("@Label", nextlabel);
+				command.Parameters.AddWithValue("@Label", nextLabel);
 				command.Parameters.AddWithValue("@Name", prod.Name);
 				command.Parameters.AddWithValue("@Description", prod.Description);
 				command.Parameters.AddWithValue("@Price", prod.Price);
@@ -342,7 +345,7 @@ namespace ConAuction
 			dataGridViewProducts.ClearSelection();
 			dataGridViewProducts.CurrentCell = null;
 
-			if (Mode == OpMode.Selling || Mode == OpMode.Showing) {
+			if (Mode == OpMode.Auctioning || Mode == OpMode.Showing) {
 				foreach (DataGridViewRow productRow in dataGridViewProducts.Rows) {
 					productRow.Visible = true;
 				}
@@ -460,10 +463,10 @@ namespace ConAuction
 
 		private void UpdateAuctionSummary()
 		{
-			textBoxSoldCount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-			labelSoldCount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-			textBoxAmount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-			labelSoldAmount.Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
+			textBoxSoldCount.Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
+			labelSoldCount.Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
+			textBoxAmount.Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
+			labelSoldAmount.Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
 			buttonSave.Visible = (Mode == OpMode.Receiving);
 			buttonSave.Enabled = fDataGridCustomerIsChanged;
 
@@ -478,7 +481,7 @@ namespace ConAuction
 			int totalcount = DataTableProduct.TotalCount();
 			textBoxTotalCount.Text = totalcount.ToString();
 
-			if (Mode == OpMode.Selling || Mode == OpMode.Paying) {
+			if (Mode == OpMode.Auctioning || Mode == OpMode.Paying) {
 				int totalSoldCount = DataTableProduct.TotalSoldCount();
 				textBoxSoldCount.Text = totalSoldCount.ToString();
 				int totalSoldAmount = DataTableProduct.TotalSoldAmount();
@@ -523,10 +526,10 @@ namespace ConAuction
 
 		private void SetVisibleProductList() {
 			dataGridViewProducts.DataSource = DataTableProduct;
-			dataGridViewProducts.Columns["Note"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-			dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Selling);
-			dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
-			dataGridViewProducts.EditMode = (Mode == OpMode.Selling) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
+			dataGridViewProducts.Columns["Note"].Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
+			dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Auctioning);
+			dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
+			dataGridViewProducts.EditMode = (Mode == OpMode.Auctioning) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
 		}
 
 		private void UpdateProductSummary()
@@ -629,7 +632,7 @@ namespace ConAuction
 			Product productCurrent = GetSelectedProduct();
 
 			if (productCurrent != null) {
-				if ((Mode == OpMode.Selling)) {
+				if ((Mode == OpMode.Auctioning)) {
 					dataGridViewProducts.BeginEdit(true);
 				}
 				else {
@@ -644,14 +647,14 @@ namespace ConAuction
 
 		private void dataGridViewProducts_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.KeyCode == Keys.F2 && Mode == OpMode.Selling) {
+			if (e.KeyCode == Keys.F2 && Mode == OpMode.Auctioning) {
 			    dataGridViewProducts.BeginEdit(false);
 			}
 		}
 
 		private void dataGridViewProducts_CellValueChanged(object sender, DataGridViewCellEventArgs e)
 		{
-			if (Mode == OpMode.Selling && DataTableProduct != null && DataTableProduct.Columns[e.ColumnIndex].ColumnName=="Price") {
+			if (Mode == OpMode.Auctioning && DataTableProduct != null && DataTableProduct.Columns[e.ColumnIndex].ColumnName=="Price") {
 				Trace.WriteLine("CellValueChanged row=" + e.RowIndex.ToString() + " col=" + e.ColumnIndex.ToString());
 
 				DataRow row = DataTableProduct.Rows[e.RowIndex];

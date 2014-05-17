@@ -66,7 +66,7 @@
 			this.buttonSave.Location = new System.Drawing.Point(17, 587);
 			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSave.Name = "buttonSave";
-			this.buttonSave.Size = new System.Drawing.Size(106, 33);
+			this.buttonSave.Size = new System.Drawing.Size(116, 33);
 			this.buttonSave.TabIndex = 7;
 			this.buttonSave.Text = "Spara";
 			this.buttonSave.UseVisualStyleBackColor = true;
@@ -144,7 +144,7 @@
 			this.buttonDeleteProduct.Location = new System.Drawing.Point(27, 638);
 			this.buttonDeleteProduct.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonDeleteProduct.Name = "buttonDeleteProduct";
-			this.buttonDeleteProduct.Size = new System.Drawing.Size(106, 33);
+			this.buttonDeleteProduct.Size = new System.Drawing.Size(134, 33);
 			this.buttonDeleteProduct.TabIndex = 24;
 			this.buttonDeleteProduct.Text = "Radera objekt";
 			this.buttonDeleteProduct.UseVisualStyleBackColor = true;
@@ -158,7 +158,7 @@
 			this.buttonNewProduct.Location = new System.Drawing.Point(27, 587);
 			this.buttonNewProduct.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonNewProduct.Name = "buttonNewProduct";
-			this.buttonNewProduct.Size = new System.Drawing.Size(106, 33);
+			this.buttonNewProduct.Size = new System.Drawing.Size(134, 33);
 			this.buttonNewProduct.TabIndex = 12;
 			this.buttonNewProduct.Text = "Nytt objekt...";
 			this.buttonNewProduct.UseVisualStyleBackColor = true;
@@ -244,7 +244,7 @@
 			this.buttonUpdate.Location = new System.Drawing.Point(17, 638);
 			this.buttonUpdate.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonUpdate.Name = "buttonUpdate";
-			this.buttonUpdate.Size = new System.Drawing.Size(106, 33);
+			this.buttonUpdate.Size = new System.Drawing.Size(116, 33);
 			this.buttonUpdate.TabIndex = 27;
 			this.buttonUpdate.Text = "Uppdatera";
 			this.toolTip1.SetToolTip(this.buttonUpdate, "Skapa ny kund, F2 för att editera");
