@@ -207,7 +207,7 @@
 			this.labelSoldAmount.AutoSize = true;
 			this.labelSoldAmount.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelSoldAmount.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.labelSoldAmount.Location = new System.Drawing.Point(245, 655);
+			this.labelSoldAmount.Location = new System.Drawing.Point(244, 655);
 			this.labelSoldAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelSoldAmount.Name = "labelSoldAmount";
 			this.labelSoldAmount.Size = new System.Drawing.Size(100, 21);
@@ -230,7 +230,7 @@
 			this.labelSoldCount.AutoSize = true;
 			this.labelSoldCount.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelSoldCount.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.labelSoldCount.Location = new System.Drawing.Point(210, 621);
+			this.labelSoldCount.Location = new System.Drawing.Point(209, 621);
 			this.labelSoldCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelSoldCount.Name = "labelSoldCount";
 			this.labelSoldCount.Size = new System.Drawing.Size(133, 21);
@@ -267,7 +267,7 @@
 			this.label6.AutoSize = true;
 			this.label6.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label6.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.label6.Location = new System.Drawing.Point(210, 588);
+			this.label6.Location = new System.Drawing.Point(209, 588);
 			this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(134, 21);
@@ -290,7 +290,7 @@
 			this.label5.AutoSize = true;
 			this.label5.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.label5.Location = new System.Drawing.Point(555, 593);
+			this.label5.Location = new System.Drawing.Point(554, 593);
 			this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(58, 21);
@@ -313,7 +313,7 @@
 			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label4.AutoSize = true;
 			this.label4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(747, 638);
+			this.label4.Location = new System.Drawing.Point(746, 638);
 			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(49, 21);
@@ -326,7 +326,7 @@
 			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(745, 591);
+			this.label3.Location = new System.Drawing.Point(744, 591);
 			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(49, 21);

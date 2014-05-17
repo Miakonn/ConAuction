@@ -428,8 +428,6 @@ namespace ConAuction
 		private void InitCustomerList()
 		{
 			try {
-				dataGridViewCustomers.DataSource = DataTableCustomer;
-
 				if (dataGridViewCustomers.ColumnCount < 5) {
 					return;
 				}
@@ -456,7 +454,8 @@ namespace ConAuction
 		}
 
 		private void SetVisibleCustomerList() {
-				dataGridViewCustomers.Columns["Finished"].Visible = (Mode == OpMode.Paying);
+			dataGridViewCustomers.DataSource = DataTableCustomer;
+			dataGridViewCustomers.Columns["Finished"].Visible = (Mode == OpMode.Paying);
 		}
 
 		private void UpdateAuctionSummary()
@@ -523,6 +522,7 @@ namespace ConAuction
 		}
 
 		private void SetVisibleProductList() {
+			dataGridViewProducts.DataSource = DataTableProduct;
 			dataGridViewProducts.Columns["Note"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
 			dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Selling);
 			dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Selling || Mode == OpMode.Paying);
