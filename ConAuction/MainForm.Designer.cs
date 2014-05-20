@@ -51,6 +51,7 @@
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.comboBoxMode = new System.Windows.Forms.ComboBox();
+			this.buttonSendSMS = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -175,6 +176,7 @@
 			// 
 			// splitContainer1.Panel1
 			// 
+			this.splitContainer1.Panel1.Controls.Add(this.buttonSendSMS);
 			this.splitContainer1.Panel1.Controls.Add(this.labelSoldAmount);
 			this.splitContainer1.Panel1.Controls.Add(this.textBoxAmount);
 			this.splitContainer1.Panel1.Controls.Add(this.dataGridViewCustomers);
@@ -365,6 +367,16 @@
 			this.comboBoxMode.TabIndex = 34;
 			this.comboBoxMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxMode_SelectedIndexChanged);
 			// 
+			// buttonSendSMS
+			// 
+			this.buttonSendSMS.Location = new System.Drawing.Point(17, 588);
+			this.buttonSendSMS.Name = "buttonSendSMS";
+			this.buttonSendSMS.Size = new System.Drawing.Size(116, 33);
+			this.buttonSendSMS.TabIndex = 30;
+			this.buttonSendSMS.Text = "Skicka SMS...";
+			this.buttonSendSMS.UseVisualStyleBackColor = true;
+			this.buttonSendSMS.Click += new System.EventHandler(this.buttonSendSMS_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -418,6 +430,7 @@
 		private System.Windows.Forms.Label labelNetPerCustomer;
 		private System.Windows.Forms.Label labelTotalPerCustomer;
 		private System.Windows.Forms.TextBox textBoxNetAmount;
+		private System.Windows.Forms.Button buttonSendSMS;
 	}
 }
 

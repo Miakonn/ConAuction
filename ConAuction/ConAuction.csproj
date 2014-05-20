@@ -48,6 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormSendSMS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSendSMS.Designer.cs">
+      <DependentUpon>FormSendSMS.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductTable.cs" />
     <Compile Include="FormEditProduct.cs">
       <SubType>Form</SubType>
@@ -76,6 +82,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormProductDisplay.resx">
       <DependentUpon>FormProductDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSendSMS.resx">
+      <DependentUpon>FormSendSMS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

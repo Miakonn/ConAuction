@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Text;
-using System.Windows.Forms;
-using System.Runtime.Serialization;
-using System.Configuration;
 using System.Reflection;
+using System.Windows.Forms;
+using System.Text;
 using MySql.Data.MySqlClient;
-using System.Diagnostics;
+
 
 namespace ConAuction
 {
@@ -470,6 +468,7 @@ namespace ConAuction
 			labelSoldAmount.Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
 			buttonSave.Visible = (Mode == OpMode.Receiving);
 			buttonSave.Enabled = fDataGridCustomerIsChanged;
+			buttonSendSMS.Visible = (Mode == OpMode.Paying);
 
 			if (fUpdatingCustomerList) {
 				return;
@@ -720,6 +719,14 @@ namespace ConAuction
 			UpdateFromDB();
 		}
 
+		private void buttonSendSMS_Click(object sender, EventArgs e) {
+
+			DataGridViewSelectedRowCollection rows = dataGridViewCustomers.SelectedRows;
+			if (rows != null && rows.Count >= 1) {
+				FormSendSMS form = new FormSendSMS(rows);
+				form.ShowDialog(this);
+			}
+		}
 	}
 		#endregion
 }
