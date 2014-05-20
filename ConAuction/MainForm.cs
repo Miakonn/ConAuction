@@ -438,7 +438,7 @@ namespace ConAuction
 				dataGridViewCustomers.Columns["id"].HeaderText = "Id";
 				dataGridViewCustomers.Columns["id"].ReadOnly = true;
 				dataGridViewCustomers.Columns["Name"].HeaderText = "Namn";
-				dataGridViewCustomers.Columns["Phone"].HeaderText = "Telefon";
+				dataGridViewCustomers.Columns["Phone"].HeaderText = "Mobilnr";
 				dataGridViewCustomers.Columns["Comment"].HeaderText = "Not";
 				dataGridViewCustomers.Columns["Finished"].HeaderText = "Klar";
 
@@ -459,6 +459,7 @@ namespace ConAuction
 		private void SetVisibleCustomerList() {
 			dataGridViewCustomers.DataSource = DataTableCustomer;
 			dataGridViewCustomers.Columns["Finished"].Visible = (Mode == OpMode.Paying);
+			dataGridViewCustomers.MultiSelect = (Mode == OpMode.Paying);
 		}
 
 		private void UpdateAuctionSummary()
@@ -586,9 +587,15 @@ namespace ConAuction
 		}
 
 		private void dataGridViewCustomers_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
-			fDataGridCustomerIsChanged = true;
-			UpdateAuctionSummary();
-			UpdateSummaryPerCustomer();
+			if (Mode == OpMode.Receiving) {
+				fDataGridCustomerIsChanged = true;
+				UpdateAuctionSummary();
+				UpdateSummaryPerCustomer();
+				if (string.Compare(dataGridViewCustomers.Columns[e.ColumnIndex].Name, "Name", true) == 0) {
+					dataGridViewCustomers.Rows[e.RowIndex].Cells["Phone"].Selected = true;
+					dataGridViewCustomers.BeginEdit(false);
+				}
+			}
 		}
 
 		private void dataGridViewCustomers_CellClick(object sender, DataGridViewCellEventArgs e) {
