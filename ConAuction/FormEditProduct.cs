@@ -141,28 +141,50 @@ namespace ConAuction
 			return s.Length > 0 && s.All(c => Char.IsDigit(c));
 		}
 
+		private string CheckLastPartForEANcode(TextBox tb) {
+			for (int len = 13; len >= 12; len --) {
+
+				if (tb.Text.Length >= len) {
+					string sEnd = tb.Text.Substring(tb.Text.Length - len, len);
+					if (IsNumber(sEnd)) {
+						string sResponse = FetchEANFromNet(sEnd);
+						if (sResponse.Length > 0 && ExtractFromJson(sResponse, "message") != "No product found.") {
+							tb.Text = tb.Text.Substring(0, tb.Text.Length - len);
+							string sName = ExtractFromJson(sResponse, "name");
+							if (sName.Length > 0) {
+								tb.Text = tb.Text + sName;
+							}
+							string sDescr = ExtractFromJson(sResponse, "description");
+							return sDescr;
+						}
+						return "-";
+					}
+				}
+			}
+			return "";
+		}
+
 		private void textBoxName_TextChanged(object sender, EventArgs e)
 		{
 			EnableDisableButtons();
-			if (textBoxName.Text.Length >= 12 && IsNumber(textBoxName.Text)) {
-				string sResponse =  FetchEANFromNet(textBoxName.Text);
-				if (sResponse.Length > 0) {
-					string sName = ExtractFromJson(sResponse, "name");
-					if (sName.Length > 0) {
-						textBoxName.Text = sName;
-					}
-					string sDescr = ExtractFromJson(sResponse, "description");
-					if (sDescr.Length > 0) {
-						textBoxProductDescription.Text += sDescr;
-					}
+			if (textBoxName.Text.Length >= 12) {
+				string sDescr = CheckLastPartForEANcode(textBoxName);
+				if (sDescr.Length > 1) {
+					textBoxName.SelectionStart = textBoxName.Text.Length;
+					textBoxProductDescription.Text = sDescr;
+					textBoxProductDescription.SelectionStart = textBoxProductDescription.Text.Length;
 				}
-
-			}
+			}			
 		}
 
 		private void textBoxProductDescription_TextChanged(object sender, EventArgs e) {
-			
-		}
 
+			if (textBoxProductDescription.Text.Length >= 12) {
+				string sDescr = CheckLastPartForEANcode(textBoxProductDescription);
+				if (sDescr.Length > 0) {
+					textBoxProductDescription.SelectionStart = textBoxProductDescription.Text.Length;
+				}
+			}
+		}
 	}
 }

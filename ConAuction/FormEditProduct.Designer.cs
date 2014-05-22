@@ -56,7 +56,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(612, 113);
+			this.label6.Location = new System.Drawing.Point(601, 115);
 			this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(69, 20);
@@ -95,7 +95,7 @@
 			// 
 			// textBoxProductNote
 			// 
-			this.textBoxProductNote.Location = new System.Drawing.Point(595, 139);
+			this.textBoxProductNote.Location = new System.Drawing.Point(605, 139);
 			this.textBoxProductNote.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxProductNote.Name = "textBoxProductNote";
 			this.textBoxProductNote.Size = new System.Drawing.Size(103, 26);
@@ -103,7 +103,7 @@
 			// 
 			// buttonSaveProduct
 			// 
-			this.buttonSaveProduct.Location = new System.Drawing.Point(474, 379);
+			this.buttonSaveProduct.Location = new System.Drawing.Point(474, 380);
 			this.buttonSaveProduct.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSaveProduct.Name = "buttonSaveProduct";
 			this.buttonSaveProduct.Size = new System.Drawing.Size(112, 36);
@@ -127,7 +127,7 @@
 			// 
 			this.textBoxProductDescription.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
 			this.textBoxProductDescription.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-			this.textBoxProductDescription.Location = new System.Drawing.Point(51, 182);
+			this.textBoxProductDescription.Location = new System.Drawing.Point(50, 182);
 			this.textBoxProductDescription.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxProductDescription.Multiline = true;
 			this.textBoxProductDescription.Name = "textBoxProductDescription";
@@ -195,6 +195,7 @@
 			this.Controls.Add(this.buttonSaveProduct);
 			this.Controls.Add(this.textBoxProductNote);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "FormEditProduct";
 			this.Text = "Objekt";
