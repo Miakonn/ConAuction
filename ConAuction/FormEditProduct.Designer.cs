@@ -133,6 +133,7 @@
 			this.textBoxProductDescription.Name = "textBoxProductDescription";
 			this.textBoxProductDescription.Size = new System.Drawing.Size(658, 185);
 			this.textBoxProductDescription.TabIndex = 2;
+			this.textBoxProductDescription.TextChanged += new System.EventHandler(this.textBoxProductDescription_TextChanged);
 			// 
 			// textBoxProductLabel
 			// 
@@ -158,6 +159,7 @@
 			// 
 			this.textBoxName.Location = new System.Drawing.Point(352, 68);
 			this.textBoxName.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxName.MaxLength = 40;
 			this.textBoxName.Name = "textBoxName";
 			this.textBoxName.Size = new System.Drawing.Size(356, 26);
 			this.textBoxName.TabIndex = 1;
