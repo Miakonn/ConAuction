@@ -152,7 +152,8 @@ namespace ConAuction
 							tb.Text = tb.Text.Substring(0, tb.Text.Length - len);
 							string sName = ExtractFromJson(sResponse, "name");
 							if (sName.Length > 0) {
-								tb.Text = tb.Text + sName;
+								tb.Text = tb.Text.TrimStart() + sName.Trim();
+								tb.SelectionStart = tb.Text.Length + 1;
 							}
 							string sDescr = ExtractFromJson(sResponse, "description");
 							return sDescr;
