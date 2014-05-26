@@ -663,8 +663,6 @@ namespace ConAuction
 
 					InsertNewProductToDB(productNew, customerId);
 					UpdateFromDB();
-
-//					SelectCustomerRow(customerId);
 				}
 			}
 		}
@@ -701,6 +699,7 @@ namespace ConAuction
 
 				DataRow row = DataTableProduct.Rows[e.RowIndex];
 				SaveProductPriceToDB((int)row["id"], (int)row["Price"]);
+				UpdateAuctionSummary();
 			}
 		}
 
