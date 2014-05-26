@@ -12,7 +12,7 @@ namespace ConAuction
 {
 	public partial class FormProductDisplay : Form
 	{
-		int currentRowId = 0;
+		int currentRowId = -1;
 		DataTable tableProducts;
 
 
@@ -39,20 +39,45 @@ namespace ConAuction
 			this.Icon = Icon.FromHandle(bitmapLogo.GetHicon());
 		}
 
+		private string ReadRulesFile() {
+			try {
+				using (StreamReader reader = new StreamReader("ConAuctionRules.txt", Encoding.UTF8)) {
+					return reader.ReadToEnd();
+				}
+			}
+			catch {
+				return "";
+			}
+		}
+
+		private string ReadFinishFile() {
+			try {
+				using (StreamReader reader = new StreamReader("ConAuctionFinish.txt", Encoding.UTF8)) {
+					return reader.ReadToEnd();
+				}
+			}
+			catch {
+				return "";
+			}
+		}
+
 		private void DisplayCurrentProduct()
 		{
 			if (currentRowId < 0) {
-				currentRowId = 0;
+				labelLabel.Text = "";
+				labelType.Text = "";
+				labelName.Text = "Välkommna!";
+				labelDescription.Text = ReadRulesFile();
+				currentRowId = -1;
 			}
-			if (currentRowId >= tableProducts.Rows.Count) {
+			else if (currentRowId >= tableProducts.Rows.Count) {
 				currentRowId = tableProducts.Rows.Count;
 				labelLabel.Text = "";
 				labelType.Text = "";
-				labelName.Text = "";
-				labelDescription.Text = "Nu är det slut!";
+				labelName.Text = "Nu är det slut!";
+				labelDescription.Text = ReadFinishFile();
 			}
 			else {
-
 				DataRow row = tableProducts.Rows[currentRowId];
 				int label = (int)row["Label"];
 				string sss = row["Label"].ToString();

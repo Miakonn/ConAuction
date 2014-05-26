@@ -39,7 +39,7 @@
 			// 
 			this.labelLabel.AutoSize = true;
 			this.labelLabel.Font = new System.Drawing.Font("Open Sans", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelLabel.Location = new System.Drawing.Point(219, 36);
+			this.labelLabel.Location = new System.Drawing.Point(210, 35);
 			this.labelLabel.Name = "labelLabel";
 			this.labelLabel.Size = new System.Drawing.Size(195, 87);
 			this.labelLabel.TabIndex = 4;
@@ -50,7 +50,7 @@
 			// 
 			this.labelName.AutoSize = true;
 			this.labelName.Font = new System.Drawing.Font("Open Sans", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelName.Location = new System.Drawing.Point(219, 123);
+			this.labelName.Location = new System.Drawing.Point(210, 125);
 			this.labelName.Name = "labelName";
 			this.labelName.Size = new System.Drawing.Size(219, 87);
 			this.labelName.TabIndex = 5;
@@ -61,7 +61,7 @@
 			// 
 			this.labelType.AutoSize = true;
 			this.labelType.Font = new System.Drawing.Font("Open Sans", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelType.Location = new System.Drawing.Point(674, 36);
+			this.labelType.Location = new System.Drawing.Point(665, 36);
 			this.labelType.Name = "labelType";
 			this.labelType.Size = new System.Drawing.Size(180, 87);
 			this.labelType.TabIndex = 6;
@@ -72,8 +72,8 @@
 			// 
 			this.labelDescription.AutoSize = true;
 			this.labelDescription.Font = new System.Drawing.Font("Open Sans", 36F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelDescription.Location = new System.Drawing.Point(223, 228);
-			this.labelDescription.MaximumSize = new System.Drawing.Size(700, 700);
+			this.labelDescription.Location = new System.Drawing.Point(210, 230);
+			this.labelDescription.MaximumSize = new System.Drawing.Size(1000, 600);
 			this.labelDescription.Name = "labelDescription";
 			this.labelDescription.Size = new System.Drawing.Size(265, 65);
 			this.labelDescription.TabIndex = 7;
@@ -82,7 +82,7 @@
 			// 
 			// pictureBoxLogo
 			// 
-			this.pictureBoxLogo.Location = new System.Drawing.Point(13, 13);
+			this.pictureBoxLogo.Location = new System.Drawing.Point(10, 10);
 			this.pictureBoxLogo.Margin = new System.Windows.Forms.Padding(4);
 			this.pictureBoxLogo.Name = "pictureBoxLogo";
 			this.pictureBoxLogo.Size = new System.Drawing.Size(139, 144);

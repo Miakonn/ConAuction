@@ -64,6 +64,8 @@ namespace ConAuction
 			comboBoxMode.Items.Add("Utlämning");
 			comboBoxMode.Items.Add("OH-projektor");
 			comboBoxMode.SelectedIndex = (int)OpMode.Initializing;
+
+			comboBoxMode.MouseWheel += new MouseEventHandler(comboBoxMode_MouseWheel);
 		}
 
 		private void LoadImage()
@@ -395,12 +397,33 @@ namespace ConAuction
 			return 0;
 		}
 
+		private string GetSelectedCustomerPhone() {
+			DataGridViewSelectedRowCollection rows = dataGridViewCustomers.SelectedRows;
+			if (rows != null && rows.Count == 1 && rows[0].Cells["Phone"].Value != DBNull.Value && rows[0].Cells["Phone"].Value != null) {
+				return rows[0].Cells["Phone"].Value.ToString();
+			}
+			return "";
+		}
+
 		private void SelectCustomerRow(int customerId) {
 			if (Mode != OpMode.Initializing) {
 				foreach (DataGridViewRow row in dataGridViewCustomers.Rows) {
 					if (row.Cells["id"].Value != null && row.Cells["id"].Value != DBNull.Value) {
 						int rowId = (int)row.Cells["id"].Value;
 						if (customerId == rowId) {
+							row.Selected = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		private void SelectCustomerRowBasedOnPhone(string strPhone) {
+			if (Mode != OpMode.Initializing) {
+				foreach (DataGridViewRow row in dataGridViewCustomers.Rows) {
+					if (row.Cells["Phone"].Value != null && row.Cells["Phone"].Value != DBNull.Value) {
+						if (strPhone == row.Cells["Phone"].Value.ToString()) {
 							row.Selected = true;
 							break;
 						}
@@ -590,7 +613,8 @@ namespace ConAuction
 				fDataGridCustomerIsChanged = true;
 				UpdateAuctionSummary();
 				UpdateSummaryPerCustomer();
-				if (string.Compare(dataGridViewCustomers.Columns[e.ColumnIndex].Name, "Name", true) == 0) {
+				if (string.Compare(dataGridViewCustomers.Columns[e.ColumnIndex].Name, "Name", true) == 0 &&
+					dataGridViewCustomers.Rows[e.RowIndex].Cells["Name"].Value.ToString() != "") {
 					dataGridViewCustomers.Rows[e.RowIndex].Cells["Phone"].Selected = true;
 					dataGridViewCustomers.BeginEdit(false);
 				}
@@ -615,8 +639,10 @@ namespace ConAuction
 
 		private void buttonSave_Click(object sender, EventArgs e)
 		{
+			string strPhone = GetSelectedCustomerPhone();
 			SaveCustomerToDB();
 			UpdateFromDB();
+			SelectCustomerRowBasedOnPhone(strPhone);
 		}
 
 		private void buttonNewProduct_Click(object sender, EventArgs e)
@@ -638,7 +664,7 @@ namespace ConAuction
 					InsertNewProductToDB(productNew, customerId);
 					UpdateFromDB();
 
-					//SelectCustomerRow(customerId);
+//					SelectCustomerRow(customerId);
 				}
 			}
 		}
@@ -727,6 +753,12 @@ namespace ConAuction
 				form.ShowDialog(this);
 			}
 		}
+
+		void comboBoxMode_MouseWheel(object sender, MouseEventArgs e) {
+			((HandledMouseEventArgs)e).Handled = true;
+		}
 	}
+
+
 		#endregion
 }

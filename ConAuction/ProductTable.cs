@@ -27,13 +27,16 @@ namespace ConAuction
 			return 0;
 		}
 
-		public static int NoOfUnsoldForCustomer(this DataTable table, int customerId) {
+		public static int NoOfSoldForCustomer(this DataTable table, int customerId) {
 			return (int)table.Compute("Count(Price)", "Price > 0 and CustomerId=" + customerId.ToString());
 		}
 
 		public static int CountForCustomer(this DataTable table, int customerId) {
 			return (int)table.Compute("Count(Price)", "CustomerId=" + customerId.ToString());
+		}
 
+		public static int NoOfUnsoldForCustomer(this DataTable table, int customerId) {
+			return CountForCustomer(table, customerId) - NoOfSoldForCustomer(table, customerId);
 		}
 
 		public static DataRow GetRowForProductId(this DataTable table, int productId) {
