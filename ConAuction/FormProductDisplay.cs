@@ -66,7 +66,7 @@ namespace ConAuction
 			if (currentRowId < 0) {
 				labelLabel.Text = "";
 				labelType.Text = "";
-				labelName.Text = "Välkommna!";
+				labelName.Text = "Välkomna!";
 				labelDescription.Text = ReadRulesFile();
 				currentRowId = -1;
 			}
