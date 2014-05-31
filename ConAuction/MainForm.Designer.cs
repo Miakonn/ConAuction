@@ -36,6 +36,7 @@
 			this.buttonDeleteProduct = new System.Windows.Forms.Button();
 			this.buttonNewProduct = new System.Windows.Forms.Button();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.buttonSendSMS = new System.Windows.Forms.Button();
 			this.labelSoldAmount = new System.Windows.Forms.Label();
 			this.textBoxAmount = new System.Windows.Forms.TextBox();
 			this.labelSoldCount = new System.Windows.Forms.Label();
@@ -51,7 +52,6 @@
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.comboBoxMode = new System.Windows.Forms.ComboBox();
-			this.buttonSendSMS = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -202,6 +202,17 @@
 			this.splitContainer1.SplitterDistance = 463;
 			this.splitContainer1.SplitterWidth = 6;
 			this.splitContainer1.TabIndex = 23;
+			// 
+			// buttonSendSMS
+			// 
+			this.buttonSendSMS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonSendSMS.Location = new System.Drawing.Point(17, 588);
+			this.buttonSendSMS.Name = "buttonSendSMS";
+			this.buttonSendSMS.Size = new System.Drawing.Size(116, 33);
+			this.buttonSendSMS.TabIndex = 30;
+			this.buttonSendSMS.Text = "Skicka SMS...";
+			this.buttonSendSMS.UseVisualStyleBackColor = true;
+			this.buttonSendSMS.Click += new System.EventHandler(this.buttonSendSMS_Click);
 			// 
 			// labelSoldAmount
 			// 
@@ -366,16 +377,6 @@
 			this.comboBoxMode.Size = new System.Drawing.Size(219, 38);
 			this.comboBoxMode.TabIndex = 34;
 			this.comboBoxMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxMode_SelectedIndexChanged);
-			// 
-			// buttonSendSMS
-			// 
-			this.buttonSendSMS.Location = new System.Drawing.Point(17, 588);
-			this.buttonSendSMS.Name = "buttonSendSMS";
-			this.buttonSendSMS.Size = new System.Drawing.Size(116, 33);
-			this.buttonSendSMS.TabIndex = 30;
-			this.buttonSendSMS.Text = "Skicka SMS...";
-			this.buttonSendSMS.UseVisualStyleBackColor = true;
-			this.buttonSendSMS.Click += new System.EventHandler(this.buttonSendSMS_Click);
 			// 
 			// MainForm
 			// 

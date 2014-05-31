@@ -345,6 +345,7 @@ namespace ConAuction
 			dataGridViewProducts.ClearSelection();
 			dataGridViewProducts.CurrentCell = null;
 
+			dataGridViewProducts.SuspendLayout();
 			if (Mode == OpMode.Auctioning || Mode == OpMode.Showing) {
 				foreach (DataGridViewRow productRow in dataGridViewProducts.Rows) {
 					productRow.Visible = true;
@@ -367,6 +368,7 @@ namespace ConAuction
 					}
 				}
 			}
+			dataGridViewProducts.ResumeLayout();
 		}
 
 		void SaveCustomerToDB() {
@@ -411,6 +413,9 @@ namespace ConAuction
 					if (row.Cells["id"].Value != null && row.Cells["id"].Value != DBNull.Value) {
 						int rowId = (int)row.Cells["id"].Value;
 						if (customerId == rowId) {
+							if (row.Displayed == false) {
+								dataGridViewCustomers.FirstDisplayedScrollingRowIndex = row.Index;
+							}
 							row.Selected = true;
 							break;
 						}
