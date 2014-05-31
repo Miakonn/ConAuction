@@ -60,6 +60,7 @@ namespace ConAuction
 			textBoxName.Text = product.Name;
 			comboBoxProductType.Text = product.Type;
 			textBoxProductDescription.Text = product.Description;
+            textBoxProductNote.Text = product.Note;
 		}
 
 		string ExtractFromJson(string sMess, string sKey){
