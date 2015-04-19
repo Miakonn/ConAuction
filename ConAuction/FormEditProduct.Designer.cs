@@ -40,6 +40,8 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.textBoxName = new System.Windows.Forms.TextBox();
 			this.buttonCopy = new System.Windows.Forms.Button();
+			this.textBoxFixedPrice = new System.Windows.Forms.TextBox();
+			this.label2 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// buttonCancelProduct
@@ -176,11 +178,31 @@
 			this.buttonCopy.UseVisualStyleBackColor = true;
 			this.buttonCopy.Click += new System.EventHandler(this.buttonCopy_Click);
 			// 
+			// textBoxFixedPrice
+			// 
+			this.textBoxFixedPrice.Location = new System.Drawing.Point(393, 139);
+			this.textBoxFixedPrice.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxFixedPrice.Name = "textBoxFixedPrice";
+			this.textBoxFixedPrice.Size = new System.Drawing.Size(103, 26);
+			this.textBoxFixedPrice.TabIndex = 14;
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(389, 115);
+			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(82, 20);
+			this.label2.TabIndex = 15;
+			this.label2.Text = "LoppisPris";
+			// 
 			// FormEditProduct
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(730, 432);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.textBoxFixedPrice);
 			this.Controls.Add(this.buttonCopy);
 			this.Controls.Add(this.textBoxName);
 			this.Controls.Add(this.label1);
@@ -219,5 +241,7 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox textBoxName;
 		private System.Windows.Forms.Button buttonCopy;
+		private System.Windows.Forms.TextBox textBoxFixedPrice;
+		private System.Windows.Forms.Label label2;
 	}
 }

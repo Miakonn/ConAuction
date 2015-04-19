@@ -68,17 +68,31 @@ namespace ConAuction
 			return sum;
 		}
 
-		public static int NetAmountForCustomer(this DataTable table, int customerId) {
+		public static int TotalCostForCustomer(this DataTable table, int customerId)
+		{
 			int SettingCost = 10;
+			int SettingCostFixed = 5;
 			try {
 				SettingCost = Int32.Parse(ConfigurationManager.AppSettings["Cost"]);
+				SettingCostFixed = Int32.Parse(ConfigurationManager.AppSettings["CostFixed"]);
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.Message);
 			}
 
-			int net = table.TotalAmountForCustomer(customerId) - table.CountForCustomer(customerId) * SettingCost;
-			return net;
+			DataRow[] foundRows = table.Select("CustomerId = " + customerId.ToString());
+
+			int sum = 0;
+			foreach (DataRow row in foundRows) {
+				bool isFixedPrice = ((int)row["FixedPrice"]) > 0;
+
+				sum += (isFixedPrice ? SettingCostFixed : SettingCost);
+			}
+			return sum;
+		}
+
+		public static int NetAmountForCustomer(this DataTable table, int customerId) {			
+			return table.TotalAmountForCustomer(customerId) - table.TotalCostForCustomer(customerId);
 		}
 
 

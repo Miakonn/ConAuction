@@ -61,6 +61,7 @@ namespace ConAuction
 			comboBoxProductType.Text = product.Type;
 			textBoxProductDescription.Text = product.Description;
             textBoxProductNote.Text = product.Note;
+			textBoxFixedPrice.Text = product.FixedPrice.ToString();
 		}
 
 		string ExtractFromJson(string sMess, string sKey){
@@ -104,9 +105,12 @@ namespace ConAuction
 			productCurrent.Name = textBoxName.Text;
 			productCurrent.Type = comboBoxProductType.Text;
 			productCurrent.Description = textBoxProductDescription.Text;
-			//int limit = 0;
-			//Int32.TryParse(, out limit);
 			productCurrent.Note = textBoxProductNote.Text;
+
+			int limit = 0;
+			if (Int32.TryParse(textBoxFixedPrice.Text, out limit)) {
+				productCurrent.FixedPrice = limit;
+			}
 		}
 
 		private void EnableDisableButtons()

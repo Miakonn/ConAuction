@@ -16,10 +16,10 @@ namespace ConAuction
 		public string Description { get; set; }
 		public string Note { get; set; }
 		public int Price { get; set; }
-
-
+		public int FixedPrice { get; set; }
 
 		public Product() { }
+
 		public Product(string id, string type, string name, string desc, string limit) {
 			Id = id;
 			Type = type;
@@ -40,6 +40,9 @@ namespace ConAuction
 			if (row.Cells["Price"].Value != DBNull.Value) {
 				Price = (int)row.Cells["Price"].Value;
 			}
+			if (row.Cells["FixedPrice"].Value != DBNull.Value) {
+				FixedPrice = (int)row.Cells["FixedPrice"].Value;
+			}
 		}
 
 		public Product(DataRow row) {
@@ -54,12 +57,23 @@ namespace ConAuction
 			if (row["Price"] != null) {
 				Price = (int)row["Price"];
 			}
+			if (row["FixedPrice"] != null) {
+				FixedPrice = (int)row["FixedPrice"];
+			}
 		}
 
+		public bool IsSold { get { return (Price > 0); } }
 
-		public bool IsSold()
-		{
-			return (Price > 0);
+		public bool IsFixedPrice { get { return (FixedPrice > 0); } }
+
+		public bool SoldForFixedPrice() {
+			if (IsFixedPrice && !IsSold) {
+				Price = FixedPrice;
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 
 	}

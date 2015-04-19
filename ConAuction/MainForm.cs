@@ -150,7 +150,7 @@ namespace ConAuction
 		{
 			try {
 				//prepare adapter to run query
-				string query = "select id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp from Product";
+				string query = "select id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice from Product where year=" + ConfigurationManager.AppSettings["Year"];
 
 				DBadapterProduct = new MySqlDataAdapter(query, DBconnection);
 				DataSet DBDataSetProduct = new DataSet();
@@ -212,15 +212,17 @@ namespace ConAuction
 					nextLabel = (int)command.ExecuteScalar() + 1;
 				}
 
-				command.CommandText ="INSERT INTO Product (Label, Name, Description,Type,  Note, Price, CustomerId, Year, timestamp)" +
-								"VALUES (@Label, @Name, @Description, @Type, @Note,@price, @CustomerId, 2014, Now());";
+				command.CommandText ="INSERT INTO Product (Label, Name, Description,Type,  Note, Price, FixedPrice, CustomerId, Year, timestamp)" +
+								"VALUES (@Label, @Name, @Description, @Type, @Note,@price, @Fixedprice, @CustomerId ," + ConfigurationManager.AppSettings["Year"] + ", Now());";
 				command.Parameters.AddWithValue("@Label", nextLabel);
 				command.Parameters.AddWithValue("@Name", prod.Name);
 				command.Parameters.AddWithValue("@Description", prod.Description);
 				command.Parameters.AddWithValue("@Price", prod.Price);
+				command.Parameters.AddWithValue("@FixedPrice", prod.FixedPrice);
 				command.Parameters.AddWithValue("@Type", prod.Type);
 				command.Parameters.AddWithValue("@Note", prod.Note);
 				command.Parameters.AddWithValue("@CustomerId", customerid);
+
 				command.UpdatedRowSource = UpdateRowSource.None;
 				command.ExecuteNonQuery();
 
@@ -247,10 +249,11 @@ namespace ConAuction
 			command.Transaction = sqlTran;
 			command.Connection = DBconnection;
 			try {
-				command.CommandText = "UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, Timestamp=Now() WHERE id=@id;";
+				command.CommandText = "UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, FixedPrice=@FixedPrice, Timestamp=Now() WHERE id=@id;";
 				command.Parameters.AddWithValue("@Name", prod.Name);
 				command.Parameters.AddWithValue("@Description", prod.Description);
 				command.Parameters.AddWithValue("@Price", prod.Price);
+				command.Parameters.AddWithValue("@FixedPrice", prod.FixedPrice);
 				command.Parameters.AddWithValue("@Type", prod.Type);
 				command.Parameters.AddWithValue("@Note", prod.Note);
 				command.Parameters.AddWithValue("@id", prod.Id);
@@ -528,6 +531,7 @@ namespace ConAuction
 				dataGridViewProducts.Columns["Description"].HeaderText = "Beskr.";
 				dataGridViewProducts.Columns["Note"].HeaderText = "Not";
 				dataGridViewProducts.Columns["Price"].HeaderText = "Pris";
+				dataGridViewProducts.Columns["FixedPrice"].HeaderText = "LoppisPris";
 
 				dataGridViewProducts.Columns["Label"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewProducts.Columns["Type"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
@@ -535,6 +539,7 @@ namespace ConAuction
 				dataGridViewProducts.Columns["Description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 				dataGridViewProducts.Columns["Note"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 				dataGridViewProducts.Columns["Price"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+				dataGridViewProducts.Columns["FixedPrice"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
 				dataGridViewProducts.Columns["Label"].ReadOnly = true;
 				dataGridViewProducts.Columns["Type"].ReadOnly = true;
@@ -546,6 +551,7 @@ namespace ConAuction
 				dataGridViewProducts.Columns["CustomerId"].Visible = false;
 				dataGridViewProducts.Columns["CustomerId"].ReadOnly = true;
 				dataGridViewProducts.Columns["TimeStamp"].Visible = false;
+				dataGridViewProducts.Columns["FixedPrice"].Visible = true;
 				}
 			catch (Exception ex) {
 				MessageBox.Show("Error " + ex.Message);
@@ -556,7 +562,7 @@ namespace ConAuction
 			dataGridViewProducts.DataSource = DataTableProduct;
 			dataGridViewProducts.Columns["Note"].Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
 			dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Auctioning);
-			dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
+			dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying || Mode == OpMode.Showing);
 			dataGridViewProducts.EditMode = (Mode == OpMode.Auctioning) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
 		}
 
@@ -590,8 +596,14 @@ namespace ConAuction
 			buttonNewProduct.Visible = (Mode == OpMode.Receiving);
 			buttonNewProduct.Enabled = !fDataGridCustomerIsChanged;
 
+
+			Product productCurrent = GetSelectedProduct();
+
 			buttonDeleteProduct.Visible = (Mode == OpMode.Receiving);
-			buttonDeleteProduct.Enabled = (!fDataGridCustomerIsChanged && GetSelectedProductId() > 0);
+			buttonDeleteProduct.Enabled = (!fDataGridCustomerIsChanged && productCurrent != null);
+
+			buttonSoldFixedPrice.Visible = (Mode == OpMode.Showing);
+			buttonSoldFixedPrice.Enabled = (!fDataGridCustomerIsChanged && productCurrent != null && productCurrent.IsFixedPrice && !productCurrent.IsSold);
 		}
 
 		#region  Event handling
@@ -723,7 +735,6 @@ namespace ConAuction
 			UpdateFromDB();
 		}
 
-
 		private void buttonDeleteProduct_Click(object sender, EventArgs e) {
 			int productId = GetSelectedProductId();
 			if (productId > 0) {
@@ -760,6 +771,21 @@ namespace ConAuction
 
 		void comboBoxMode_MouseWheel(object sender, MouseEventArgs e) {
 			((HandledMouseEventArgs)e).Handled = true;
+		}
+
+		private void buttonSoldFixedPrice_Click(object sender, EventArgs e)
+		{
+			Product productCurrent = GetSelectedProduct();
+
+			if (productCurrent != null) {
+				if ((Mode == OpMode.Showing)) {
+					if (productCurrent.SoldForFixedPrice()) {
+						SaveProductToDB(productCurrent);
+						UpdateFromDB();
+					}
+				}
+			}
+
 		}
 	}
 
