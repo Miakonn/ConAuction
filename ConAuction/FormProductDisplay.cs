@@ -89,6 +89,18 @@ namespace ConAuction
 			Refresh();
 		}
 
+		private void IterateToNextUnsoldProduct(int step)
+		{
+			bool isSold = false;
+			do {
+				currentRowId+= step;
+				if (currentRowId >= tableProducts.Rows.Count) {
+					return;
+				}
+				DataRow row = tableProducts.Rows[currentRowId];
+				isSold = ((int)row["Price"] > 0);
+			} while (isSold);
+		}
 
 		private void FormProductDisplay_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -96,18 +108,14 @@ namespace ConAuction
 				if (e.Modifiers == Keys.Control) {
 					currentRowId += 10;
 				}
-				else {
-					currentRowId++;
-				}
+				IterateToNextUnsoldProduct(1);
 				DisplayCurrentProduct();				
 			}
 			else if (e.KeyCode == Keys.PageUp || e.KeyCode == Keys.Up) {
 				if (e.Modifiers == Keys.Control) {
 					currentRowId -= 10;
 				}
-				else {
-					currentRowId--;
-				}
+				IterateToNextUnsoldProduct(1);
 				DisplayCurrentProduct();
 			}
 			else if (e.KeyCode == Keys.Escape) {
