@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="ConAuction" Language="1033" Version="1.0.0.0" Manufacturer="AndersBlom" UpgradeCode="780c61b9-84e2-4e53-b84f-fab9f08e6cac">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<Condition Message="You need to be an administrator to install this product.">
+			Privileged
+		</Condition>
+		
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="ConAuction" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="ConAuction" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="ProductComponent">
+				<File Id='ConAuctionExe' Name='ConAuction.exe' DiskId='1' Source='..\ConAuction\bin\Release\ConAuction.exe' KeyPath='yes'/>
+			</Component>
+			<Component Id="ProductComponent2">
+				<File Id='ConAuctionConfig' Name='ConAuction.exe.config' DiskId='1' Source='..\ConAuction\bin\Release\ConAuction.exe.config' KeyPath='yes'/>
+			</Component>
+			<Component Id="ProductComponent3">
+				<File Id='ConAuctionVsExe' Name='ConAuction.vshost.exe' DiskId='1' Source='..\ConAuction\bin\Release\ConAuction.vshost.exe' KeyPath='yes'/>
+			</Component>
+			<Component Id="ProductComponent4">
+				<File Id='ConAuctionVsConfig' Name='ConAuction.vshost.exe.config' DiskId='1' Source='..\ConAuction\bin\Release\ConAuction.vshost.exe.config' KeyPath='yes'/>
+			</Component>
+			<Component Id="ProductComponent5">
+				<File Id='ConAuctionVsManifest' Name='ConAuction.vshost.exe.manisfest' DiskId='1' Source='..\ConAuction\bin\Release\ConAuction.vshost.exe.manifest' KeyPath='yes'/>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
