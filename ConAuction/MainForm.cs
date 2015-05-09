@@ -509,8 +509,9 @@ namespace ConAuction
 				return;
 			}
 
-			int totalcount = DataTableProduct.TotalCount();
-			textBoxTotalCount.Text = totalcount.ToString();
+			int totalcountAuction = DataTableProduct.TotalCountAuction();
+			int totalcountFixed = DataTableProduct.TotalCountFixedPrice();
+			textBoxTotalCount.Text = totalcountAuction.ToString() + " + " + totalcountFixed.ToString();
 
 			if (Mode == OpMode.Auctioning || Mode == OpMode.Paying) {
 				int totalSoldCount = DataTableProduct.TotalSoldCount();

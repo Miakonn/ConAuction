@@ -14,6 +14,14 @@ namespace ConAuction
 			return table.Rows.Count;
 		}
 
+		public static int TotalCountAuction(this DataTable table) {
+			return (int)table.Compute("Count(FixedPrice)", "FixedPrice = 0");
+		}
+
+		public static int TotalCountFixedPrice(this DataTable table) {
+			return (int)table.Compute("Count(FixedPrice)", "FixedPrice > 0");
+		}
+
 		public static int TotalSoldCount(this DataTable table) {
 			return (int)table.Compute("Count(Price)", "Price > 0");
 		}

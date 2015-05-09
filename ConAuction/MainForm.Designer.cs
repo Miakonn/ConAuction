@@ -43,6 +43,7 @@
 			this.buttonUpdate = new System.Windows.Forms.Button();
 			this.textBoxSoldCount = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
+			this.buttonSoldFixedPrice = new System.Windows.Forms.Button();
 			this.textBoxUnsold = new System.Windows.Forms.TextBox();
 			this.labelUnsoldPerCustomer = new System.Windows.Forms.Label();
 			this.textBoxTotalAmount = new System.Windows.Forms.TextBox();
@@ -52,7 +53,6 @@
 			this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
 			this.comboBoxMode = new System.Windows.Forms.ComboBox();
-			this.buttonSoldFixedPrice = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -135,7 +135,7 @@
 			this.textBoxTotalCount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxTotalCount.Name = "textBoxTotalCount";
 			this.textBoxTotalCount.ReadOnly = true;
-			this.textBoxTotalCount.Size = new System.Drawing.Size(57, 26);
+			this.textBoxTotalCount.Size = new System.Drawing.Size(80, 26);
 			this.textBoxTotalCount.TabIndex = 16;
 			// 
 			// buttonDeleteProduct
@@ -289,6 +289,20 @@
 			this.label6.TabIndex = 24;
 			this.label6.Text = "Totalt antal objekt";
 			// 
+			// buttonSoldFixedPrice
+			// 
+			this.buttonSoldFixedPrice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonSoldFixedPrice.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonSoldFixedPrice.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+			this.buttonSoldFixedPrice.Location = new System.Drawing.Point(242, 587);
+			this.buttonSoldFixedPrice.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonSoldFixedPrice.Name = "buttonSoldFixedPrice";
+			this.buttonSoldFixedPrice.Size = new System.Drawing.Size(134, 33);
+			this.buttonSoldFixedPrice.TabIndex = 25;
+			this.buttonSoldFixedPrice.Text = "Såld på loppis";
+			this.buttonSoldFixedPrice.UseVisualStyleBackColor = true;
+			this.buttonSoldFixedPrice.Click += new System.EventHandler(this.buttonSoldFixedPrice_Click);
+			// 
 			// textBoxUnsold
 			// 
 			this.textBoxUnsold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -379,20 +393,6 @@
 			this.comboBoxMode.Size = new System.Drawing.Size(219, 38);
 			this.comboBoxMode.TabIndex = 34;
 			this.comboBoxMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxMode_SelectedIndexChanged);
-			// 
-			// buttonSoldFixedPrice
-			// 
-			this.buttonSoldFixedPrice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonSoldFixedPrice.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonSoldFixedPrice.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.buttonSoldFixedPrice.Location = new System.Drawing.Point(242, 587);
-			this.buttonSoldFixedPrice.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonSoldFixedPrice.Name = "buttonSoldFixedPrice";
-			this.buttonSoldFixedPrice.Size = new System.Drawing.Size(134, 33);
-			this.buttonSoldFixedPrice.TabIndex = 25;
-			this.buttonSoldFixedPrice.Text = "Såld på loppis";
-			this.buttonSoldFixedPrice.UseVisualStyleBackColor = true;
-			this.buttonSoldFixedPrice.Click += new System.EventHandler(this.buttonSoldFixedPrice_Click);
 			// 
 			// MainForm
 			// 
