@@ -80,22 +80,23 @@ namespace ConAuction
 		{
 			int SettingCost = 10;
 			int SettingCostFixed = 5;
+			int sum = 0;
 			try {
 				SettingCost = Int32.Parse(ConfigurationManager.AppSettings["Cost"]);
 				SettingCostFixed = Int32.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+				DataRow[] foundRows = table.Select("CustomerId = " + customerId.ToString());
+
+				foreach (DataRow row in foundRows) {
+					if (!String.IsNullOrEmpty(row["FixedPrice"].ToString())) {
+						bool isFixedPrice = ((int)row["FixedPrice"]) > 0;
+						sum += (isFixedPrice ? SettingCostFixed : SettingCost);
+					}
+				}
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.Message);
 			}
 
-			DataRow[] foundRows = table.Select("CustomerId = " + customerId.ToString());
-
-			int sum = 0;
-			foreach (DataRow row in foundRows) {
-				bool isFixedPrice = ((int)row["FixedPrice"]) > 0;
-
-				sum += (isFixedPrice ? SettingCostFixed : SettingCost);
-			}
 			return sum;
 		}
 
