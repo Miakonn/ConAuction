@@ -275,13 +275,14 @@ namespace ConAuction
 			}
 		}
 
-		private void SaveProductPriceToDB(int id, int price)
+		private void SaveProductPriceToDB(int id, int price, string note)
 		{
 			MySqlCommand command = DBconnection.CreateCommand();
 			command.Connection = DBconnection;
 			try {
-				command.CommandText = "UPDATE Product SET Price=@Price, Timestamp=Now() WHERE id=@id;";
+				command.CommandText = "UPDATE Product SET Price=@Price, Timestamp=Now(), Note=@Note WHERE id=@id;";
 				command.Parameters.AddWithValue("@Price", price);
+				command.Parameters.AddWithValue("@Note", note);
 				command.Parameters.AddWithValue("@id", id);
 				command.UpdatedRowSource = UpdateRowSource.None;
 				command.ExecuteNonQuery();
@@ -489,6 +490,15 @@ namespace ConAuction
 			dataGridViewCustomers.DataSource = DataTableCustomer;
 			dataGridViewCustomers.Columns["Finished"].Visible = (Mode == OpMode.Paying);
 			dataGridViewCustomers.MultiSelect = (Mode == OpMode.Paying);
+
+			if (Mode == OpMode.Paying) {
+				foreach (DataGridViewRow customerRow in dataGridViewCustomers.Rows) {
+					if (customerRow.Cells["id"].Value != null) {
+						int count = DataTableProduct.CountForCustomer((int)customerRow.Cells["id"].Value);
+						customerRow.Visible = (count > 0);
+					}
+				}
+			}
 		}
 
 		private void UpdateAuctionSummary()
@@ -562,6 +572,7 @@ namespace ConAuction
 		private void SetVisibleProductList() {
 			dataGridViewProducts.DataSource = DataTableProduct;
 			dataGridViewProducts.Columns["Note"].Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying);
+			dataGridViewProducts.Columns["Note"].ReadOnly = !(Mode == OpMode.Auctioning);
 			dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Auctioning);
 			dataGridViewProducts.Columns["Price"].Visible = (Mode == OpMode.Auctioning || Mode == OpMode.Paying || Mode == OpMode.Showing);
 			dataGridViewProducts.EditMode = (Mode == OpMode.Auctioning) ? DataGridViewEditMode.EditOnKeystrokeOrF2 : DataGridViewEditMode.EditProgrammatically;
@@ -716,7 +727,14 @@ namespace ConAuction
 				Trace.WriteLine("CellValueChanged row=" + e.RowIndex.ToString() + " col=" + e.ColumnIndex.ToString());
 
 				DataRow row = DataTableProduct.Rows[e.RowIndex];
-				SaveProductPriceToDB((int)row["id"], (int)row["Price"]);
+				SaveProductPriceToDB((int)row["id"], (int)row["Price"], row["Note"].ToString());
+				UpdateAuctionSummary();
+			}
+			if (Mode == OpMode.Auctioning && DataTableProduct != null && DataTableProduct.Columns[e.ColumnIndex].ColumnName == "Note") {
+				Trace.WriteLine("CellValueChanged row=" + e.RowIndex.ToString() + " col=" + e.ColumnIndex.ToString());
+
+				DataRow row = DataTableProduct.Rows[e.RowIndex];
+				SaveProductPriceToDB((int)row["id"], (int)row["Price"], row["Note"].ToString());
 				UpdateAuctionSummary();
 			}
 		}
