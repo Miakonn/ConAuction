@@ -23,11 +23,10 @@ namespace ConAuction {
 
         public static int TotalSoldAmount(this DataTable table) {
             var obj = table.Compute("Sum(Price)", "Price > 0");
-            var amount = 0;
+            int amount;
             if (int.TryParse(obj.ToString(), out amount)) {
                 return amount;
             }
-            ;
             return 0;
         }
 
@@ -73,8 +72,8 @@ namespace ConAuction {
         }
 
         public static int TotalCostForCustomer(this DataTable table, int customerId) {
-            var SettingCost = 10;
-            var SettingCostFixed = 5;
+            int SettingCost;
+            int SettingCostFixed;
             var sum = 0;
             try {
                 SettingCost = int.Parse(ConfigurationManager.AppSettings["Cost"]);
@@ -98,7 +97,6 @@ namespace ConAuction {
         public static int NetAmountForCustomer(this DataTable table, int customerId) {
             return table.TotalAmountForCustomer(customerId) - table.TotalCostForCustomer(customerId);
         }
-
 
         public static bool IsDirty(this DataTable table) {
             var changes = table.GetChanges();

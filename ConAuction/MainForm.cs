@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 
 namespace ConAuction {
     public enum OpMode {
@@ -18,17 +15,7 @@ namespace ConAuction {
     }
 
     public partial class MainForm : Form {
-        private readonly string ConnectionString = ConfigurationManager.AppSettings["ConnectionString"];
-        private DataTable DataTableCustomer;
-        private DataTable DataTableProduct;
-
-        private MySqlDataAdapter DBadapterCustomer;
-        private MySqlDataAdapter DBadapterProduct;
-        private MySqlConnection DBconnection;
-        private bool fDataGridCustomerIsChanged;
-
-        private bool fUpdatingCustomerList;
-        private bool fUpdatingProductList;
+        private readonly ViewModel DataViewModel;
 
         private OpMode Mode = OpMode.Initializing;
 
@@ -37,9 +24,11 @@ namespace ConAuction {
             InitializeComponent();
             LoadImage();
 
+            DataViewModel = new ViewModel();
+
             bool fStarted;
             do {
-                fStarted = InitDB();
+                fStarted = DataViewModel.InitDB();
                 if (!fStarted) {
                     var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null,
                         MessageBoxButtons.RetryCancel);
@@ -81,317 +70,53 @@ namespace ConAuction {
             }
         }
 
-        private bool InitDB() {
-            try {
-                //Initialize mysql connection
-                DBconnection = new MySqlConnection(ConnectionString);
-                DBconnection.Open();
-                var fOk = DBconnection.Ping();
-                if (!fOk) {
-                    MessageBox.Show("Cannot connect to server.");
-                    return false;
-                }
-            }
-            catch (MySqlException ex) {
-                MessageBox.Show(ex.Message);
-                return false;
-            }
-            return true;
-        }
-
-        public void UpdateCustomerFromDB() {
-            fUpdatingCustomerList = true;
-            try {
-                //prepare adapter to run query
-                var query = "select id,name,phone,comment,finished,timestamp from Customer;";
-
-                DBadapterCustomer = new MySqlDataAdapter(query, DBconnection);
-                var DBDataSetCustomer = new DataSet();
-                //get query results in dataset
-                DBadapterCustomer.Fill(DBDataSetCustomer);
-
-                DBDataSetCustomer.Tables[0].TableName = "Customer";
-                DataTableCustomer = DBDataSetCustomer.Tables[0];
-
-                // Set the UPDATE command and parameters.
-                DBadapterCustomer.UpdateCommand = new MySqlCommand(
-                    "UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=NOW(), Finished=@Finished, Timestamp=Now() WHERE id=@id and timestamp=@Timestamp;",
-                    DBconnection);
-                DBadapterCustomer.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-                DBadapterCustomer.UpdateCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 30, "Name");
-                DBadapterCustomer.UpdateCommand.Parameters.Add("@Phone", MySqlDbType.VarChar, 15, "Phone");
-                DBadapterCustomer.UpdateCommand.Parameters.Add("@Comment", MySqlDbType.VarChar, 100, "Comment");
-                DBadapterCustomer.UpdateCommand.Parameters.Add("@Finished", MySqlDbType.UByte, 1, "Finished");
-                DBadapterCustomer.UpdateCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 10, "Timestamp");
-                DBadapterCustomer.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
-
-                // Set the INSERT command and parameter.
-                DBadapterCustomer.InsertCommand = new MySqlCommand(
-                    "INSERT INTO customer (Name, Phone, Comment, Date, TimeStamp) VALUES (@Name,@Phone,@Comment,Now(),Now());",
-                    DBconnection);
-                DBadapterCustomer.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 30, "Name");
-                DBadapterCustomer.InsertCommand.Parameters.Add("@Phone", MySqlDbType.VarChar, 15, "Phone");
-                DBadapterCustomer.InsertCommand.Parameters.Add("@Comment", MySqlDbType.VarChar, 100, "Comment");
-
-                DBadapterCustomer.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
-
-                // Set the DELETE command and parameter.
-                DBadapterCustomer.DeleteCommand = new MySqlCommand("DELETE FROM customer WHERE Id=@id;", DBconnection);
-                DBadapterCustomer.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-                DBadapterCustomer.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
-            }
-            catch (MySqlException ex) {
-                MessageBox.Show(ex.Message);
-            }
-            fUpdatingCustomerList = false;
-        }
-
-        private void InsertNewCustomerToDB(Customer customer) {
-            var sqlTran = DBconnection.BeginTransaction();
-
-            var command = DBconnection.CreateCommand();
-            command.Transaction = sqlTran;
-            command.Connection = DBconnection;
-            try {
-                // Set the INSERT command and parameter.
-                command.CommandText =
-                    "INSERT INTO customer (Name, Phone, Comment, Date, TimeStamp) VALUES (@Name,@Phone,@Comment,Now(),Now());";
-                command.Parameters.AddWithValue("@Name", customer.Name);
-                command.Parameters.AddWithValue("@Phone", customer.Phone);
-                command.Parameters.AddWithValue("@Comment", customer.Note);
-
-                command.UpdatedRowSource = UpdateRowSource.None;
-                command.ExecuteNonQuery();
-
-                // Commit the transaction.
-                sqlTran.Commit();
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-
-                try {
-                    sqlTran.Rollback();
-                }
-                catch (Exception exRollback) {
-                    MessageBox.Show(exRollback.Message);
-                }
-            }
-        }
-
-        public void UpdateProductFromDB() {
-            try {
-                //prepare adapter to run query
-                var query =
-                    "select id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice from Product where year=" +
-                    ConfigurationManager.AppSettings["Year"];
-
-                DBadapterProduct = new MySqlDataAdapter(query, DBconnection);
-                var DBDataSetProduct = new DataSet();
-                //get query results in dataset
-                DBadapterProduct.Fill(DBDataSetProduct);
-
-                DataTableProduct = DBDataSetProduct.Tables[0];
-                DataTableProduct.TableName = "Product";
-
-                // Set the UPDATE command and parameters.
-                //DBadapterProduct.UpdateCommand = new MySqlCommand(
-                //    "UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, Timestamp=Now() WHERE id=@id;",
-                //    DBconnection);
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 45, "name");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-                ////DBadapter.UpdateCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 10, "Timestamp");
-                //DBadapterProduct.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
-
-                // Set the INSERT command and parameter.
-                //DBadapterProduct.InsertCommand = new MySqlCommand(
-                //    "INSERT INTO Product (Name, Description,Type,  Note, Price, CustomerId, Year, timestamp)" +
-                //"VALUES (@Name, @Description, @Type, @Note,@price, @CustomerId, 2014, Now());",
-                //    DBconnection);
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 45, "Name");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@CustomerId", MySqlDbType.Int16, 10, "CustomerId");
-                //DBadapterProduct.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
-
-                // Set the DELETE command and parameter.
-                //DBadapterProduct.DeleteCommand = new MySqlCommand(
-                //    "DELETE FROM Product WHERE Id=@id;", DBconnection);
-                //DBadapterProduct.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-                //DBadapterProduct.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
-            }
-            catch (MySqlException ex) {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void InsertNewProductToDB(Product prod, int customerid) {
-            var sqlTran = DBconnection.BeginTransaction();
-
-            var command = DBconnection.CreateCommand();
-            command.Transaction = sqlTran;
-            command.Connection = DBconnection;
-            try {
-                command.CommandText = "select max(Label) from Product where Year=" +
-                                      ConfigurationManager.AppSettings["Year"];
-                var result = command.ExecuteScalar();
-                var nextLabel = 1;
-                if (result != DBNull.Value) {
-                    nextLabel = (int) command.ExecuteScalar() + 1;
-                }
-
-                command.CommandText =
-                    "INSERT INTO Product (Label, Name, Description,Type,  Note, Price, FixedPrice, CustomerId, Year, timestamp)" +
-                    "VALUES (@Label, @Name, @Description, @Type, @Note,@price, @Fixedprice, @CustomerId ," +
-                    ConfigurationManager.AppSettings["Year"] + ", Now());";
-                command.Parameters.AddWithValue("@Label", nextLabel);
-                command.Parameters.AddWithValue("@Name", prod.Name);
-                command.Parameters.AddWithValue("@Description", prod.Description);
-                command.Parameters.AddWithValue("@Price", prod.Price);
-                command.Parameters.AddWithValue("@FixedPrice", prod.FixedPrice);
-                command.Parameters.AddWithValue("@Type", prod.Type);
-                command.Parameters.AddWithValue("@Note", prod.Note);
-                command.Parameters.AddWithValue("@CustomerId", customerid);
-
-                command.UpdatedRowSource = UpdateRowSource.None;
-                command.ExecuteNonQuery();
-
-                // Commit the transaction.
-                sqlTran.Commit();
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-
-                try {
-                    sqlTran.Rollback();
-                }
-                catch (Exception exRollback) {
-                    MessageBox.Show(exRollback.Message);
-                }
-            }
-        }
-
-        private void SaveProductToDB(Product prod) {
-            var sqlTran = DBconnection.BeginTransaction();
-
-            var command = DBconnection.CreateCommand();
-            command.Transaction = sqlTran;
-            command.Connection = DBconnection;
-            try {
-                command.CommandText =
-                    "UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, FixedPrice=@FixedPrice, Timestamp=Now() WHERE id=@id;";
-                command.Parameters.AddWithValue("@Name", prod.Name);
-                command.Parameters.AddWithValue("@Description", prod.Description);
-                command.Parameters.AddWithValue("@Price", prod.Price);
-                command.Parameters.AddWithValue("@FixedPrice", prod.FixedPrice);
-                command.Parameters.AddWithValue("@Type", prod.Type);
-                command.Parameters.AddWithValue("@Note", prod.Note);
-                command.Parameters.AddWithValue("@id", prod.Id);
-                command.UpdatedRowSource = UpdateRowSource.None;
-                command.ExecuteNonQuery();
-
-                // Commit the transaction.
-                sqlTran.Commit();
-                Trace.WriteLine("Update Product : SUCCESS!");
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-                try {
-                    sqlTran.Rollback();
-                }
-                catch (Exception exRollback) {
-                    MessageBox.Show(exRollback.Message);
-                }
-            }
-        }
-
-        private void SaveProductPriceToDB(int id, int price, string note) {
-            var command = DBconnection.CreateCommand();
-            command.Connection = DBconnection;
-            try {
-                command.CommandText = "UPDATE Product SET Price=@Price, Timestamp=Now(), Note=@Note WHERE id=@id;";
-                command.Parameters.AddWithValue("@Price", price);
-                command.Parameters.AddWithValue("@Note", note);
-                command.Parameters.AddWithValue("@id", id);
-                command.UpdatedRowSource = UpdateRowSource.None;
-                command.ExecuteNonQuery();
-
-                Trace.WriteLine("Update Price : SUCCESS!");
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void DeleteProductToDB(int id) {
-            var command = DBconnection.CreateCommand();
-            command.Connection = DBconnection;
-            try {
-                command.CommandText = "DELETE FROM Product WHERE Id=@id;";
-                command.Parameters.AddWithValue("@id", id);
-                command.UpdatedRowSource = UpdateRowSource.None;
-                command.ExecuteNonQuery();
-
-                Trace.WriteLine("Delete Product : SUCCESS!");
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        public void UpdateFromDB() {
+        public void UpdateFromDB()
+        {
             Cursor.Current = Cursors.WaitCursor;
             Trace.WriteLine("UpdateFromDB");
-            fUpdatingProductList = true;
-            var customerId = GetSelectedCustomerId();
-
-            if (fDataGridCustomerIsChanged && Mode != OpMode.Initializing) {
-                var res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", null, MessageBoxButtons.YesNo);
-                if (res == DialogResult.Yes) {
-                    SaveCustomerToDB();
-                }
-            }
-
+            DataViewModel.fUpdatingProductList = true;
+            DataViewModel.fUpdatingCustomerList = true;
             TableAutoSizeToggleOff(dataGridViewCustomers);
             TableAutoSizeToggleOff(dataGridViewProducts);
 
-            fUpdatingCustomerList = true;
-            UpdateCustomerFromDB();
+
+            if (DataViewModel.fDataGridCustomerIsChanged && Mode != OpMode.Initializing) {
+                var res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", null, MessageBoxButtons.YesNo);
+                if (res == DialogResult.Yes) {
+                    DataViewModel.SaveCustomerToDB();
+                }
+            }
+
+            DataViewModel.UpdateCustomerFromDB();
             if (Mode == OpMode.Initializing) {
                 InitCustomerList();
             }
             SetVisibleCustomerList();
 
-            UpdateProductFromDB();
+            DataViewModel.UpdateProductFromDB();
             if (Mode == OpMode.Initializing) {
                 InitProductList();
             }
             SetVisibleProductList();
 
-            fUpdatingCustomerList = false;
             UpdateAuctionSummary();
             UpdateProductListHiding();
             UpdateSummaryPerCustomer();
-            fDataGridCustomerIsChanged = false;
+            DataViewModel.fDataGridCustomerIsChanged = false;
 
-            SelectCustomerRow(customerId);
+            SelectCustomerRow(GetSelectedCustomerId());
 
             TableAutoSizeToggleOn(dataGridViewCustomers);
             TableAutoSizeToggleOn(dataGridViewProducts);
-            
             Cursor.Current = Cursors.Default;
-            fUpdatingProductList = false;
+            DataViewModel.fUpdatingCustomerList = false;
+            DataViewModel.fUpdatingProductList = false;
             Trace.WriteLine("UpdateFromDB -finished");
         }
 
         private void UpdateProductListHiding() {
             var selectedCustomerId = GetSelectedCustomerId();
-            if (fUpdatingCustomerList) {
+            if (DataViewModel.fUpdatingCustomerList) {
                 return;
             }
 
@@ -427,16 +152,6 @@ namespace ConAuction {
             dataGridViewProducts.ResumeLayout();
             stopwatch.Stop();
             Trace.WriteLine("UpdateProductListHiding - finished " + stopwatch.ElapsedMilliseconds);
-        }
-
-        private void SaveCustomerToDB() {
-            try {
-                DBadapterCustomer.Update(DataTableCustomer);
-                fDataGridCustomerIsChanged = false;
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-            }
         }
 
         private int GetSelectedCustomerId() {
@@ -526,7 +241,7 @@ namespace ConAuction {
         }
 
         private void SetVisibleCustomerList() {
-            dataGridViewCustomers.DataSource = DataTableCustomer;
+            dataGridViewCustomers.DataSource = DataViewModel.DataTableCustomer;
             // ReSharper disable once PossibleNullReferenceException
             dataGridViewCustomers.Columns["Finished"].Visible = Mode == OpMode.Paying;
             dataGridViewCustomers.MultiSelect = Mode == OpMode.Paying;
@@ -534,7 +249,7 @@ namespace ConAuction {
             if (Mode == OpMode.Paying) {
                 foreach (DataGridViewRow customerRow in dataGridViewCustomers.Rows) {
                     if (customerRow.Cells["id"].Value != null) {
-                        var count = DataTableProduct.CountForCustomer((int) customerRow.Cells["id"].Value);
+                        var count = DataViewModel.DataTableProduct.CountForCustomer((int)customerRow.Cells["id"].Value);
                         customerRow.Visible = count > 0;
                     }
                 }
@@ -547,32 +262,32 @@ namespace ConAuction {
             textBoxAmount.Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
             labelSoldAmount.Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
             buttonSave.Visible = Mode == OpMode.Receiving;
-            buttonSave.Enabled = fDataGridCustomerIsChanged;
+            buttonSave.Enabled = DataViewModel.fDataGridCustomerIsChanged;
             buttonSendSMS.Visible = Mode == OpMode.Paying;
 
-            if (fUpdatingCustomerList) {
+            if (DataViewModel.fUpdatingCustomerList) {
                 return;
             }
 
-            if (DataTableProduct == null) {
+            if (DataViewModel.DataTableProduct == null) {
                 return;
             }
 
-            var totalcountAuction = DataTableProduct.TotalCountAuction();
-            var totalcountFixed = DataTableProduct.TotalCountFixedPrice();
+            var totalcountAuction = DataViewModel.DataTableProduct.TotalCountAuction();
+            var totalcountFixed = DataViewModel.DataTableProduct.TotalCountFixedPrice();
             textBoxTotalCount.Text = totalcountAuction + " + " + totalcountFixed;
 
             if (Mode == OpMode.Auctioning || Mode == OpMode.Paying) {
-                var totalSoldCount = DataTableProduct.TotalSoldCount();
+                var totalSoldCount = DataViewModel.DataTableProduct.TotalSoldCount();
                 textBoxSoldCount.Text = totalSoldCount.ToString();
-                var totalSoldAmount = DataTableProduct.TotalSoldAmount();
+                var totalSoldAmount = DataViewModel.DataTableProduct.TotalSoldAmount();
                 textBoxAmount.Text = totalSoldAmount.ToString();
             }
         }
 
         private void InitProductList() {
             try {
-                dataGridViewProducts.DataSource = DataTableProduct;
+                dataGridViewProducts.DataSource = DataViewModel.DataTableProduct;
 
                 // ReSharper disable PossibleNullReferenceException
                 dataGridViewProducts.Columns["Label"].HeaderText = "Id";
@@ -616,7 +331,7 @@ namespace ConAuction {
         }
 
         private void SetVisibleProductList() {
-            dataGridViewProducts.DataSource = DataTableProduct;
+            dataGridViewProducts.DataSource = DataViewModel.DataTableProduct;
             // ReSharper disable PossibleNullReferenceException
             dataGridViewProducts.Columns["Note"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
             dataGridViewProducts.Columns["Note"].ReadOnly = Mode != OpMode.Auctioning;
@@ -643,12 +358,12 @@ namespace ConAuction {
             if (fShowSummary) {
                 var foundCustomer = GetSelectedCustomerId();
                 try {
-                    if (foundCustomer > 0 && DataTableProduct != null) {
-                        var totalAmount = DataTableProduct.TotalAmountForCustomer(foundCustomer);
+                    if (foundCustomer > 0 && DataViewModel.DataTableProduct != null) {
+                        var totalAmount = DataViewModel.DataTableProduct.TotalAmountForCustomer(foundCustomer);
                         textBoxTotalAmount.Text = totalAmount.ToString();
-                        var netAmount = DataTableProduct.NetAmountForCustomer(foundCustomer);
+                        var netAmount = DataViewModel.DataTableProduct.NetAmountForCustomer(foundCustomer);
                         textBoxNetAmount.Text = netAmount.ToString();
-                        var noOfUnsold = DataTableProduct.NoOfUnsoldForCustomer(foundCustomer);
+                        var noOfUnsold = DataViewModel.DataTableProduct.NoOfUnsoldForCustomer(foundCustomer);
                         textBoxUnsold.Text = noOfUnsold.ToString();
                     }
                 }
@@ -657,27 +372,27 @@ namespace ConAuction {
                 }
             }
             buttonNewProduct.Visible = Mode == OpMode.Receiving;
-            buttonNewProduct.Enabled = !fDataGridCustomerIsChanged;
+            buttonNewProduct.Enabled = !DataViewModel.fDataGridCustomerIsChanged;
 
             buttonNewCustomer.Visible = Mode == OpMode.Receiving;
-            buttonNewCustomer.Enabled = !fDataGridCustomerIsChanged;
+            buttonNewCustomer.Enabled = !DataViewModel.fDataGridCustomerIsChanged;
 
             var productCurrent = GetSelectedProduct();
 
             buttonDeleteProduct.Visible = Mode == OpMode.Receiving;
-            buttonDeleteProduct.Enabled = !fDataGridCustomerIsChanged && productCurrent != null;
+            buttonDeleteProduct.Enabled = !DataViewModel.fDataGridCustomerIsChanged && productCurrent != null;
 
             buttonSoldFixedPrice.Visible = Mode == OpMode.Showing;
-            buttonSoldFixedPrice.Enabled = !fDataGridCustomerIsChanged && productCurrent != null &&
+            buttonSoldFixedPrice.Enabled = !DataViewModel.fDataGridCustomerIsChanged && productCurrent != null &&
                                            productCurrent.IsFixedPrice && !productCurrent.IsSold;
 
         }
 
-        #region  Event handling
+   #region  Event handling
 
         private void dataGridViewCustomers_SelectionChanged(object sender, EventArgs e) {
             if (Mode != OpMode.Initializing) {
-                if (!fUpdatingCustomerList && !fUpdatingProductList) {
+                if (!DataViewModel.fUpdatingCustomerList && !DataViewModel.fUpdatingProductList) {
                     Trace.WriteLine("dataGridViewCustomers_SelectionChanged");
                     UpdateProductListHiding();
                     UpdateSummaryPerCustomer();
@@ -693,7 +408,7 @@ namespace ConAuction {
 
         private void dataGridViewCustomers_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
             if (Mode == OpMode.Receiving) {
-                fDataGridCustomerIsChanged = true;
+                DataViewModel.fDataGridCustomerIsChanged = true;
                 UpdateAuctionSummary();
                 UpdateSummaryPerCustomer();
                 if (
@@ -717,32 +432,32 @@ namespace ConAuction {
                     else {
                         cell.Value = !(bool) cell.Value;
                     }
-                    SaveCustomerToDB();
+                    DataViewModel.SaveCustomerToDB();
                 }
             }
         }
 
         private void buttonSave_Click(object sender, EventArgs e) {
             var strPhone = GetSelectedCustomerPhone();
-            SaveCustomerToDB();
+            DataViewModel.SaveCustomerToDB();
             UpdateFromDB();
             SelectCustomerRowBasedOnPhone(strPhone);
         }
 
         private void buttonNewProduct_Click(object sender, EventArgs e) {
             var customerId = GetSelectedCustomerId();
-            if (customerId > 0 && DataTableProduct != null) {
-                var productIdLast = DataTableProduct.GetLastProductIdForCustomer(customerId);
+            if (customerId > 0 && DataViewModel.DataTableProduct != null) {
+                var productIdLast = DataViewModel.DataTableProduct.GetLastProductIdForCustomer(customerId);
                 Product productLast = null;
                 if (productIdLast > 0) {
-                    productLast = new Product(DataTableProduct.GetRowForProductId(productIdLast));
+                    productLast = new Product(DataViewModel.DataTableProduct.GetRowForProductId(productIdLast));
                 }
 
                 var productNew = new Product();
                 var form = new FormEditProduct(productNew, productLast, Mode);
 
                 if (form.ShowDialog(this) == DialogResult.OK) {
-                    InsertNewProductToDB(productNew, customerId);
+                    DataViewModel.InsertNewProductToDB(productNew, customerId);
                     UpdateFromDB();
                 }
             }
@@ -758,7 +473,7 @@ namespace ConAuction {
                 else {
                     var form = new FormEditProduct(productCurrent, null, Mode);
                     if (form.ShowDialog() == DialogResult.OK) {
-                        SaveProductToDB(productCurrent);
+                        DataViewModel.SaveProductToDB(productCurrent);
                         UpdateFromDB();
                     }
                 }
@@ -772,29 +487,29 @@ namespace ConAuction {
         }
 
         private void dataGridViewProducts_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
-            if (Mode == OpMode.Auctioning && DataTableProduct != null &&
-                DataTableProduct.Columns[e.ColumnIndex].ColumnName == "Price") {
+            if (Mode == OpMode.Auctioning && DataViewModel.DataTableProduct != null &&
+                DataViewModel.DataTableProduct.Columns[e.ColumnIndex].ColumnName == "Price") {
                 Trace.WriteLine("CellValueChanged row=" + e.RowIndex + " col=" + e.ColumnIndex);
 
-                var row = DataTableProduct.Rows[e.RowIndex];
-                SaveProductPriceToDB((int) row["id"], (int) row["Price"], row["Note"].ToString());
+                var row = DataViewModel.DataTableProduct.Rows[e.RowIndex];
+                DataViewModel.SaveProductPriceToDB((int)row["id"], (int)row["Price"], row["Note"].ToString());
                 UpdateAuctionSummary();
             }
-            if (Mode == OpMode.Auctioning && DataTableProduct != null &&
-                DataTableProduct.Columns[e.ColumnIndex].ColumnName == "Note") {
+            if (Mode == OpMode.Auctioning && DataViewModel.DataTableProduct != null &&
+                DataViewModel.DataTableProduct.Columns[e.ColumnIndex].ColumnName == "Note") {
                 Trace.WriteLine("CellValueChanged row=" + e.RowIndex + " col=" + e.ColumnIndex);
 
-                var row = DataTableProduct.Rows[e.RowIndex];
-                SaveProductPriceToDB((int) row["id"], (int) row["Price"], row["Note"].ToString());
+                var row = DataViewModel.DataTableProduct.Rows[e.RowIndex];
+                DataViewModel.SaveProductPriceToDB((int)row["id"], (int)row["Price"], row["Note"].ToString());
                 UpdateAuctionSummary();
             }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
-            if (fDataGridCustomerIsChanged) {
+            if (DataViewModel.fDataGridCustomerIsChanged) {
                 var res = MessageBox.Show("Vill du spara ändringar?", "DB", MessageBoxButtons.YesNo);
                 if (res == DialogResult.Yes) {
-                    SaveCustomerToDB();
+                    DataViewModel.SaveCustomerToDB();
                 }
             }
         }
@@ -809,13 +524,13 @@ namespace ConAuction {
                 var res = MessageBox.Show("Är du säker på att du vill radera produkten?", "ConAuction",
                     MessageBoxButtons.YesNo);
                 if (res == DialogResult.Yes) {
-                    DeleteProductToDB(productId);
+                    DataViewModel.DeleteProductToDB(productId);
                 }
             }
         }
 
         private void dataGridViewProducts_SelectionChanged(object sender, EventArgs e) {
-            if (!fUpdatingProductList && !fUpdatingCustomerList) {
+            if (!DataViewModel.fUpdatingProductList && !DataViewModel.fUpdatingCustomerList) {
                 Trace.WriteLine("dataGridViewProducts_SelectionChanged");
                 UpdateSummaryPerCustomer();
             }
@@ -824,7 +539,7 @@ namespace ConAuction {
         private void comboBoxMode_SelectedIndexChanged(object sender, EventArgs e) {
             Mode = (OpMode) comboBoxMode.SelectedIndex;
             if (Mode == OpMode.Overhead) {
-                var form = new FormProductDisplay(DataTableProduct);
+                var form = new FormProductDisplay(DataViewModel.DataTableProduct);
                 form.ShowDialog();
                 Mode = OpMode.Initializing;
                 comboBoxMode.SelectedIndex = (int) OpMode.Initializing;
@@ -852,7 +567,7 @@ namespace ConAuction {
             if (productCurrent != null) {
                 if (Mode == OpMode.Showing) {
                     if (productCurrent.SoldForFixedPrice()) {
-                        SaveProductToDB(productCurrent);
+                        DataViewModel.SaveProductToDB(productCurrent);
                         UpdateFromDB();
                     }
                 }
@@ -864,7 +579,7 @@ namespace ConAuction {
             var form = new FormEditCustomer(customerNew);
 
             if (form.ShowDialog(this) == DialogResult.OK) {
-                InsertNewCustomerToDB(customerNew);
+                DataViewModel.InsertNewCustomerToDB(customerNew);
                 UpdateFromDB();
             }
         }
