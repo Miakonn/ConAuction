@@ -51,6 +51,8 @@ namespace ConAuction {
             } while (!fStarted);
 
             InitComboBoxMode();
+            TableAutoSizeToggleOn(dataGridViewCustomers);
+            TableAutoSizeToggleOn(dataGridViewProducts);
             dataGridViewCustomers.ClearSelection();
             dataGridViewCustomers.CurrentCell = null;
             Trace.WriteLine("MainForm - finished");
@@ -355,9 +357,8 @@ namespace ConAuction {
                 }
             }
 
-            // This increases the speed of redraw with a factor of 100!! I wonder why?
-            dataGridViewProducts.DataSource = null;
-            dataGridViewProducts.DataSource = DataTableProduct;
+            TableAutoSizeToggleOff(dataGridViewCustomers);
+            TableAutoSizeToggleOff(dataGridViewProducts);
 
             fUpdatingCustomerList = true;
             UpdateCustomerFromDB();
@@ -379,10 +380,13 @@ namespace ConAuction {
             fDataGridCustomerIsChanged = false;
 
             SelectCustomerRow(customerId);
+
+            TableAutoSizeToggleOn(dataGridViewCustomers);
+            TableAutoSizeToggleOn(dataGridViewProducts);
+            
             Cursor.Current = Cursors.Default;
             fUpdatingProductList = false;
             Trace.WriteLine("UpdateFromDB -finished");
-
         }
 
         private void UpdateProductListHiding() {
@@ -513,13 +517,6 @@ namespace ConAuction {
                 dataGridViewCustomers.Columns["Comment"].HeaderText = "Not";
                 dataGridViewCustomers.Columns["Finished"].HeaderText = "Klar";
 
-                dataGridViewCustomers.Columns["id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridViewCustomers.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridViewCustomers.Columns["Phone"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridViewCustomers.Columns["Comment"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                dataGridViewCustomers.Columns["Finished"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-
                 dataGridViewCustomers.Columns["TimeStamp"].Visible = false;
                // ReSharper restore PossibleNullReferenceException
             }
@@ -586,14 +583,6 @@ namespace ConAuction {
                 dataGridViewProducts.Columns["Price"].HeaderText = "Pris";
                 dataGridViewProducts.Columns["FixedPrice"].HeaderText = "LoppisPris";
 
-                dataGridViewProducts.Columns["Label"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridViewProducts.Columns["Type"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridViewProducts.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridViewProducts.Columns["Description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                dataGridViewProducts.Columns["Note"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridViewProducts.Columns["Price"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridViewProducts.Columns["FixedPrice"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
                 dataGridViewProducts.Columns["Label"].ReadOnly = true;
                 dataGridViewProducts.Columns["Type"].ReadOnly = true;
                 dataGridViewProducts.Columns["Name"].ReadOnly = true;
@@ -606,10 +595,23 @@ namespace ConAuction {
                 dataGridViewProducts.Columns["TimeStamp"].Visible = false;
                 dataGridViewProducts.Columns["FixedPrice"].Visible = true;
                 // ReSharper restore PossibleNullReferenceException
-
             }
             catch (Exception ex) {
                 MessageBox.Show("Error " + ex.Message);
+            }
+        }
+
+        private static void TableAutoSizeToggleOn(DataGridView grid)
+        {
+            foreach (DataGridViewColumn col in grid.Columns) {
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            }
+        }
+
+        private static void TableAutoSizeToggleOff(DataGridView grid)
+        {
+            foreach (DataGridViewColumn col in grid.Columns) {
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
 
