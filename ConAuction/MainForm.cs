@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using System.Text;
 using MySql.Data.MySqlClient;
 
-
 namespace ConAuction
 {
 	public enum OpMode { Initializing=0, Receiving=1, Showing=2, Auctioning=3, Paying=4, Overhead=5};
@@ -145,6 +144,38 @@ namespace ConAuction
 			fUpdatingCustomerList = false;
 
 		}
+
+        private void InsertNewCustomerToDB(Customer customer)
+        {
+            MySqlTransaction sqlTran = DBconnection.BeginTransaction();
+
+            MySqlCommand command = DBconnection.CreateCommand();
+            command.Transaction = sqlTran;
+            command.Connection = DBconnection;
+            try {
+                // Set the INSERT command and parameter.
+                command.CommandText = "INSERT INTO customer (Name, Phone, Comment, Date, TimeStamp) VALUES (@Name,@Phone,@Comment,Now(),Now());";
+                command.Parameters.AddWithValue("@Name", customer.Name);
+                command.Parameters.AddWithValue("@Phone", customer.Phone);
+                command.Parameters.AddWithValue("@Comment", customer.Note);
+
+                command.UpdatedRowSource = UpdateRowSource.None;
+                command.ExecuteNonQuery();
+
+                // Commit the transaction.
+                sqlTran.Commit();
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+
+                try {
+                    sqlTran.Rollback();
+                }
+                catch (Exception exRollback) {
+                    MessageBox.Show(exRollback.Message);
+                }
+            }
+        }
 
 		public void UpdateProductFromDB()
 		{
@@ -608,6 +639,8 @@ namespace ConAuction
 			buttonNewProduct.Visible = (Mode == OpMode.Receiving);
 			buttonNewProduct.Enabled = !fDataGridCustomerIsChanged;
 
+            buttonNewCustomer.Visible = (Mode == OpMode.Receiving);
+            buttonNewCustomer.Enabled = !fDataGridCustomerIsChanged;
 
 			Product productCurrent = GetSelectedProduct();
 
@@ -806,6 +839,17 @@ namespace ConAuction
 			}
 
 		}
+
+        private void buttonNewCustomer_Click(object sender, EventArgs e)
+        {
+            var customerNew = new Customer();
+            var form = new FormEditCustomer(customerNew);
+
+            if (form.ShowDialog(this) == DialogResult.OK) {
+                InsertNewCustomerToDB(customerNew);
+                UpdateFromDB();
+            }
+        }
 	}
 
 
