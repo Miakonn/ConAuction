@@ -435,14 +435,6 @@ namespace ConAuction {
             }
         }
 
-        private DataGridViewRow GetSelectedCustomerRow() {
-            var rows = dataGridViewCustomers.SelectedRows;
-            if (rows.Count == 1) {
-                return rows[0];
-            }
-            return null;
-        }
-
         private int GetSelectedCustomerId() {
             var rows = dataGridViewCustomers.SelectedRows;
             if (rows.Count == 1 && rows[0].Cells["id"].Value != DBNull.Value &&
@@ -513,6 +505,7 @@ namespace ConAuction {
                     return;
                 }
 
+                // ReSharper disable PossibleNullReferenceException
                 dataGridViewCustomers.Columns["id"].HeaderText = "Id";
                 dataGridViewCustomers.Columns["id"].ReadOnly = true;
                 dataGridViewCustomers.Columns["Name"].HeaderText = "Namn";
@@ -528,6 +521,7 @@ namespace ConAuction {
 
 
                 dataGridViewCustomers.Columns["TimeStamp"].Visible = false;
+               // ReSharper restore PossibleNullReferenceException
             }
             catch (Exception ex) {
                 MessageBox.Show("Error " + ex.Message);
@@ -536,6 +530,7 @@ namespace ConAuction {
 
         private void SetVisibleCustomerList() {
             dataGridViewCustomers.DataSource = DataTableCustomer;
+            // ReSharper disable once PossibleNullReferenceException
             dataGridViewCustomers.Columns["Finished"].Visible = Mode == OpMode.Paying;
             dataGridViewCustomers.MultiSelect = Mode == OpMode.Paying;
 
@@ -582,6 +577,7 @@ namespace ConAuction {
             try {
                 dataGridViewProducts.DataSource = DataTableProduct;
 
+                // ReSharper disable PossibleNullReferenceException
                 dataGridViewProducts.Columns["Label"].HeaderText = "Id";
                 dataGridViewProducts.Columns["Name"].HeaderText = "Namn";
                 dataGridViewProducts.Columns["Type"].HeaderText = "Typ";
@@ -609,6 +605,8 @@ namespace ConAuction {
                 dataGridViewProducts.Columns["CustomerId"].ReadOnly = true;
                 dataGridViewProducts.Columns["TimeStamp"].Visible = false;
                 dataGridViewProducts.Columns["FixedPrice"].Visible = true;
+                // ReSharper restore PossibleNullReferenceException
+
             }
             catch (Exception ex) {
                 MessageBox.Show("Error " + ex.Message);
@@ -617,14 +615,16 @@ namespace ConAuction {
 
         private void SetVisibleProductList() {
             dataGridViewProducts.DataSource = DataTableProduct;
+            // ReSharper disable PossibleNullReferenceException
             dataGridViewProducts.Columns["Note"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
-            dataGridViewProducts.Columns["Note"].ReadOnly = !(Mode == OpMode.Auctioning);
-            dataGridViewProducts.Columns["Price"].ReadOnly = !(Mode == OpMode.Auctioning);
+            dataGridViewProducts.Columns["Note"].ReadOnly = Mode != OpMode.Auctioning;
+            dataGridViewProducts.Columns["Price"].ReadOnly = Mode != OpMode.Auctioning;
             dataGridViewProducts.Columns["Price"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying ||
                                                             Mode == OpMode.Showing;
             dataGridViewProducts.EditMode = Mode == OpMode.Auctioning
                 ? DataGridViewEditMode.EditOnKeystrokeOrF2
                 : DataGridViewEditMode.EditProgrammatically;
+            // ReSharper restore PossibleNullReferenceException
         }
 
         private void UpdateSummaryPerCustomer() {
@@ -834,7 +834,7 @@ namespace ConAuction {
 
         private void buttonSendSMS_Click(object sender, EventArgs e) {
             var rows = dataGridViewCustomers.SelectedRows;
-            if (rows != null && rows.Count >= 1) {
+            if (rows.Count >= 1) {
                 var form = new FormSendSMS(rows);
                 form.ShowDialog(this);
             }
