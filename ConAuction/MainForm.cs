@@ -28,10 +28,12 @@ namespace ConAuction {
         private bool fDataGridCustomerIsChanged;
 
         private bool fUpdatingCustomerList;
+        private bool fUpdatingProductList;
 
         private OpMode Mode = OpMode.Initializing;
 
         public MainForm() {
+            Trace.WriteLine("MainForm");
             InitializeComponent();
             LoadImage();
 
@@ -48,11 +50,10 @@ namespace ConAuction {
                 }
             } while (!fStarted);
 
-            UpdateFromDB();
-
+            InitComboBoxMode();
             dataGridViewCustomers.ClearSelection();
             dataGridViewCustomers.CurrentCell = null;
-            InitComboBoxMode();
+            Trace.WriteLine("MainForm - finished");
         }
 
         private void InitComboBoxMode() {
@@ -342,6 +343,9 @@ namespace ConAuction {
         }
 
         public void UpdateFromDB() {
+            Cursor.Current = Cursors.WaitCursor;
+            Trace.WriteLine("UpdateFromDB");
+            fUpdatingProductList = true;
             var customerId = GetSelectedCustomerId();
 
             if (fDataGridCustomerIsChanged && Mode != OpMode.Initializing) {
@@ -350,6 +354,10 @@ namespace ConAuction {
                     SaveCustomerToDB();
                 }
             }
+
+            // This increases the speed of redraw with a factor of 100!! I wonder why?
+            dataGridViewProducts.DataSource = null;
+            dataGridViewProducts.DataSource = DataTableProduct;
 
             fUpdatingCustomerList = true;
             UpdateCustomerFromDB();
@@ -371,6 +379,10 @@ namespace ConAuction {
             fDataGridCustomerIsChanged = false;
 
             SelectCustomerRow(customerId);
+            Cursor.Current = Cursors.Default;
+            fUpdatingProductList = false;
+            Trace.WriteLine("UpdateFromDB -finished");
+
         }
 
         private void UpdateProductListHiding() {
@@ -379,6 +391,9 @@ namespace ConAuction {
                 return;
             }
 
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Trace.WriteLine("UpdateProductListHiding:" + Mode);
             dataGridViewProducts.ClearSelection();
             dataGridViewProducts.CurrentCell = null;
 
@@ -406,6 +421,8 @@ namespace ConAuction {
                 }
             }
             dataGridViewProducts.ResumeLayout();
+            stopwatch.Stop();
+            Trace.WriteLine("UpdateProductListHiding - finished " + stopwatch.ElapsedMilliseconds);
         }
 
         private void SaveCustomerToDB() {
@@ -450,7 +467,7 @@ namespace ConAuction {
                     if (row.Cells["id"].Value != null && row.Cells["id"].Value != DBNull.Value) {
                         var rowId = (int) row.Cells["id"].Value;
                         if (customerId == rowId) {
-                            if (row.Displayed == false) {
+                            if (row.Displayed == false && row.Visible) {
                                 dataGridViewCustomers.FirstDisplayedScrollingRowIndex = row.Index;
                             }
                             row.Selected = true;
@@ -611,6 +628,7 @@ namespace ConAuction {
         }
 
         private void UpdateSummaryPerCustomer() {
+            Trace.WriteLine("UpdateSummaryPerCustomer");
             var fShowSummary = Mode == OpMode.Paying;
 
             textBoxTotalAmount.Visible = fShowSummary;
@@ -650,13 +668,15 @@ namespace ConAuction {
             buttonSoldFixedPrice.Visible = Mode == OpMode.Showing;
             buttonSoldFixedPrice.Enabled = !fDataGridCustomerIsChanged && productCurrent != null &&
                                            productCurrent.IsFixedPrice && !productCurrent.IsSold;
+
         }
 
         #region  Event handling
 
         private void dataGridViewCustomers_SelectionChanged(object sender, EventArgs e) {
             if (Mode != OpMode.Initializing) {
-                if (!fUpdatingCustomerList) {
+                if (!fUpdatingCustomerList && !fUpdatingProductList) {
+                    Trace.WriteLine("dataGridViewCustomers_SelectionChanged");
                     UpdateProductListHiding();
                     UpdateSummaryPerCustomer();
                 }
@@ -793,7 +813,10 @@ namespace ConAuction {
         }
 
         private void dataGridViewProducts_SelectionChanged(object sender, EventArgs e) {
-            UpdateSummaryPerCustomer();
+            if (!fUpdatingProductList && !fUpdatingCustomerList) {
+                Trace.WriteLine("dataGridViewProducts_SelectionChanged");
+                UpdateSummaryPerCustomer();
+            }
         }
 
         private void comboBoxMode_SelectedIndexChanged(object sender, EventArgs e) {
@@ -804,6 +827,8 @@ namespace ConAuction {
                 Mode = OpMode.Initializing;
                 comboBoxMode.SelectedIndex = (int) OpMode.Initializing;
             }
+            Trace.WriteLine("comboBoxMode_SelectedIndexChanged");
+
             UpdateFromDB();
         }
 
