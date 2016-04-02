@@ -73,6 +73,7 @@ namespace ConAuction
             // textBoxCustomerName
             // 
             this.textBoxCustomerName.Location = new System.Drawing.Point(12, 60);
+            this.textBoxCustomerName.MaxLength = 45;
             this.textBoxCustomerName.Name = "textBoxCustomerName";
             this.textBoxCustomerName.Size = new System.Drawing.Size(311, 20);
             this.textBoxCustomerName.TabIndex = 3;
@@ -90,6 +91,7 @@ namespace ConAuction
             // textBoxCustomerPhone
             // 
             this.textBoxCustomerPhone.Location = new System.Drawing.Point(12, 108);
+            this.textBoxCustomerPhone.MaxLength = 20;
             this.textBoxCustomerPhone.Name = "textBoxCustomerPhone";
             this.textBoxCustomerPhone.Size = new System.Drawing.Size(136, 20);
             this.textBoxCustomerPhone.TabIndex = 5;
@@ -107,6 +109,7 @@ namespace ConAuction
             // textBoxCustomerNote
             // 
             this.textBoxCustomerNote.Location = new System.Drawing.Point(12, 161);
+            this.textBoxCustomerNote.MaxLength = 45;
             this.textBoxCustomerNote.Name = "textBoxCustomerNote";
             this.textBoxCustomerNote.Size = new System.Drawing.Size(136, 20);
             this.textBoxCustomerNote.TabIndex = 7;
