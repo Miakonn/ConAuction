@@ -60,6 +60,12 @@
     <Compile Include="FormEditCustomer.Designer.cs">
       <DependentUpon>FormEditCustomer.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSearch.Designer.cs">
+      <DependentUpon>FormSearch.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormSendSMS.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormProductDisplay.resx">
       <DependentUpon>FormProductDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSearch.resx">
+      <DependentUpon>FormSearch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormSendSMS.resx">
       <DependentUpon>FormSendSMS.cs</DependentUpon>

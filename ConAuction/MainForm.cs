@@ -386,6 +386,28 @@ namespace ConAuction {
             buttonSoldFixedPrice.Enabled = !DataViewModel.fDataGridCustomerIsChanged && productCurrent != null &&
                                            productCurrent.IsFixedPrice && !productCurrent.IsSold;
 
+            buttonSearch.Visible = Mode == OpMode.Showing;
+        
+        }
+
+        public int SearchProductTable(string searchText) {
+            dataGridViewProducts.ClearSelection();
+            int found = 0;
+            foreach (DataGridViewRow row in dataGridViewProducts.Rows) {
+                string s1 = (string)row.Cells["Description"].Value;
+                string s2 = (string)row.Cells["Name"].Value;
+
+                if ((s1.IndexOf(searchText, StringComparison.CurrentCultureIgnoreCase) >= 0) ||
+                    s2.IndexOf(searchText, StringComparison.CurrentCultureIgnoreCase) >= 0) {
+                    row.Selected = true;
+                    if (found == 0) {
+                        dataGridViewProducts.FirstDisplayedScrollingRowIndex = row.Index;
+                    }
+                    found++;
+                }
+            }
+            MessageBox.Show("Hittade " + found.ToString() + " objekt!");
+            return found;
         }
 
    #region  Event handling
@@ -582,6 +604,12 @@ namespace ConAuction {
                 DataViewModel.InsertNewCustomerToDB(customerNew);
                 UpdateFromDB();
             }
+        }
+
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            var formSearch = new FormSearch(this);
+            var res = formSearch.ShowDialog();
         }
     }
 
