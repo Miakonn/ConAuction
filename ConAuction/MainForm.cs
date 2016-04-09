@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -270,6 +271,7 @@ namespace ConAuction {
             buttonSave.Enabled = DataViewModel.fDataGridCustomerIsChanged;
             buttonSendSMS.Visible = Mode == OpMode.Paying;
             buttonSendResult.Visible = (Mode == OpMode.Paying);
+            buttonExport.Visible = (Mode == OpMode.Showing);
 
             if (DataViewModel.fUpdatingCustomerList) {
                 return;
@@ -634,6 +636,14 @@ namespace ConAuction {
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e) {
+            var text = DataViewModel.DataTableProduct.ExportProductsToJson();
+
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            path = Path.Combine(path, "ConAuction.json");
+            System.IO.File.WriteAllText(path, text);
         }
     }
 

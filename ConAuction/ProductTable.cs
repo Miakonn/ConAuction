@@ -151,5 +151,29 @@ namespace ConAuction {
             }
             return false;
         }
+
+        private static string WriteJsonObj(string label, string value) {
+            label = label.Replace('"', '\'');
+            value = value.Replace('"', '\'');
+            return string.Format("\"{0}\":\"{1}\"", label, value);
+        }
+
+        public static string ExportProductsToJson(this DataTable table) {
+           var strB = new StringBuilder();
+            strB.AppendLine("{\"Products\":[");
+
+            foreach (DataRow row in table.Rows) {
+                var str = string.Format("{{{0}, {1}, {2}}},", WriteJsonObj("Label", row["Label"].ToString()),
+                    WriteJsonObj("Name", row["Name"].ToString()),
+                    WriteJsonObj("Description", row["Description"].ToString()));
+
+                str = str.Replace("\r\n", "\\n");
+                strB.AppendLine(str);
+
+            }
+            strB.AppendLine("]}");
+            return strB.ToString();
+        }
+
     }
 }
