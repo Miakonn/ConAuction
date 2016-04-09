@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace ConAuction {
@@ -53,37 +55,80 @@ namespace ConAuction {
         public static int GetLastProductIdForCustomer(this DataTable table, int customerId) {
             var foundRows = table.Select("CustomerId = " + customerId);
 
-            var rowId = 0;
-            foreach (var row in foundRows) {
-                rowId = Math.Max(rowId, (int) row["id"]);
-            }
-            return rowId;
+            return foundRows.Select(row => (int) row["id"]).Concat(new[] {0}).Max();
         }
 
         public static int TotalAmountForCustomer(this DataTable table, int customerId) {
             var foundRows = table.Select("CustomerId = " + customerId + " and ISNULL(Price, 0) > 0");
 
-            var sum = 0;
-            foreach (var row in foundRows) {
-                var price = (int) row["Price"];
-                sum += price;
+            return foundRows.Sum(row => (int) row["Price"]);
+        }
+
+        public static string ExportCustomerReceipt(this DataTable table, int customerId, string customerName) {
+            var foundRows = table.Select("CustomerId = " + customerId + " and ISNULL(Price, 0) > 0");
+
+            var strB = new StringBuilder();
+            strB.AppendLine("<!DOCTYPE html> <meta charset=\"UTF-8\"> ");
+            strB.AppendLine("<html>");
+            strB.AppendLine("<body>");
+
+            strB.AppendLine("<h1>LinCons auktion</h1>");
+            strB.AppendLine("<h2>Linköping " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " </h2>");
+            strB.AppendLine("<h3>" + customerName + "</h3>");
+
+            strB.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
+            strB.AppendLine("<tr>");
+            strB.AppendLine("<td align='center'>Id</td>");
+            strB.AppendLine("<td align='left'>Namn</td>");
+            strB.AppendLine("<td align='left'>Beskrivning</td>");
+            strB.AppendLine("<td align='right'>Sålt för</td>");
+            strB.AppendLine("<td align='right'>Avgift</td>");
+            strB.AppendLine("<tr>");
+
+            var costNormal = int.Parse(ConfigurationManager.AppSettings["Cost"]);
+            var costFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+
+            foreach (DataRow row in foundRows) {
+                bool sold = row["Price"].ToString() != "0";
+                bool fixedPrice = row["FixedPrice"].ToString() != "0";
+
+                strB.AppendLine("<tr>");
+
+                strB.AppendLine("<td align='center'>" + row["Label"] + "</td>");
+                strB.AppendLine("<td align='left'>" + row["Name"] + "</td>");
+                strB.AppendLine("<td align='left'>" + row["Description"] + "</td>");
+                strB.AppendLine("<td align='right'>" + (sold ? row["Price"] : "ej sålt") + "</td>");
+                int cost = fixedPrice ? costFixed : costNormal;
+                strB.AppendLine("<td align='right'>" + cost +"</td>");
+                strB.AppendLine("</tr>");
             }
-            return sum;
+
+            // table footer & end of html file
+            strB.AppendLine("</table><p>");
+
+            strB.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
+ 
+            strB.AppendLine("<tr><td>Summa:</td><td align='right'>" + table.TotalAmountForCustomer(customerId) + " kr </td></tr>");
+            strB.AppendLine("<tr><td>Avgift:</td><td align='right'>" + table.TotalCostForCustomer(customerId) + " kr </td></tr>");
+            strB.AppendLine("<tr><td>Netto:</td><td align='right'>" + table.NetAmountForCustomer(customerId) + " kr </td></tr>");
+            strB.AppendLine("</table>");
+            strB.AppendLine("<h3/>Ansvarig för auktionen: " + ConfigurationManager.AppSettings["MailSenderName"] + " - " +ConfigurationManager.AppSettings["MailSenderAddress"] + "</h3>");
+            strB.AppendLine("</body></html>");
+
+            return strB.ToString();
         }
 
         public static int TotalCostForCustomer(this DataTable table, int customerId) {
-            int SettingCost;
-            int SettingCostFixed;
             var sum = 0;
             try {
-                SettingCost = int.Parse(ConfigurationManager.AppSettings["Cost"]);
-                SettingCostFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+                var settingCost = int.Parse(ConfigurationManager.AppSettings["Cost"]);
+                var settingCostFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
                 var foundRows = table.Select("CustomerId = " + customerId);
 
                 foreach (var row in foundRows) {
                     if (!string.IsNullOrEmpty(row["FixedPrice"].ToString())) {
                         var isFixedPrice = (int) row["FixedPrice"] > 0;
-                        sum += isFixedPrice ? SettingCostFixed : SettingCost;
+                        sum += isFixedPrice ? settingCostFixed : settingCost;
                     }
                 }
             }

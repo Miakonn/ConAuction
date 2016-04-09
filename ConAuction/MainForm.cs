@@ -60,17 +60,17 @@ namespace ConAuction {
         }
 
         private void LoadImage() {
-            var _imageStream =
+            var imageStream =
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("ConAuction.LinconAuktionLiten.png");
-            if (_imageStream != null) {
-                var bitmapLogo = new Bitmap(_imageStream);
+            if (imageStream != null) {
+                var bitmapLogo = new Bitmap(imageStream);
                 pictureBoxLogo.Image = bitmapLogo;
 
                 Icon = Icon.FromHandle(bitmapLogo.GetHicon());
             }
         }
 
-        public void UpdateFromDB()
+        public void UpdateFromDb()
         {
             Cursor.Current = Cursors.WaitCursor;
             Trace.WriteLine("UpdateFromDB");
@@ -154,20 +154,25 @@ namespace ConAuction {
             Trace.WriteLine("UpdateProductListHiding - finished " + stopwatch.ElapsedMilliseconds);
         }
 
-        private int GetSelectedCustomerId() {
+        private int GetSelectedCustomerId()
+        {
             var rows = dataGridViewCustomers.SelectedRows;
             if (rows.Count == 1 && rows[0].Cells["id"].Value != DBNull.Value &&
-                rows[0].Cells["id"].Value != null) {
-                return (int) rows[0].Cells["id"].Value;
+                rows[0].Cells["id"].Value != null)
+            {
+                return (int)rows[0].Cells["id"].Value;
             }
             return 0;
         }
 
-        private string GetSelectedCustomerPhone() {
+
+        private string GetSelectedCustomerColumn(string columnId)
+        {
             var rows = dataGridViewCustomers.SelectedRows;
-            if (rows.Count == 1 && rows[0].Cells["Phone"].Value != DBNull.Value &&
-                rows[0].Cells["Phone"].Value != null) {
-                return rows[0].Cells["Phone"].Value.ToString();
+            if (rows.Count == 1 && rows[0].Cells[columnId].Value != DBNull.Value &&
+                rows[0].Cells[columnId].Value != null)
+            {
+                return rows[0].Cells[columnId].Value.ToString();
             }
             return "";
         }
@@ -264,6 +269,7 @@ namespace ConAuction {
             buttonSave.Visible = Mode == OpMode.Receiving;
             buttonSave.Enabled = DataViewModel.fDataGridCustomerIsChanged;
             buttonSendSMS.Visible = Mode == OpMode.Paying;
+            buttonSendResult.Visible = (Mode == OpMode.Paying);
 
             if (DataViewModel.fUpdatingCustomerList) {
                 return;
@@ -460,9 +466,9 @@ namespace ConAuction {
         }
 
         private void buttonSave_Click(object sender, EventArgs e) {
-            var strPhone = GetSelectedCustomerPhone();
+            var strPhone = GetSelectedCustomerColumn("Phone");
             DataViewModel.SaveCustomerToDB();
-            UpdateFromDB();
+            UpdateFromDb();
             SelectCustomerRowBasedOnPhone(strPhone);
         }
 
@@ -480,7 +486,7 @@ namespace ConAuction {
 
                 if (form.ShowDialog(this) == DialogResult.OK) {
                     DataViewModel.InsertNewProductToDB(productNew, customerId);
-                    UpdateFromDB();
+                    UpdateFromDb();
                 }
             }
         }
@@ -496,7 +502,7 @@ namespace ConAuction {
                     var form = new FormEditProduct(productCurrent, null, Mode);
                     if (form.ShowDialog() == DialogResult.OK) {
                         DataViewModel.SaveProductToDB(productCurrent);
-                        UpdateFromDB();
+                        UpdateFromDb();
                     }
                 }
             }
@@ -537,7 +543,7 @@ namespace ConAuction {
         }
 
         private void buttonUpdate_Click(object sender, EventArgs e) {
-            UpdateFromDB();
+            UpdateFromDb();
         }
 
         private void buttonDeleteProduct_Click(object sender, EventArgs e) {
@@ -568,7 +574,7 @@ namespace ConAuction {
             }
             Trace.WriteLine("comboBoxMode_SelectedIndexChanged");
 
-            UpdateFromDB();
+            UpdateFromDb();
         }
 
         private void buttonSendSMS_Click(object sender, EventArgs e) {
@@ -590,7 +596,7 @@ namespace ConAuction {
                 if (Mode == OpMode.Showing) {
                     if (productCurrent.SoldForFixedPrice()) {
                         DataViewModel.SaveProductToDB(productCurrent);
-                        UpdateFromDB();
+                        UpdateFromDb();
                     }
                 }
             }
@@ -602,7 +608,7 @@ namespace ConAuction {
 
             if (form.ShowDialog(this) == DialogResult.OK) {
                 DataViewModel.InsertNewCustomerToDB(customerNew);
-                UpdateFromDB();
+                UpdateFromDb();
             }
         }
 
@@ -610,6 +616,24 @@ namespace ConAuction {
         {
             var formSearch = new FormSearch(this);
             var res = formSearch.ShowDialog();
+        }
+
+        private void buttonSendResult_Click(object sender, EventArgs e) {
+
+            var foundCustomer = GetSelectedCustomerId();
+            try {
+                if (foundCustomer > 0 && DataViewModel.DataTableProduct != null) {
+                    var report = DataViewModel.DataTableProduct.ExportCustomerReceipt(foundCustomer, GetSelectedCustomerColumn("Name"));
+
+
+
+                    var form = new FormSendMail(report);
+                    form.ShowDialog(this);
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 

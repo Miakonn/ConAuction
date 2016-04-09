@@ -44,6 +44,7 @@
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.textBoxSoldCount = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.buttonSearch = new System.Windows.Forms.Button();
             this.buttonSoldFixedPrice = new System.Windows.Forms.Button();
             this.textBoxUnsold = new System.Windows.Forms.TextBox();
             this.labelUnsoldPerCustomer = new System.Windows.Forms.Label();
@@ -54,7 +55,7 @@
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.comboBoxMode = new System.Windows.Forms.ComboBox();
-            this.buttonSearch = new System.Windows.Forms.Button();
+            this.buttonSendResult = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewProducts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCustomers)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -193,6 +194,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.buttonSendResult);
             this.splitContainer1.Panel2.Controls.Add(this.buttonSearch);
             this.splitContainer1.Panel2.Controls.Add(this.buttonSoldFixedPrice);
             this.splitContainer1.Panel2.Controls.Add(this.textBoxUnsold);
@@ -307,6 +309,20 @@
             this.label6.TabIndex = 24;
             this.label6.Text = "Totalt antal objekt";
             // 
+            // buttonSearch
+            // 
+            this.buttonSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSearch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSearch.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.buttonSearch.Location = new System.Drawing.Point(242, 638);
+            this.buttonSearch.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonSearch.Name = "buttonSearch";
+            this.buttonSearch.Size = new System.Drawing.Size(134, 33);
+            this.buttonSearch.TabIndex = 26;
+            this.buttonSearch.Text = "Sök objekt...";
+            this.buttonSearch.UseVisualStyleBackColor = true;
+            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
+            // 
             // buttonSoldFixedPrice
             // 
             this.buttonSoldFixedPrice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -412,19 +428,19 @@
             this.comboBoxMode.TabIndex = 34;
             this.comboBoxMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxMode_SelectedIndexChanged);
             // 
-            // buttonSearch
+            // buttonSendResult
             // 
-            this.buttonSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSearch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSearch.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.buttonSearch.Location = new System.Drawing.Point(242, 638);
-            this.buttonSearch.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(134, 33);
-            this.buttonSearch.TabIndex = 26;
-            this.buttonSearch.Text = "Sök objekt...";
-            this.buttonSearch.UseVisualStyleBackColor = true;
-            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
+            this.buttonSendResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSendResult.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSendResult.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.buttonSendResult.Location = new System.Drawing.Point(242, 587);
+            this.buttonSendResult.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonSendResult.Name = "buttonSendResult";
+            this.buttonSendResult.Size = new System.Drawing.Size(134, 33);
+            this.buttonSendResult.TabIndex = 27;
+            this.buttonSendResult.Text = "Skicka resultat...";
+            this.buttonSendResult.UseVisualStyleBackColor = true;
+            this.buttonSendResult.Click += new System.EventHandler(this.buttonSendResult_Click);
             // 
             // MainForm
             // 
@@ -483,6 +499,7 @@
 		private System.Windows.Forms.Button buttonSoldFixedPrice;
         private System.Windows.Forms.Button buttonNewCustomer;
         private System.Windows.Forms.Button buttonSearch;
+        private System.Windows.Forms.Button buttonSendResult;
 	}
 }
 
