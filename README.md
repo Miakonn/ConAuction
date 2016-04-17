@@ -3,4 +3,4 @@ ConAuction
 
 
 Auktionsprogram kopplat till MySQl database
-DB-modelen finns i ConAuction.mwb
+DB-modellen finns i ConAuction.mwb
