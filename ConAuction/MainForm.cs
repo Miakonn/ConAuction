@@ -81,6 +81,7 @@ namespace ConAuction {
             TableAutoSizeToggleOff(dataGridViewCustomers);
             TableAutoSizeToggleOff(dataGridViewProducts);
 
+	        int selectedCustomer = GetSelectedCustomerId();
 
             if (DataViewModel.fDataGridCustomerIsChanged && Mode != OpMode.Initializing) {
                 var res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", null, MessageBoxButtons.YesNo);
@@ -101,12 +102,13 @@ namespace ConAuction {
             }
             SetVisibleProductList();
 
+			SelectCustomerRow(selectedCustomer);
+
             UpdateAuctionSummary();
             UpdateProductListHiding();
             UpdateSummaryPerCustomer();
             DataViewModel.fDataGridCustomerIsChanged = false;
 
-            SelectCustomerRow(GetSelectedCustomerId());
 
             TableAutoSizeToggleOn(dataGridViewCustomers);
             TableAutoSizeToggleOn(dataGridViewProducts);
@@ -254,6 +256,7 @@ namespace ConAuction {
             dataGridViewCustomers.MultiSelect = Mode == OpMode.Paying;
 
             if (Mode == OpMode.Paying) {
+	            dataGridViewCustomers.CurrentCell = null;
                 foreach (DataGridViewRow customerRow in dataGridViewCustomers.Rows) {
                     if (customerRow.Cells["id"].Value != null) {
                         var count = DataViewModel.DataTableProduct.CountForCustomer((int)customerRow.Cells["id"].Value);
@@ -648,7 +651,7 @@ namespace ConAuction {
 
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             path = Path.Combine(path, "ConAuction.json");
-            System.IO.File.WriteAllText(path, text);
+            File.WriteAllText(path, text);
         }
     }
 
