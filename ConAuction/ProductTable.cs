@@ -163,9 +163,12 @@ namespace ConAuction {
             strB.AppendLine("{\"Products\":[");
 
             foreach (DataRow row in table.Rows) {
-                var str = string.Format("{{{0}, {1}, {2}}},", WriteJsonObj("Label", row["Label"].ToString()),
+                var str = string.Format("{{{0}, {1}, {2}, {3}}},", 
+					WriteJsonObj("Label", row["Label"].ToString()),
                     WriteJsonObj("Name", row["Name"].ToString()),
-                    WriteJsonObj("Description", row["Description"].ToString()));
+					WriteJsonObj("Type", row["Type"].ToString()),
+					WriteJsonObj("Description", row["Description"].ToString())
+					);
 
                 str = str.Replace("\r\n", "\\n");
                 strB.AppendLine(str);

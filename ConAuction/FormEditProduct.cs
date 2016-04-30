@@ -72,7 +72,7 @@ namespace ConAuction {
             return "";
         }
 
-        private string FetchEANFromNet(string barcode) {
+        private static string FetchEANFromNet(string barcode) {
             const string sUrl = "http://www.outpan.com/api/get_product.php";
             var finalUrl = string.Format("{0}?barcode={1}", sUrl, barcode);
             Trace.WriteLine(finalUrl);
@@ -134,7 +134,7 @@ namespace ConAuction {
             return s.Length > 0 && s.All(char.IsDigit);
         }
 
-        private string CheckLastPartForEANcode(TextBox tb) {
+        private string CheckLastPartForEANCode(TextBox tb) {
             for (var len = 13; len >= 12; len --) {
                 if (tb.Text.Length >= len) {
                     var sEnd = tb.Text.Substring(tb.Text.Length - len, len);
@@ -160,7 +160,7 @@ namespace ConAuction {
         private void textBoxName_TextChanged(object sender, EventArgs e) {
             EnableDisableButtons();
             if (textBoxName.Text.Length >= 12) {
-                var sDescr = CheckLastPartForEANcode(textBoxName);
+                var sDescr = CheckLastPartForEANCode(textBoxName);
                 if (sDescr.Length > 1) {
                     textBoxName.SelectionStart = textBoxName.Text.Length;
                     textBoxProductDescription.Text = sDescr;
@@ -171,7 +171,7 @@ namespace ConAuction {
 
         private void textBoxProductDescription_TextChanged(object sender, EventArgs e) {
             if (textBoxProductDescription.Text.Length >= 12) {
-                var sDescr = CheckLastPartForEANcode(textBoxProductDescription);
+                var sDescr = CheckLastPartForEANCode(textBoxProductDescription);
                 if (sDescr.Length > 0) {
                     textBoxProductDescription.SelectionStart = textBoxProductDescription.Text.Length;
                 }

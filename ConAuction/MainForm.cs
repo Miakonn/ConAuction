@@ -16,10 +16,10 @@ namespace ConAuction {
     }
 
     public partial class MainForm : Form {
-        private readonly ViewModel DataViewModel;
+	    private ViewModel DataViewModel { get; set; }
 
-        private OpMode Mode = OpMode.Initializing;
-
+	    private OpMode Mode  { get; set; }
+	    
         public MainForm() {
             Trace.WriteLine("MainForm");
             InitializeComponent();
@@ -40,6 +40,7 @@ namespace ConAuction {
                 }
             } while (!fStarted);
 
+			Mode = OpMode.Initializing;
             InitComboBoxMode();
             TableAutoSizeToggleOn(dataGridViewCustomers);
             TableAutoSizeToggleOn(dataGridViewProducts);
@@ -339,6 +340,9 @@ namespace ConAuction {
         }
 
         private void SetVisibleProductList() {
+
+	        dataGridViewProducts.Visible = (Mode != OpMode.Initializing);   
+
             dataGridViewProducts.DataSource = DataViewModel.DataTableProduct;
             // ReSharper disable PossibleNullReferenceException
             dataGridViewProducts.Columns["Note"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
@@ -346,7 +350,8 @@ namespace ConAuction {
             dataGridViewProducts.Columns["Price"].ReadOnly = Mode != OpMode.Auctioning;
             dataGridViewProducts.Columns["Price"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying ||
                                                             Mode == OpMode.Showing;
-            dataGridViewProducts.EditMode = Mode == OpMode.Auctioning
+			dataGridViewProducts.Columns["Description"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Showing;
+			dataGridViewProducts.EditMode = Mode == OpMode.Auctioning
                 ? DataGridViewEditMode.EditOnKeystrokeOrF2
                 : DataGridViewEditMode.EditProgrammatically;
             // ReSharper restore PossibleNullReferenceException
@@ -617,7 +622,7 @@ namespace ConAuction {
         private void buttonSearch_Click(object sender, EventArgs e)
         {
             var formSearch = new FormSearch(this);
-            var res = formSearch.ShowDialog();
+            formSearch.ShowDialog();
         }
 
         private void buttonSendResult_Click(object sender, EventArgs e) {

@@ -7,14 +7,14 @@ using System.Windows.Forms;
 
 namespace ConAuction {
     public partial class FormProductDisplay : Form {
-        private int currentRowId = -1;
-        private readonly DataTable tableProducts;
+        private int _currentRowId = -1;
+        private readonly DataTable _tableProducts;
 
         public FormProductDisplay(DataTable table) {
             InitializeComponent();
             LoadImage();
 
-            tableProducts = table;
+            _tableProducts = table;
 
             WindowState = FormWindowState.Normal;
             FormBorderStyle = FormBorderStyle.None;
@@ -24,17 +24,17 @@ namespace ConAuction {
         }
 
         private void LoadImage() {
-            var _imageStream =
+            var imageStream =
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("ConAuction.LinconAuktionLiten.png");
-            if (_imageStream != null) {
-                var bitmapLogo = new Bitmap(_imageStream);
+            if (imageStream != null) {
+                var bitmapLogo = new Bitmap(imageStream);
                 pictureBoxLogo.Image = bitmapLogo;
 
                 Icon = Icon.FromHandle(bitmapLogo.GetHicon());
             }
         }
 
-        private string ReadRulesFile() {
+        private static string ReadRulesFile() {
             try {
                 using (var reader = new StreamReader("ConAuctionRules.txt", Encoding.UTF8)) {
                     return reader.ReadToEnd();
@@ -57,22 +57,22 @@ namespace ConAuction {
         }
 
         private void DisplayCurrentProduct() {
-            if (currentRowId < 0) {
+            if (_currentRowId < 0) {
                 labelLabel.Text = "";
                 labelType.Text = "";
                 labelName.Text = "Välkomna!";
                 labelDescription.Text = ReadRulesFile();
-                currentRowId = -1;
+                _currentRowId = -1;
             }
-            else if (currentRowId >= tableProducts.Rows.Count) {
-                currentRowId = tableProducts.Rows.Count;
+            else if (_currentRowId >= _tableProducts.Rows.Count) {
+                _currentRowId = _tableProducts.Rows.Count;
                 labelLabel.Text = "";
                 labelType.Text = "";
                 labelName.Text = "Nu är det slut!";
                 labelDescription.Text = ReadFinishFile();
             }
             else {
-                var row = tableProducts.Rows[currentRowId];
+                var row = _tableProducts.Rows[_currentRowId];
                 var label = (int) row["Label"];
                 labelLabel.Text = label.ToString();
                 labelType.Text = (string) row["Type"];
@@ -85,28 +85,28 @@ namespace ConAuction {
         private void IterateToNextUnsoldProduct(int step) {
             bool isSold;
             do {
-                currentRowId += step;
-                if (currentRowId >= tableProducts.Rows.Count) {
+                _currentRowId += step;
+				if (_currentRowId >= _tableProducts.Rows.Count) {
                     return;
                 }
-                var row = tableProducts.Rows[currentRowId];
+                var row = _tableProducts.Rows[_currentRowId];
                 isSold = (int) row["Price"] > 0;
             } while (isSold);
         }
 
-        private void FormProductDisplay_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.PageDown || e.KeyCode == Keys.Down || e.KeyCode == Keys.Space) {
+	    private void FormProductDisplay_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.PageDown || e.KeyCode == Keys.Down || e.KeyCode == Keys.Space || e.KeyCode == Keys.Right) {
                 if (e.Modifiers == Keys.Control) {
-                    currentRowId += 10;
+                    _currentRowId += 10;
                 }
                 IterateToNextUnsoldProduct(1);
                 DisplayCurrentProduct();
             }
-            else if (e.KeyCode == Keys.PageUp || e.KeyCode == Keys.Up) {
+			else if (e.KeyCode == Keys.PageUp || e.KeyCode == Keys.Up || e.KeyCode == Keys.Left) {
                 if (e.Modifiers == Keys.Control) {
-                    currentRowId -= 10;
+                    _currentRowId -= 10;
                 }
-                IterateToNextUnsoldProduct(1);
+				_currentRowId--;
                 DisplayCurrentProduct();
             }
             else if (e.KeyCode == Keys.Escape) {
