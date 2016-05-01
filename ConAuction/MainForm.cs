@@ -229,6 +229,8 @@ namespace ConAuction {
 
         private void InitCustomerList() {
             try {
+				dataGridViewCustomers.DataSource = DataViewModel.DataTableCustomer;
+
                 if (dataGridViewCustomers.ColumnCount < 5) {
                     return;
                 }
@@ -250,7 +252,6 @@ namespace ConAuction {
         }
 
         private void SetVisibleCustomerList() {
-            dataGridViewCustomers.DataSource = DataViewModel.DataTableCustomer;
             // ReSharper disable once PossibleNullReferenceException
             dataGridViewCustomers.Columns["Finished"].Visible = Mode == OpMode.Paying;
             dataGridViewCustomers.MultiSelect = Mode == OpMode.Paying;
