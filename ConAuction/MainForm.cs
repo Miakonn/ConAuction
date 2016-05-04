@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -168,7 +169,6 @@ namespace ConAuction {
             }
             return 0;
         }
-
 
         private string GetSelectedCustomerColumn(string columnId)
         {
@@ -590,8 +590,9 @@ namespace ConAuction {
 
         private void buttonSendSMS_Click(object sender, EventArgs e) {
             var rows = dataGridViewCustomers.SelectedRows;
-            if (rows.Count >= 1) {
-                var form = new FormSendSMS(rows);
+
+	        if (rows.Count >= 1) {
+				var form = new FormSendSMS(rows.Cast<DataGridViewRow>().Where(row => row.Visible).ToList());
                 form.ShowDialog(this);
             }
         }
@@ -635,8 +636,6 @@ namespace ConAuction {
             try {
                 if (foundCustomer > 0 && DataViewModel.DataTableProduct != null) {
                     var report = DataViewModel.DataTableProduct.ExportCustomerReceipt(foundCustomer, GetSelectedCustomerColumn("Name"));
-
-
 
                     var form = new FormSendMail(report);
                     form.ShowDialog(this);

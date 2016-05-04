@@ -38,19 +38,20 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBoxMessage.Location = new System.Drawing.Point(12, 101);
+			this.textBoxMessage.Location = new System.Drawing.Point(12, 138);
 			this.textBoxMessage.Multiline = true;
 			this.textBoxMessage.Name = "textBoxMessage";
-			this.textBoxMessage.Size = new System.Drawing.Size(366, 170);
+			this.textBoxMessage.Size = new System.Drawing.Size(366, 244);
 			this.textBoxMessage.TabIndex = 0;
 			// 
 			// textBoxRecipient
 			// 
 			this.textBoxRecipient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.textBoxRecipient.Location = new System.Drawing.Point(12, 56);
+			this.textBoxRecipient.Multiline = true;
 			this.textBoxRecipient.Name = "textBoxRecipient";
 			this.textBoxRecipient.ReadOnly = true;
-			this.textBoxRecipient.Size = new System.Drawing.Size(364, 26);
+			this.textBoxRecipient.Size = new System.Drawing.Size(364, 76);
 			this.textBoxRecipient.TabIndex = 1;
 			// 
 			// label1
@@ -67,7 +68,7 @@
 			// 
 			this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonOK.Location = new System.Drawing.Point(175, 287);
+			this.buttonOK.Location = new System.Drawing.Point(175, 398);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(93, 36);
 			this.buttonOK.TabIndex = 3;
@@ -79,7 +80,7 @@
 			// 
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCancel.Location = new System.Drawing.Point(288, 287);
+			this.buttonCancel.Location = new System.Drawing.Point(288, 398);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(90, 36);
 			this.buttonCancel.TabIndex = 4;
@@ -91,7 +92,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(390, 335);
+			this.ClientSize = new System.Drawing.Size(390, 446);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonOK);
 			this.Controls.Add(this.label1);

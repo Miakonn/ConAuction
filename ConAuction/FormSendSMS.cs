@@ -1,27 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 
 namespace ConAuction {
     public partial class FormSendSMS : Form {
-        private readonly DataGridViewSelectedRowCollection rows;
+		private readonly List<DataGridViewRow> _rows;
 
-        public FormSendSMS(DataGridViewSelectedRowCollection rowsT) {
-            rows = rowsT;
+		public FormSendSMS(List<DataGridViewRow> rows) {
+            _rows = rows;
             InitializeComponent();
 
-
             textBoxMessage.Text =
-                "Auktionen är avslutad. Du kan hämta ut dina pengar mellan kl 9 och 13 under söndagen. /LinCon auktionen";
+                "Auktionen är avslutad. Du kan hämta ut dina pengar mellan kl 9 och 13 under lördagen. /LinCon auktionen";
 
-            var sRecipient = "";
-            foreach (DataGridViewRow row in rows) {
-                var sName = row.Cells["Name"].Value.ToString();
-                sRecipient += sName + ", ";
-            }
+            var sRecipient = _rows.Select(row => row.Cells["Name"].Value.ToString()).Aggregate("", (current, sName) => current + (sName + ", "));
 
-            textBoxRecipient.Text = sRecipient;
+			textBoxRecipient.Text = sRecipient;
         }
 
         private static string FixPhoneNo(string phoneno) {
@@ -39,7 +36,6 @@ namespace ConAuction {
             const string sUser = "andersblom";
             const string sOriginator = "46705542120";
             const string sUrl = "https://se-1.cellsynt.net/sms.php";
-//			string data = "username=andersblom&password=kYJhMyCn&destination=0046705542120&type=text&charset=UTF-8&text=Testing 123&originatortype=numeric&originator={}";
 
             var finalUrl =
                 string.Format(
@@ -55,7 +51,7 @@ namespace ConAuction {
         private void buttonOK_Click(object sender, EventArgs e) {
             var message = textBoxMessage.Text;
 
-            foreach (DataGridViewRow row in rows) {
+            foreach (DataGridViewRow row in _rows) {
                 var phoneno = row.Cells["Phone"].Value.ToString();
                 SendSMS(phoneno, message);
             }

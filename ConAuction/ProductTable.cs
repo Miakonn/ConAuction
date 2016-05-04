@@ -155,12 +155,15 @@ namespace ConAuction {
         private static string WriteJsonObj(string label, string value) {
             label = label.Replace('"', '\'');
             value = value.Replace('"', '\'');
+	        if (string.IsNullOrEmpty(value)) {
+		        value = "-";
+	        }
             return string.Format("\"{0}\":\"{1}\"", label, value);
         }
 
         public static string ExportProductsToJson(this DataTable table) {
            var strB = new StringBuilder();
-            strB.AppendLine("{\"Products\":[");
+            strB.AppendLine("[");
 
             foreach (DataRow row in table.Rows) {
                 var str = string.Format("{{{0}, {1}, {2}, {3}}},", 
@@ -174,7 +177,7 @@ namespace ConAuction {
                 strB.AppendLine(str);
 
             }
-            strB.AppendLine("]}");
+            strB.AppendLine("]");
             return strB.ToString();
         }
 
