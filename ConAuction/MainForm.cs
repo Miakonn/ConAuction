@@ -134,9 +134,8 @@ namespace ConAuction {
             dataGridViewProducts.SuspendLayout();
             if (Mode == OpMode.Auctioning || Mode == OpMode.Showing) {
                 foreach (DataGridViewRow productRow in dataGridViewProducts.Rows) {
-	                var sold = ((int) productRow.Cells["Price"].Value > 0);
 					productRow.Visible = true;
-					productRow.DefaultCellStyle.BackColor = sold ? Color.LightGray : Color.White;
+	                SetProductRowColor(productRow);
                 }
             }
             else {
@@ -469,7 +468,13 @@ namespace ConAuction {
             return found;
         }
 
-   #region  Event handling
+	    private void SetProductRowColor(DataGridViewRow row) {
+			var sold = ((int)row.Cells["Price"].Value > 0);
+			row.DefaultCellStyle.BackColor = sold ? Color.LightGray : Color.White;
+	    }
+
+
+	    #region  Event handling
 
         private void dataGridViewCustomers_SelectionChanged(object sender, EventArgs e) {
             if (Mode != OpMode.Initializing) {

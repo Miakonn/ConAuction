@@ -45,7 +45,7 @@ namespace ConAuction {
             }
         }
 
-        private string ReadFinishFile() {
+        private static string ReadFinishFile() {
             try {
                 using (var reader = new StreamReader("ConAuctionFinish.txt", Encoding.UTF8)) {
                     return reader.ReadToEnd();
@@ -75,15 +75,21 @@ namespace ConAuction {
                 var row = _tableProducts.Rows[_currentRowId];
                 var label = (int) row["Label"];
                 labelLabel.Text = label.ToString();
-                labelType.Text = (string) row["Type"];
                 labelName.Text = (string) row["Name"];
-                labelDescription.Text = (string) row["Description"];
+				labelType.Text = (string)row["Type"];
+	            if ((int) row["Price"] > 0) {
+					labelDescription.Text = "Sålt för " + row["Price"] + ":-";
+				}
+	            else {
+					labelDescription.Text = (string)row["Description"];
+				}
             }
             Refresh();
         }
 
         private void IterateToNextUnsoldProduct(int step) {
             bool isSold;
+	        bool isFixedPrice;
             do {
                 _currentRowId += step;
 				if (_currentRowId >= _tableProducts.Rows.Count) {
@@ -91,7 +97,9 @@ namespace ConAuction {
                 }
                 var row = _tableProducts.Rows[_currentRowId];
                 isSold = (int) row["Price"] > 0;
-            } while (isSold);
+				isFixedPrice = ((int)row["FixedPrice"] > 0) && !row["Note"].ToString().ToLowerInvariant().Contains("auktion");
+
+            } while (isSold || isFixedPrice);
         }
 
 	    private void FormProductDisplay_KeyDown(object sender, KeyEventArgs e) {
