@@ -107,7 +107,7 @@ namespace ConAuction {
 			SelectCustomerRow(selectedCustomer);
 
             UpdateAuctionSummary();
-            UpdateProductListHiding();
+            SetProductListHiding();
             UpdateSummaryPerCustomer();
             DataViewModel.fDataGridCustomerIsChanged = false;
 
@@ -119,7 +119,7 @@ namespace ConAuction {
             Trace.WriteLine("UpdateFromDB -finished");
         }
 
-        private void UpdateProductListHiding() {
+        private void SetProductListHiding() {
             var selectedCustomerId = GetSelectedCustomerId();
             if (DataViewModel.fUpdatingCustomerList) {
                 return;
@@ -134,7 +134,9 @@ namespace ConAuction {
             dataGridViewProducts.SuspendLayout();
             if (Mode == OpMode.Auctioning || Mode == OpMode.Showing) {
                 foreach (DataGridViewRow productRow in dataGridViewProducts.Rows) {
-                    productRow.Visible = true;
+	                var sold = ((int) productRow.Cells["Price"].Value > 0);
+					productRow.Visible = true;
+					productRow.DefaultCellStyle.BackColor = sold ? Color.LightGray : Color.White;
                 }
             }
             else {
@@ -197,6 +199,23 @@ namespace ConAuction {
                 }
             }
         }
+
+	    private void SelectProductRow(string productId) {
+			if (Mode != OpMode.Initializing) {
+				foreach (DataGridViewRow row in dataGridViewProducts.Rows) {
+					if (row.Cells["id"].Value != null && row.Cells["id"].Value != DBNull.Value) {
+						var rowId = ((int)row.Cells["id"].Value).ToString();
+						if (productId == rowId) {
+							if (row.Displayed == false && row.Visible) {
+								dataGridViewProducts.FirstDisplayedScrollingRowIndex = row.Index;
+							}
+							row.Selected = true;
+							break;
+						}
+					}
+				}
+			}		    
+	    }
 
         private void SelectCustomerRowBasedOnPhone(string strPhone) {
             if (Mode != OpMode.Initializing) {
@@ -371,7 +390,7 @@ namespace ConAuction {
 
             dataGridViewProducts.DataSource = DataViewModel.DataTableProduct;
             // ReSharper disable PossibleNullReferenceException
-			dataGridViewProducts.Columns["FixedPrice"].Visible = Mode != OpMode.Auctioning;
+			//dataGridViewProducts.Columns["FixedPrice"].Visible = Mode != OpMode.Auctioning;
 			dataGridViewProducts.Columns["Note"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
             dataGridViewProducts.Columns["Note"].ReadOnly = Mode != OpMode.Auctioning;
             dataGridViewProducts.Columns["Price"].ReadOnly = Mode != OpMode.Auctioning;
@@ -456,7 +475,7 @@ namespace ConAuction {
             if (Mode != OpMode.Initializing) {
                 if (!DataViewModel.fUpdatingCustomerList && !DataViewModel.fUpdatingProductList) {
                     Trace.WriteLine("dataGridViewCustomers_SelectionChanged");
-                    UpdateProductListHiding();
+                    SetProductListHiding();
                     UpdateSummaryPerCustomer();
                 }
             }
@@ -539,6 +558,7 @@ namespace ConAuction {
                         UpdateFromDb();
                     }
                 }
+	            SelectProductRow(productCurrent.Id);
             }
         }
 
