@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -43,8 +44,8 @@ namespace ConAuction {
 
 			Mode = OpMode.Initializing;
             InitComboBoxMode();
-            TableAutoSizeToggleOn(dataGridViewCustomers);
-            TableAutoSizeToggleOn(dataGridViewProducts);
+            TableAutoSizeToggleOnCustomer(dataGridViewCustomers);
+            TableAutoSizeToggleOnProduct(dataGridViewProducts);
             dataGridViewCustomers.ClearSelection();
             dataGridViewCustomers.CurrentCell = null;
             Trace.WriteLine("MainForm - finished");
@@ -79,8 +80,8 @@ namespace ConAuction {
             Trace.WriteLine("UpdateFromDB");
             DataViewModel.fUpdatingProductList = true;
             DataViewModel.fUpdatingCustomerList = true;
-            TableAutoSizeToggleOff(dataGridViewCustomers);
-            TableAutoSizeToggleOff(dataGridViewProducts);
+            TableAutoSizeToggleOffCustomer(dataGridViewCustomers);
+            TableAutoSizeToggleOffProduct(dataGridViewProducts);
 
 	        int selectedCustomer = GetSelectedCustomerId();
 
@@ -110,9 +111,8 @@ namespace ConAuction {
             UpdateSummaryPerCustomer();
             DataViewModel.fDataGridCustomerIsChanged = false;
 
-
-            TableAutoSizeToggleOn(dataGridViewCustomers);
-            TableAutoSizeToggleOn(dataGridViewProducts);
+            TableAutoSizeToggleOnCustomer(dataGridViewCustomers);
+            TableAutoSizeToggleOnProduct(dataGridViewProducts);
             Cursor.Current = Cursors.Default;
             DataViewModel.fUpdatingCustomerList = false;
             DataViewModel.fUpdatingProductList = false;
@@ -253,6 +253,8 @@ namespace ConAuction {
 
         private void SetVisibleCustomerList() {
             // ReSharper disable once PossibleNullReferenceException
+			dataGridViewCustomers.Visible = Mode != OpMode.Auctioning;
+	        // ReSharper disable once PossibleNullReferenceException
             dataGridViewCustomers.Columns["Finished"].Visible = Mode == OpMode.Paying;
             dataGridViewCustomers.MultiSelect = Mode == OpMode.Paying;
 
@@ -329,19 +331,39 @@ namespace ConAuction {
             }
         }
 
-        private static void TableAutoSizeToggleOn(DataGridView grid)
+	    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+	    private static void TableAutoSizeToggleOnCustomer(DataGridView grid)
         {
-            foreach (DataGridViewColumn col in grid.Columns) {
-                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            }
+			grid.Columns["id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			grid.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			grid.Columns["Phone"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			grid.Columns["Comment"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+			grid.Columns["Finished"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
         }
 
-        private static void TableAutoSizeToggleOff(DataGridView grid)
+	    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+	    private static void TableAutoSizeToggleOnProduct(DataGridView grid) {
+			grid.Columns["Label"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			grid.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			grid.Columns["Type"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			grid.Columns["Description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+			grid.Columns["Note"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			grid.Columns["Price"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+			grid.Columns["FixedPrice"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+		}
+
+        private static void TableAutoSizeToggleOffCustomer(DataGridView grid)
         {
             foreach (DataGridViewColumn col in grid.Columns) {
                 col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
+
+		private static void TableAutoSizeToggleOffProduct(DataGridView grid) {
+			foreach (DataGridViewColumn col in grid.Columns) {
+				col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+			}
+		}
 
         private void SetVisibleProductList() {
 
@@ -349,7 +371,8 @@ namespace ConAuction {
 
             dataGridViewProducts.DataSource = DataViewModel.DataTableProduct;
             // ReSharper disable PossibleNullReferenceException
-            dataGridViewProducts.Columns["Note"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
+			dataGridViewProducts.Columns["FixedPrice"].Visible = Mode != OpMode.Auctioning;
+			dataGridViewProducts.Columns["Note"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
             dataGridViewProducts.Columns["Note"].ReadOnly = Mode != OpMode.Auctioning;
             dataGridViewProducts.Columns["Price"].ReadOnly = Mode != OpMode.Auctioning;
             dataGridViewProducts.Columns["Price"].Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying ||
