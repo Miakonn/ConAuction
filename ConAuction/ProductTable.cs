@@ -7,6 +7,8 @@ using System.Windows.Forms;
 
 namespace ConAuction {
     public static class ProductTable {
+
+
         public static int TotalCount(this DataTable table) {
             return table.Rows.Count;
         }
@@ -23,14 +25,21 @@ namespace ConAuction {
             return (int) table.Compute("Count(Price)", "Price > 0");
         }
 
-        public static int TotalSoldAmount(this DataTable table) {
+        public static long TotalSoldAmount(this DataTable table) {
             var obj = table.Compute("Sum(Price)", "Price > 0");
-            int amount;
-            if (int.TryParse(obj.ToString(), out amount)) {
-                return amount;
-            }
-            return 0;
+	        return (long) obj;
         }
+
+		public static int TotalProfit(this DataTable table) {
+			var settingCost = int.Parse(ConfigurationManager.AppSettings["Cost"]);
+			var settingCostFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+
+			var countFixed = TotalCountFixedPrice(table);
+			var countTotal = TotalCount(table);
+			var countStd = countTotal - countFixed;
+
+			return (countStd * settingCost + countFixed * settingCostFixed);
+		}
 
         public static int NoOfSoldForCustomer(this DataTable table, int customerId) {
             return (int) table.Compute("Count(Price)", "Price > 0 and CustomerId=" + customerId);

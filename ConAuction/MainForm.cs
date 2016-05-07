@@ -314,8 +314,12 @@ namespace ConAuction {
                 var totalSoldCount = DataViewModel.DataTableProduct.TotalSoldCount();
                 textBoxSoldCount.Text = totalSoldCount.ToString();
                 var totalSoldAmount = DataViewModel.DataTableProduct.TotalSoldAmount();
-                textBoxAmount.Text = totalSoldAmount.ToString();
+	            var totalProfit = DataViewModel.DataTableProduct.TotalProfit();
+                textBoxAmount.Text = totalSoldAmount + " (" + totalProfit + ")";
             }
+	        if (Mode == OpMode.Paying) {
+		        textBoxToPay.Text = DataViewModel.LeftToPay().ToString();
+	        }
         }
 
         private void InitProductList() {
@@ -505,6 +509,11 @@ namespace ConAuction {
                     dataGridViewCustomers.BeginEdit(false);
                 }
             }
+	        if (Mode == OpMode.Paying) {
+				DataViewModel.fDataGridCustomerIsChanged = true;
+				DataViewModel.SaveCustomerToDB();
+				UpdateAuctionSummary();
+	        }
         }
 
         private void dataGridViewCustomers_CellClick(object sender, DataGridViewCellEventArgs e) {
@@ -701,6 +710,14 @@ namespace ConAuction {
             path = Path.Combine(path, "ConAuction.json");
             File.WriteAllText(path, text);
         }
+
+		private void label2_Click(object sender, EventArgs e) {
+
+		}
+
+		private void textBox1_TextChanged(object sender, EventArgs e) {
+
+		}
     }
 
     #endregion

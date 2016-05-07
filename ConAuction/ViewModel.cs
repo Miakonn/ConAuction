@@ -302,5 +302,18 @@ namespace ConAuction
             }
         }
 
+
+	    public int LeftToPay() {
+			var foundRows = DataTableCustomer.Select("finished=false");
+			var sum = 0;
+
+		    foreach (var row in foundRows) {
+			    var id = (int)row["id"];
+				sum += DataTableProduct.NetAmountForCustomer(id);
+			   }
+
+			return sum;
+	    }
+
     }
 }
