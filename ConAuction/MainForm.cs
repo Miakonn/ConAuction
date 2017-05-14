@@ -92,8 +92,11 @@ namespace ConAuction {
                 }
             }
 
-            DataViewModel.UpdateCustomerFromDB();
-            if (Mode == OpMode.Initializing) {
+
+			dataGridViewCustomers.DataSource = DataViewModel.DataTableCustomer;
+			DataViewModel.UpdateCustomerFromDB();
+			dataGridViewCustomers.DataSource = DataViewModel.DataTableCustomer;
+			if (Mode == OpMode.Initializing) {
                 InitCustomerList();
             }
             SetVisibleCustomerList();
@@ -247,6 +250,7 @@ namespace ConAuction {
 
         private void InitCustomerList() {
             try {
+				Trace.WriteLine("InitCustomerList");
 				dataGridViewCustomers.DataSource = DataViewModel.DataTableCustomer;
 
                 if (dataGridViewCustomers.ColumnCount < 5) {
@@ -272,6 +276,9 @@ namespace ConAuction {
         private void SetVisibleCustomerList() {
             // ReSharper disable once PossibleNullReferenceException
 			dataGridViewCustomers.Visible = Mode != OpMode.Auctioning;
+	        if (dataGridViewCustomers.ColumnCount < 5) {
+		        return;
+	        }
 	        // ReSharper disable once PossibleNullReferenceException
             dataGridViewCustomers.Columns["Finished"].Visible = Mode == OpMode.Paying;
             dataGridViewCustomers.MultiSelect = Mode == OpMode.Paying;
@@ -293,7 +300,7 @@ namespace ConAuction {
             textBoxAmount.Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
             labelSoldAmount.Visible = Mode == OpMode.Auctioning || Mode == OpMode.Paying;
             buttonSave.Visible = Mode == OpMode.Receiving;
-            buttonSave.Enabled = DataViewModel.fDataGridCustomerIsChanged;
+	        buttonSave.Enabled = DataViewModel.fDataGridCustomerIsChanged;
             buttonSendSMS.Visible = Mode == OpMode.Paying;
             buttonSendResult.Visible = (Mode == OpMode.Paying);
             buttonExport.Visible = (Mode == OpMode.Showing);
@@ -354,8 +361,11 @@ namespace ConAuction {
         }
 
 	    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-	    private static void TableAutoSizeToggleOnCustomer(DataGridView grid)
-        {
+		private static void TableAutoSizeToggleOnCustomer(DataGridView grid) {
+			if (grid.ColumnCount < 5) {
+				return;
+			}
+
 			grid.Columns["id"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 			grid.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 			grid.Columns["Phone"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
