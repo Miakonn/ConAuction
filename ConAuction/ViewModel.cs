@@ -302,7 +302,6 @@ namespace ConAuction
             }
         }
 
-
 	    public int LeftToPay() {
 			var foundRows = DataTableCustomer.Select("finished=false");
 			var sum = 0;

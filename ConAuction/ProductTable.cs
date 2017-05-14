@@ -27,7 +27,7 @@ namespace ConAuction {
 
         public static long TotalSoldAmount(this DataTable table) {
             var obj = table.Compute("Sum(Price)", "Price > 0");
-	        return (long) obj;
+	        return (obj ==  DBNull.Value) ? 0 : (long) obj;
         }
 
 		public static int TotalProfit(this DataTable table) {

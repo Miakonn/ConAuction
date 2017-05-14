@@ -95,7 +95,7 @@
 			this.dataGridViewProducts.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewProducts.Name = "dataGridViewProducts";
 			this.dataGridViewProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewProducts.Size = new System.Drawing.Size(912, 541);
+			this.dataGridViewProducts.Size = new System.Drawing.Size(910, 541);
 			this.dataGridViewProducts.TabIndex = 13;
 			this.dataGridViewProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellDoubleClick);
 			this.dataGridViewProducts.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellValueChanged);
@@ -319,7 +319,7 @@
 			this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonExport.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonExport.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.buttonExport.Location = new System.Drawing.Point(242, 571);
+			this.buttonExport.Location = new System.Drawing.Point(364, 569);
 			this.buttonExport.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonExport.Name = "buttonExport";
 			this.buttonExport.Size = new System.Drawing.Size(134, 33);
@@ -333,7 +333,7 @@
 			this.buttonSendResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonSendResult.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonSendResult.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.buttonSendResult.Location = new System.Drawing.Point(242, 571);
+			this.buttonSendResult.Location = new System.Drawing.Point(364, 622);
 			this.buttonSendResult.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSendResult.Name = "buttonSendResult";
 			this.buttonSendResult.Size = new System.Drawing.Size(134, 33);
@@ -347,7 +347,7 @@
 			this.buttonSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonSearch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonSearch.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.buttonSearch.Location = new System.Drawing.Point(242, 622);
+			this.buttonSearch.Location = new System.Drawing.Point(207, 622);
 			this.buttonSearch.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSearch.Name = "buttonSearch";
 			this.buttonSearch.Size = new System.Drawing.Size(134, 33);
@@ -361,7 +361,7 @@
 			this.buttonSoldFixedPrice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.buttonSoldFixedPrice.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.buttonSoldFixedPrice.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.buttonSoldFixedPrice.Location = new System.Drawing.Point(242, 571);
+			this.buttonSoldFixedPrice.Location = new System.Drawing.Point(212, 571);
 			this.buttonSoldFixedPrice.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSoldFixedPrice.Name = "buttonSoldFixedPrice";
 			this.buttonSoldFixedPrice.Size = new System.Drawing.Size(134, 33);
@@ -373,7 +373,7 @@
 			// textBoxUnsold
 			// 
 			this.textBoxUnsold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxUnsold.Location = new System.Drawing.Point(616, 572);
+			this.textBoxUnsold.Location = new System.Drawing.Point(614, 572);
 			this.textBoxUnsold.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxUnsold.Name = "textBoxUnsold";
 			this.textBoxUnsold.ReadOnly = true;
@@ -386,7 +386,7 @@
 			this.labelUnsoldPerCustomer.AutoSize = true;
 			this.labelUnsoldPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelUnsoldPerCustomer.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.labelUnsoldPerCustomer.Location = new System.Drawing.Point(548, 577);
+			this.labelUnsoldPerCustomer.Location = new System.Drawing.Point(546, 577);
 			this.labelUnsoldPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUnsoldPerCustomer.Name = "labelUnsoldPerCustomer";
 			this.labelUnsoldPerCustomer.Size = new System.Drawing.Size(58, 21);
@@ -397,7 +397,7 @@
 			// textBoxTotalAmount
 			// 
 			this.textBoxTotalAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxTotalAmount.Location = new System.Drawing.Point(797, 571);
+			this.textBoxTotalAmount.Location = new System.Drawing.Point(795, 571);
 			this.textBoxTotalAmount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxTotalAmount.Name = "textBoxTotalAmount";
 			this.textBoxTotalAmount.ReadOnly = true;
@@ -409,7 +409,7 @@
 			this.labelNetPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelNetPerCustomer.AutoSize = true;
 			this.labelNetPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelNetPerCustomer.Location = new System.Drawing.Point(740, 622);
+			this.labelNetPerCustomer.Location = new System.Drawing.Point(738, 622);
 			this.labelNetPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelNetPerCustomer.Name = "labelNetPerCustomer";
 			this.labelNetPerCustomer.Size = new System.Drawing.Size(49, 21);
@@ -422,7 +422,7 @@
 			this.labelTotalPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTotalPerCustomer.AutoSize = true;
 			this.labelTotalPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelTotalPerCustomer.Location = new System.Drawing.Point(738, 575);
+			this.labelTotalPerCustomer.Location = new System.Drawing.Point(736, 575);
 			this.labelTotalPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTotalPerCustomer.Name = "labelTotalPerCustomer";
 			this.labelTotalPerCustomer.Size = new System.Drawing.Size(49, 21);
@@ -433,7 +433,7 @@
 			// textBoxNetAmount
 			// 
 			this.textBoxNetAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxNetAmount.Location = new System.Drawing.Point(797, 619);
+			this.textBoxNetAmount.Location = new System.Drawing.Point(795, 619);
 			this.textBoxNetAmount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxNetAmount.Name = "textBoxNetAmount";
 			this.textBoxNetAmount.ReadOnly = true;
