@@ -174,6 +174,20 @@ namespace ConAuction {
             return 0;
         }
 
+		private Customer GetSelectedCustomer() {
+			var rows = dataGridViewCustomers.SelectedRows;
+			if (rows.Count == 1 && rows[0].Cells["id"].Value != DBNull.Value &&
+				rows[0].Cells["id"].Value != null) {
+				string id = rows[0].Cells["id"].Value.ToString();
+				string name = rows[0].Cells["Name"].Value != DBNull.Value ? rows[0].Cells["Name"].Value as string : "";
+				string phone = rows[0].Cells["Phone"].Value != DBNull.Value ? rows[0].Cells["Phone"].Value as string : "";
+				string comment = rows[0].Cells["Comment"].Value != DBNull.Value ? rows[0].Cells["Comment"].Value as string : "";
+
+				return new Customer(id, name , phone, comment);
+			}
+			return null;
+		}
+
         private string GetSelectedCustomerColumn(string columnId)
         {
             var rows = dataGridViewCustomers.SelectedRows;
@@ -195,10 +209,17 @@ namespace ConAuction {
                                 dataGridViewCustomers.FirstDisplayedScrollingRowIndex = row.Index;
                             }
                             row.Selected = true;
-                            break;
                         }
+	                    row.Selected = false;
                     }
                 }
+
+				int irow = dataGridViewCustomers.Rows.GetLastRow(DataGridViewElementStates.Visible) - 1;
+	            var rowLast = dataGridViewCustomers.Rows[irow];
+				if (rowLast.Displayed == false && rowLast.Visible) {
+					dataGridViewCustomers.FirstDisplayedScrollingRowIndex = irow;
+				}
+				rowLast.Selected = true;
             }
         }
 
@@ -504,7 +525,17 @@ namespace ConAuction {
             if (e.KeyCode == Keys.F2 && Mode == OpMode.Receiving) {
                 dataGridViewCustomers.BeginEdit(false);
             }
-        }
+			if (e.KeyCode == Keys.Delete && Mode == OpMode.Receiving) {
+				DataViewModel.DeleteCustomerToDB(GetSelectedCustomerId());
+				UpdateFromDb();
+			}
+			if (e.KeyCode == Keys.End) {
+				SelectCustomerRow(999999);
+			}
+			if (e.KeyCode == Keys.Home) {
+				SelectCustomerRow(1);
+			}
+		}
 
         private void dataGridViewCustomers_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
             if (Mode == OpMode.Receiving) {
@@ -721,12 +752,20 @@ namespace ConAuction {
             File.WriteAllText(path, text);
         }
 
-		private void label2_Click(object sender, EventArgs e) {
 
-		}
+		private void dataGridViewCustomers_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
 
-		private void textBox1_TextChanged(object sender, EventArgs e) {
+			Customer customer = GetSelectedCustomer();
+			if (customer == null) {
+				return;
+			}
 
+			var form = new FormEditCustomer(customer);
+
+			if (form.ShowDialog(this) == DialogResult.OK) {
+				DataViewModel.SaveCustomerToDB(customer);
+				UpdateFromDb();
+			}
 		}
     }
 

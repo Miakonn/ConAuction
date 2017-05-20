@@ -95,7 +95,7 @@
 			this.dataGridViewProducts.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewProducts.Name = "dataGridViewProducts";
 			this.dataGridViewProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewProducts.Size = new System.Drawing.Size(910, 541);
+			this.dataGridViewProducts.Size = new System.Drawing.Size(908, 541);
 			this.dataGridViewProducts.TabIndex = 13;
 			this.dataGridViewProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellDoubleClick);
 			this.dataGridViewProducts.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellValueChanged);
@@ -104,6 +104,7 @@
 			// 
 			// dataGridViewCustomers
 			// 
+			this.dataGridViewCustomers.AllowUserToDeleteRows = false;
 			this.dataGridViewCustomers.AllowUserToResizeRows = false;
 			this.dataGridViewCustomers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -120,6 +121,7 @@
 			this.dataGridViewCustomers.Size = new System.Drawing.Size(457, 541);
 			this.dataGridViewCustomers.TabIndex = 14;
 			this.dataGridViewCustomers.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCustomers_CellClick);
+			this.dataGridViewCustomers.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCustomers_CellDoubleClick);
 			this.dataGridViewCustomers.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewCustomers_CellValueChanged);
 			this.dataGridViewCustomers.SelectionChanged += new System.EventHandler(this.dataGridViewCustomers_SelectionChanged);
 			this.dataGridViewCustomers.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewCustomers_KeyDown);
@@ -373,7 +375,7 @@
 			// textBoxUnsold
 			// 
 			this.textBoxUnsold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxUnsold.Location = new System.Drawing.Point(614, 572);
+			this.textBoxUnsold.Location = new System.Drawing.Point(612, 572);
 			this.textBoxUnsold.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxUnsold.Name = "textBoxUnsold";
 			this.textBoxUnsold.ReadOnly = true;
@@ -386,7 +388,7 @@
 			this.labelUnsoldPerCustomer.AutoSize = true;
 			this.labelUnsoldPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelUnsoldPerCustomer.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.labelUnsoldPerCustomer.Location = new System.Drawing.Point(546, 577);
+			this.labelUnsoldPerCustomer.Location = new System.Drawing.Point(544, 577);
 			this.labelUnsoldPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUnsoldPerCustomer.Name = "labelUnsoldPerCustomer";
 			this.labelUnsoldPerCustomer.Size = new System.Drawing.Size(58, 21);
@@ -397,7 +399,7 @@
 			// textBoxTotalAmount
 			// 
 			this.textBoxTotalAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxTotalAmount.Location = new System.Drawing.Point(795, 571);
+			this.textBoxTotalAmount.Location = new System.Drawing.Point(793, 571);
 			this.textBoxTotalAmount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxTotalAmount.Name = "textBoxTotalAmount";
 			this.textBoxTotalAmount.ReadOnly = true;
@@ -409,7 +411,7 @@
 			this.labelNetPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelNetPerCustomer.AutoSize = true;
 			this.labelNetPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelNetPerCustomer.Location = new System.Drawing.Point(738, 622);
+			this.labelNetPerCustomer.Location = new System.Drawing.Point(736, 622);
 			this.labelNetPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelNetPerCustomer.Name = "labelNetPerCustomer";
 			this.labelNetPerCustomer.Size = new System.Drawing.Size(49, 21);
@@ -422,7 +424,7 @@
 			this.labelTotalPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTotalPerCustomer.AutoSize = true;
 			this.labelTotalPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelTotalPerCustomer.Location = new System.Drawing.Point(736, 575);
+			this.labelTotalPerCustomer.Location = new System.Drawing.Point(734, 575);
 			this.labelTotalPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTotalPerCustomer.Name = "labelTotalPerCustomer";
 			this.labelTotalPerCustomer.Size = new System.Drawing.Size(49, 21);
@@ -433,7 +435,7 @@
 			// textBoxNetAmount
 			// 
 			this.textBoxNetAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxNetAmount.Location = new System.Drawing.Point(795, 619);
+			this.textBoxNetAmount.Location = new System.Drawing.Point(793, 619);
 			this.textBoxNetAmount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxNetAmount.Name = "textBoxNetAmount";
 			this.textBoxNetAmount.ReadOnly = true;
@@ -473,7 +475,6 @@
 			this.label2.Size = new System.Drawing.Size(76, 21);
 			this.label2.TabIndex = 33;
 			this.label2.Text = "Att betala";
-			this.label2.Click += new System.EventHandler(this.label2_Click);
 			// 
 			// textBoxToPay
 			// 
@@ -484,7 +485,6 @@
 			this.textBoxToPay.ReadOnly = true;
 			this.textBoxToPay.Size = new System.Drawing.Size(117, 26);
 			this.textBoxToPay.TabIndex = 32;
-			this.textBoxToPay.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
 			// 
 			// MainForm
 			// 

@@ -120,6 +120,63 @@ namespace ConAuction
             }
         }
 
+		public void SaveCustomerToDB(Customer customer) {
+			var sqlTran = DBconnection.BeginTransaction();
+
+			var command = DBconnection.CreateCommand();
+			command.Transaction = sqlTran;
+			command.Connection = DBconnection;
+			try {
+				command.CommandText = "UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=NOW(), Finished=@Finished, Timestamp=Now() WHERE id=@id;";
+				command.Parameters.AddWithValue("@Name", customer.Name);
+				command.Parameters.AddWithValue("@Phone", customer.Phone);
+				command.Parameters.AddWithValue("@Comment", customer.Note);
+				command.Parameters.AddWithValue("@Finished", true);
+				command.Parameters.AddWithValue("@id", customer.Id);
+				command.UpdatedRowSource = UpdateRowSource.None;
+				command.ExecuteNonQuery();
+
+				// Commit the transaction.
+				sqlTran.Commit();
+				Trace.WriteLine("Update Customer : SUCCESS!");
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
+				try {
+					sqlTran.Rollback();
+				}
+				catch (Exception exRollback) {
+					MessageBox.Show(exRollback.Message);
+				}
+			}
+		}
+	
+		public void SaveCustomerToDB() {
+			try {
+				DBadapterCustomer.Update(DataTableCustomer);
+				fDataGridCustomerIsChanged = false;
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
+			}
+		}
+
+		public void DeleteCustomerToDB(int id) {
+			var command = DBconnection.CreateCommand();
+			command.Connection = DBconnection;
+			try {
+				command.CommandText = "DELETE FROM Customer WHERE Id=@id;";
+				command.Parameters.AddWithValue("@id", id);
+				command.UpdatedRowSource = UpdateRowSource.None;
+				command.ExecuteNonQuery();
+
+				Trace.WriteLine("Delete Customer : SUCCESS!");
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
+			}
+		}
+
         public void UpdateProductFromDB()
         {
             try {
@@ -135,38 +192,6 @@ namespace ConAuction
 
                 DataTableProduct = DBDataSetProduct.Tables[0];
                 DataTableProduct.TableName = "Product";
-
-                // Set the UPDATE command and parameters.
-                //DBadapterProduct.UpdateCommand = new MySqlCommand(
-                //    "UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, Timestamp=Now() WHERE id=@id;",
-                //    DBconnection);
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 45, "name");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
-                //DBadapterProduct.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-                ////DBadapter.UpdateCommand.Parameters.Add("@Timestamp", MySqlDbType.DateTime, 10, "Timestamp");
-                //DBadapterProduct.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
-
-                // Set the INSERT command and parameter.
-                //DBadapterProduct.InsertCommand = new MySqlCommand(
-                //    "INSERT INTO Product (Name, Description,Type,  Note, Price, CustomerId, Year, timestamp)" +
-                //"VALUES (@Name, @Description, @Type, @Note,@price, @CustomerId, 2014, Now());",
-                //    DBconnection);
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Name", MySqlDbType.VarChar, 45, "Name");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Description", MySqlDbType.VarChar, 250, "Description");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Type", MySqlDbType.VarChar, 15, "Type");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Note", MySqlDbType.VarChar, 15, "Note");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@Price", MySqlDbType.Int16, 10, "Price");
-                //DBadapterProduct.InsertCommand.Parameters.Add("@CustomerId", MySqlDbType.Int16, 10, "CustomerId");
-                //DBadapterProduct.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
-
-                // Set the DELETE command and parameter.
-                //DBadapterProduct.DeleteCommand = new MySqlCommand(
-                //    "DELETE FROM Product WHERE Id=@id;", DBconnection);
-                //DBadapterProduct.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int16, 4, "id");
-                //DBadapterProduct.DeleteCommand.UpdatedRowSource = UpdateRowSource.None;
             }
             catch (MySqlException ex) {
                 MessageBox.Show(ex.Message);
@@ -285,17 +310,6 @@ namespace ConAuction
                 command.ExecuteNonQuery();
 
                 Trace.WriteLine("Delete Product : SUCCESS!");
-            }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        public void SaveCustomerToDB()
-        {
-            try {
-                DBadapterCustomer.Update(DataTableCustomer);
-                fDataGridCustomerIsChanged = false;
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
