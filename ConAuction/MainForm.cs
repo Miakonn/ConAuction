@@ -523,7 +523,7 @@ namespace ConAuction {
 
         private void dataGridViewCustomers_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.F2 && Mode == OpMode.Receiving) {
-                dataGridViewCustomers.BeginEdit(false);
+	            dataGridViewCustomers_CellDoubleClick(sender, null);
             }
 			if (e.KeyCode == Keys.Delete && Mode == OpMode.Receiving) {
 				DataViewModel.DeleteCustomerToDB(GetSelectedCustomerId());
