@@ -213,5 +213,13 @@ namespace ConAuction {
 			return null;		    
 	    }
 
+		public static Customer GetCustomerFromId(this DataTable table, int customerId) {
+			var foundRows = table.Select("id = " + customerId);
+			if (foundRows.Length > 0) {
+				return new Customer(foundRows[0]);
+			}
+			return null;
+		}
+
     }
 }

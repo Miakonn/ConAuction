@@ -255,6 +255,14 @@ namespace ConAuction {
             return null;
         }
 
+		private void SelectProductPriceColumns() {
+			var rows = dataGridViewProducts.SelectedRows;
+			if (rows.Count > 0) {
+				rows[0].Cells["Price"].Selected = true;
+			}
+		}
+
+
         private int GetSelectedProductId() {
             var rows = dataGridViewProducts.SelectedRows;
             if (rows.Count == 1) {
@@ -605,8 +613,8 @@ namespace ConAuction {
                 else {
 	                int productId = Int32.Parse(productCurrent.Id);
 	                var id = DataViewModel.DataTableProduct.GetCustomerIdForProductId(productId);
-	                var customerName = DataViewModel.DataTableCustomer.GetCustomerNameFromId(id);
-                    var form = new FormEditProduct(productCurrent, null, Mode, customerName);
+	                var customer = DataViewModel.DataTableCustomer.GetCustomerFromId(id);
+                    var form = new FormEditProduct(productCurrent, null, Mode, customer.NumberAndName);
                     if (form.ShowDialog() == DialogResult.OK) {
                         DataViewModel.SaveProductToDB(productCurrent);
                         UpdateFromDb();
@@ -618,9 +626,14 @@ namespace ConAuction {
 
         private void dataGridViewProducts_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.F2 && Mode == OpMode.Auctioning) {
-                dataGridViewProducts.BeginEdit(false);
+				SelectProductPriceColumns();
+				dataGridViewProducts.BeginEdit(false);
             }
-        }
+			if (e.KeyCode == Keys.F1 && Mode == OpMode.Auctioning) {
+				SelectProductPriceColumns();
+				dataGridViewProducts.BeginEdit(true);
+			}
+		}
 
         private void dataGridViewProducts_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
             if (Mode == OpMode.Auctioning && DataViewModel.DataTableProduct != null &&
