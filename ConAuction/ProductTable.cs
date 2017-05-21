@@ -61,6 +61,14 @@ namespace ConAuction {
             return null;
         }
 
+		public static int GetCustomerIdForProductId(this DataTable table, int productId) {
+			var foundRows = table.Select("id = " + productId);
+			if (foundRows.Length > 0) {
+				return (int)foundRows[0]["CustomerId"];
+			}
+			return 0;
+		}
+
         public static int GetLastProductIdForCustomer(this DataTable table, int customerId) {
             var foundRows = table.Select("CustomerId = " + customerId);
 
@@ -195,6 +203,15 @@ namespace ConAuction {
             strB.AppendLine("]");
             return strB.ToString();
         }
+
+
+		public static string GetCustomerNameFromId(this DataTable table, int customerId) {
+			var foundRows = table.Select("id = " + customerId);
+			if (foundRows.Length > 0) {
+				return foundRows[0]["id"] + ": " + foundRows[0]["Name"];
+			}
+			return null;		    
+	    }
 
     }
 }

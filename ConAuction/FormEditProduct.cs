@@ -10,8 +10,9 @@ namespace ConAuction {
     public partial class FormEditProduct : Form {
         private readonly Product productCurrent;
         private readonly Product productLast;
+	    private readonly string customer;
 
-        public FormEditProduct(Product product, Product productLastT, OpMode mode) {
+        public FormEditProduct(Product product, Product productLastT, OpMode mode, string customerT) {
             InitializeComponent();
 
             productCurrent = product;
@@ -25,7 +26,8 @@ namespace ConAuction {
 
             textBoxProductLabel.Text = product.Label;
 
-            SetProductContents(product);
+	        customer = customerT;
+			SetProductContents(product);
 
             productLast = productLastT;
             buttonCopy.Visible = (mode == OpMode.Receiving) && (productLast != null);
@@ -57,6 +59,7 @@ namespace ConAuction {
             textBoxProductDescription.Text = product.Description;
             textBoxProductNote.Text = product.Note;
             textBoxFixedPrice.Text = product.FixedPrice.ToString();
+	        textBoxCustomer.Text = customer;
         }
 
         private string ExtractFromJson(string sMess, string sKey) {

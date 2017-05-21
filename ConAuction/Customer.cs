@@ -13,27 +13,27 @@ namespace ConAuction {
             Note = note;
         }
 
-        //public Customer(DataGridViewRow row) {
-        //    Id = ((int) row.Cells["id"].Value).ToString();
-        //    Name = (string) row.Cells["Name"].Value;
-        //    Phone = (string) row.Cells["Phone"].Value;
-        //    if (row.Cells["Comment"].Value != DBNull.Value) {
-        //        Note = (string) row.Cells["Comment"].Value;
-        //    }
-        //}
+        public Customer(DataGridViewRow row) {
+			Id = row.Cells["id"].Value.ToString();
+			Name = row.Cells["Name"].Value != DBNull.Value ? row.Cells["Name"].Value as string : "";
+			Phone = row.Cells["Phone"].Value != DBNull.Value ? row.Cells["Phone"].Value as string : "";
+			Note = row.Cells["Comment"].Value != DBNull.Value ? row.Cells["Comment"].Value as string : "";
+        }
 
-        //public Customer(DataRow row) {
-        //    Id = ((int) row["id"]).ToString();
-        //    Name = (string) row["Name"];
-        //    Phone = (string) row["Phone"];
-        //    if (row["Comment"] != null) {
-        //        Note = (string) row["Comment"];
-        //    }
-        //}
+        public Customer(DataRow row) {
+			Id = row["id"].ToString();
+			Name = row["Name"] != null ? row["Name"] as string : "";
+			Phone = row["Phone"] != null ? row["Phone"] as string : "";
+			Note = row["Comment"] != null ? row["Comment"] as string : "";
+        }
 
         public string Id { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Note { get; set; }
+
+	    public string NumberAndName {
+		    get { return Id + " : " + Name; }
+	    }
     }
 }

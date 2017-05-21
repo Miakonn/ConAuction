@@ -176,14 +176,8 @@ namespace ConAuction {
 
 		private Customer GetSelectedCustomer() {
 			var rows = dataGridViewCustomers.SelectedRows;
-			if (rows.Count == 1 && rows[0].Cells["id"].Value != DBNull.Value &&
-				rows[0].Cells["id"].Value != null) {
-				string id = rows[0].Cells["id"].Value.ToString();
-				string name = rows[0].Cells["Name"].Value != DBNull.Value ? rows[0].Cells["Name"].Value as string : "";
-				string phone = rows[0].Cells["Phone"].Value != DBNull.Value ? rows[0].Cells["Phone"].Value as string : "";
-				string comment = rows[0].Cells["Comment"].Value != DBNull.Value ? rows[0].Cells["Comment"].Value as string : "";
-
-				return new Customer(id, name , phone, comment);
+			if (rows.Count == 1 && rows[0].Cells["id"].Value != DBNull.Value && rows[0].Cells["id"].Value != null) {
+				return new Customer(rows[0]);
 			}
 			return null;
 		}
@@ -590,7 +584,9 @@ namespace ConAuction {
                 }
 
                 var productNew = new Product();
-                var form = new FormEditProduct(productNew, productLast, Mode);
+	            var customer = GetSelectedCustomer();
+
+                var form = new FormEditProduct(productNew, productLast, Mode, customer.NumberAndName);
 
                 if (form.ShowDialog(this) == DialogResult.OK) {
                     DataViewModel.InsertNewProductToDB(productNew, customerId);
@@ -607,7 +603,10 @@ namespace ConAuction {
                     dataGridViewProducts.BeginEdit(true);
                 }
                 else {
-                    var form = new FormEditProduct(productCurrent, null, Mode);
+	                int productId = Int32.Parse(productCurrent.Id);
+	                var id = DataViewModel.DataTableProduct.GetCustomerIdForProductId(productId);
+	                var customerName = DataViewModel.DataTableCustomer.GetCustomerNameFromId(id);
+                    var form = new FormEditProduct(productCurrent, null, Mode, customerName);
                     if (form.ShowDialog() == DialogResult.OK) {
                         DataViewModel.SaveProductToDB(productCurrent);
                         UpdateFromDb();
@@ -629,16 +628,26 @@ namespace ConAuction {
                 Trace.WriteLine("CellValueChanged row=" + e.RowIndex + " col=" + e.ColumnIndex);
 
                 var row = DataViewModel.DataTableProduct.Rows[e.RowIndex];
-                DataViewModel.SaveProductPriceToDB((int)row["id"], (int)row["Price"], row["Note"].ToString());
-                UpdateAuctionSummary();
-            }
+	            if (row["Price"] != DBNull.Value) {
+		            DataViewModel.SaveProductPriceToDB((int) row["id"], (int) row["Price"], row["Note"].ToString());
+					UpdateAuctionSummary();
+				}
+				else {
+					UpdateFromDb();
+				}
+			}
             if (Mode == OpMode.Auctioning && DataViewModel.DataTableProduct != null &&
                 DataViewModel.DataTableProduct.Columns[e.ColumnIndex].ColumnName == "Note") {
                 Trace.WriteLine("CellValueChanged row=" + e.RowIndex + " col=" + e.ColumnIndex);
 
                 var row = DataViewModel.DataTableProduct.Rows[e.RowIndex];
-                DataViewModel.SaveProductPriceToDB((int)row["id"], (int)row["Price"], row["Note"].ToString());
-                UpdateAuctionSummary();
+	            if (row["Price"] != DBNull.Value) {
+		            DataViewModel.SaveProductPriceToDB((int) row["id"], (int) row["Price"], row["Note"].ToString());
+		            UpdateAuctionSummary();
+	            }
+	            else {
+		            UpdateFromDb();
+	            }
             }
         }
 
