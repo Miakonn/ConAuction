@@ -24,31 +24,39 @@ namespace ConAuction {
 	    
         public MainForm() {
             Trace.WriteLine("MainForm");
-            InitializeComponent();
-            LoadImage();
+	        try {
+		        InitializeComponent();
+		        LoadImage();
 
-            DataViewModel = new ViewModel();
+		        DataViewModel = new ViewModel();
 
-            bool fStarted;
-            do {
-                fStarted = DataViewModel.InitDB();
-                if (!fStarted) {
-                    var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null,
-                        MessageBoxButtons.RetryCancel);
-                    if (res != DialogResult.Retry) {
-                        Application.Exit();
-                        Environment.Exit(-1);
-                    }
-                }
-            } while (!fStarted);
+		        bool fStarted;
+		        do {
+			        fStarted = DataViewModel.InitDB();
+			        if (!fStarted) {
+				        var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null,
+					        MessageBoxButtons.RetryCancel);
+				        if (res != DialogResult.Retry) {
+					        Application.Exit();
+					        Environment.Exit(-1);
+				        }
+			        }
+		        } while (!fStarted);
 
-			Mode = OpMode.Initializing;
-            InitComboBoxMode();
-            TableAutoSizeToggleOnCustomer(dataGridViewCustomers);
-            TableAutoSizeToggleOnProduct(dataGridViewProducts);
-            dataGridViewCustomers.ClearSelection();
-            dataGridViewCustomers.CurrentCell = null;
-            Trace.WriteLine("MainForm - finished");
+		        Mode = OpMode.Initializing;
+		        InitComboBoxMode();
+		        TableAutoSizeToggleOnCustomer(dataGridViewCustomers);
+		        TableAutoSizeToggleOnProduct(dataGridViewProducts);
+		        dataGridViewCustomers.ClearSelection();
+		        dataGridViewCustomers.CurrentCell = null;
+		        Trace.WriteLine("MainForm - finished");
+	        }
+			catch (FileLoadException ex) {
+				MessageBox.Show(ex.Message);
+			}
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
+			}
         }
 
         private void InitComboBoxMode() {

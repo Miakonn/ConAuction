@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -37,7 +38,11 @@ namespace ConAuction
                 MessageBox.Show(ex.Message);
                 return false;
             }
-            return true;
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
+				return false;
+			}
+			return true;
         }
 
         public void UpdateCustomerFromDB()
