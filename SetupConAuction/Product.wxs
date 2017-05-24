@@ -39,9 +39,6 @@
 					</Shortcut>
 				</File>
 				<File Id='ConAuctionConfig' Name='ConAuction.exe.config' Source='..\ConAuction\bin\Release\ConAuction.exe.config'/>
-				<File Id='ConAuctionVsExe' Name='ConAuction.vshost.exe' Source='..\ConAuction\bin\Release\ConAuction.vshost.exe'/>
-				<File Id='ConAuctionVsConfig' Name='ConAuction.vshost.exe.config' Source='..\ConAuction\bin\Release\ConAuction.vshost.exe.config'/>
-				<File Id='ConAuctionVsManifest' Name='ConAuction.vshost.exe.manisfest' Source='..\ConAuction\bin\Release\ConAuction.vshost.exe.manifest'/>
 				<File Id='MySqlLib' Name='MySql.Data.dll' Source='..\Libs\MySql.Data.dll'/>
 			</Component>
 		</ComponentGroup>

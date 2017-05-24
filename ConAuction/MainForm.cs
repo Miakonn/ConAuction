@@ -202,26 +202,29 @@ namespace ConAuction {
         }
 
         private void SelectCustomerRow(int customerId) {
+	        bool found = false;
             if (Mode != OpMode.Initializing) {
                 foreach (DataGridViewRow row in dataGridViewCustomers.Rows) {
                     if (row.Cells["id"].Value != null && row.Cells["id"].Value != DBNull.Value) {
                         var rowId = (int) row.Cells["id"].Value;
-                        if (customerId == rowId) {
-                            if (row.Displayed == false && row.Visible) {
-                                dataGridViewCustomers.FirstDisplayedScrollingRowIndex = row.Index;
-                            }
-                            row.Selected = true;
-                        }
-	                    row.Selected = false;
+	                    if (customerId == rowId) {
+		                    if (row.Displayed == false && row.Visible) {
+			                    dataGridViewCustomers.FirstDisplayedScrollingRowIndex = row.Index;
+		                    }
+		                    row.Selected = true;
+		                    found = true;
+		                    break;
+	                    }
                     }
                 }
-
-				int irow = dataGridViewCustomers.Rows.GetLastRow(DataGridViewElementStates.Visible) - 1;
-	            var rowLast = dataGridViewCustomers.Rows[irow];
-				if (rowLast.Displayed == false && rowLast.Visible) {
-					dataGridViewCustomers.FirstDisplayedScrollingRowIndex = irow;
-				}
-				rowLast.Selected = true;
+	            if (!found) {
+		            int irow = dataGridViewCustomers.Rows.GetLastRow(DataGridViewElementStates.Visible) - 1;
+		            var rowLast = dataGridViewCustomers.Rows[irow];
+		            if (rowLast.Displayed == false && rowLast.Visible) {
+			            dataGridViewCustomers.FirstDisplayedScrollingRowIndex = irow;
+		            }
+		            rowLast.Selected = true;
+	            }
             }
         }
 
@@ -536,7 +539,11 @@ namespace ConAuction {
 	            dataGridViewCustomers_CellDoubleClick(sender, null);
             }
 			if (e.KeyCode == Keys.Delete && Mode == OpMode.Receiving) {
-				DataViewModel.DeleteCustomerToDB(GetSelectedCustomerId());
+				var res = MessageBox.Show("Är du säker på att du vill radera kunden?", "ConAuction",
+                    MessageBoxButtons.YesNo);
+				if (res == DialogResult.Yes) {
+					DataViewModel.DeleteCustomerToDB(GetSelectedCustomerId());
+				}
 				UpdateFromDb();
 			}
 			if (e.KeyCode == Keys.End) {
@@ -692,6 +699,7 @@ namespace ConAuction {
                     MessageBoxButtons.YesNo);
                 if (res == DialogResult.Yes) {
                     DataViewModel.DeleteProductToDB(productId);
+					UpdateFromDb();
                 }
             }
         }

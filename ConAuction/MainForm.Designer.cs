@@ -95,7 +95,7 @@
 			this.dataGridViewProducts.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewProducts.Name = "dataGridViewProducts";
 			this.dataGridViewProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewProducts.Size = new System.Drawing.Size(908, 541);
+			this.dataGridViewProducts.Size = new System.Drawing.Size(906, 541);
 			this.dataGridViewProducts.TabIndex = 13;
 			this.dataGridViewProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellDoubleClick);
 			this.dataGridViewProducts.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProducts_CellValueChanged);
@@ -135,7 +135,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(230, 34);
 			this.label1.TabIndex = 15;
-			this.label1.Text = "LinCon Auction V2.2";
+			this.label1.Text = "LinCon Auction V2.3";
 			// 
 			// textBoxTotalCount
 			// 
@@ -375,7 +375,7 @@
 			// textBoxUnsold
 			// 
 			this.textBoxUnsold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxUnsold.Location = new System.Drawing.Point(612, 572);
+			this.textBoxUnsold.Location = new System.Drawing.Point(610, 572);
 			this.textBoxUnsold.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxUnsold.Name = "textBoxUnsold";
 			this.textBoxUnsold.ReadOnly = true;
@@ -388,7 +388,7 @@
 			this.labelUnsoldPerCustomer.AutoSize = true;
 			this.labelUnsoldPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelUnsoldPerCustomer.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-			this.labelUnsoldPerCustomer.Location = new System.Drawing.Point(544, 577);
+			this.labelUnsoldPerCustomer.Location = new System.Drawing.Point(542, 577);
 			this.labelUnsoldPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUnsoldPerCustomer.Name = "labelUnsoldPerCustomer";
 			this.labelUnsoldPerCustomer.Size = new System.Drawing.Size(58, 21);
@@ -399,7 +399,7 @@
 			// textBoxTotalAmount
 			// 
 			this.textBoxTotalAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxTotalAmount.Location = new System.Drawing.Point(793, 571);
+			this.textBoxTotalAmount.Location = new System.Drawing.Point(791, 571);
 			this.textBoxTotalAmount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxTotalAmount.Name = "textBoxTotalAmount";
 			this.textBoxTotalAmount.ReadOnly = true;
@@ -411,7 +411,7 @@
 			this.labelNetPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelNetPerCustomer.AutoSize = true;
 			this.labelNetPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelNetPerCustomer.Location = new System.Drawing.Point(736, 622);
+			this.labelNetPerCustomer.Location = new System.Drawing.Point(734, 622);
 			this.labelNetPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelNetPerCustomer.Name = "labelNetPerCustomer";
 			this.labelNetPerCustomer.Size = new System.Drawing.Size(49, 21);
@@ -424,7 +424,7 @@
 			this.labelTotalPerCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTotalPerCustomer.AutoSize = true;
 			this.labelTotalPerCustomer.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelTotalPerCustomer.Location = new System.Drawing.Point(734, 575);
+			this.labelTotalPerCustomer.Location = new System.Drawing.Point(732, 575);
 			this.labelTotalPerCustomer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTotalPerCustomer.Name = "labelTotalPerCustomer";
 			this.labelTotalPerCustomer.Size = new System.Drawing.Size(49, 21);
@@ -435,7 +435,7 @@
 			// textBoxNetAmount
 			// 
 			this.textBoxNetAmount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxNetAmount.Location = new System.Drawing.Point(793, 619);
+			this.textBoxNetAmount.Location = new System.Drawing.Point(791, 619);
 			this.textBoxNetAmount.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxNetAmount.Name = "textBoxNetAmount";
 			this.textBoxNetAmount.ReadOnly = true;
