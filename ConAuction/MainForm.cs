@@ -93,12 +93,12 @@ namespace ConAuction {
 
 	        int selectedCustomer = GetSelectedCustomerId();
 
-            if (DataViewModel.fDataGridCustomerIsChanged && Mode != OpMode.Initializing) {
-                var res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", null, MessageBoxButtons.YesNo);
-                if (res == DialogResult.Yes) {
-                    DataViewModel.SaveCustomerToDB();
-                }
-            }
+			//if (DataViewModel.fDataGridCustomerIsChanged && Mode != OpMode.Initializing) {
+			//	var res = MessageBox.Show("Vill du spara ändringar innan uppdatering?", null, MessageBoxButtons.YesNo);
+			//	if (res == DialogResult.Yes) {
+			//		DataViewModel.SaveCustomerToDB();
+			//	}
+			//}
 
 
 			dataGridViewCustomers.DataSource = DataViewModel.DataTableCustomer;
@@ -555,22 +555,24 @@ namespace ConAuction {
 		}
 
         private void dataGridViewCustomers_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
-            if (Mode == OpMode.Receiving) {
-                DataViewModel.fDataGridCustomerIsChanged = true;
-                UpdateAuctionSummary();
-                UpdateSummaryPerCustomer();
-                if (
-                    string.Compare(dataGridViewCustomers.Columns[e.ColumnIndex].Name, "Name",
-                        StringComparison.OrdinalIgnoreCase) == 0 &&
-                    dataGridViewCustomers.Rows[e.RowIndex].Cells["Name"].Value.ToString() != "") {
-                    dataGridViewCustomers.Rows[e.RowIndex].Cells["Phone"].Selected = true;
-                    dataGridViewCustomers.BeginEdit(false);
-                }
-            }
+			//if (Mode == OpMode.Receiving) {
+			//	DataViewModel.fDataGridCustomerIsChanged = true;
+			//	UpdateAuctionSummary();
+			//	UpdateSummaryPerCustomer();
+			//	if (
+			//		string.Compare(dataGridViewCustomers.Columns[e.ColumnIndex].Name, "Name",
+			//			StringComparison.OrdinalIgnoreCase) == 0 &&
+			//		dataGridViewCustomers.Rows[e.RowIndex].Cells["Name"].Value.ToString() != "") {
+			//		dataGridViewCustomers.Rows[e.RowIndex].Cells["Phone"].Selected = true;
+			//		dataGridViewCustomers.BeginEdit(false);
+			//	}
+			//}
 	        if (Mode == OpMode.Paying) {
-				DataViewModel.fDataGridCustomerIsChanged = true;
-				DataViewModel.SaveCustomerToDB();
+				//DataViewModel.fDataGridCustomerIsChanged = true;
+				Customer customer = new Customer(dataGridViewCustomers.Rows[e.RowIndex]);
+				DataViewModel.SaveCustomerToDB(customer);
 				UpdateAuctionSummary();
+				UpdateFromDb();
 	        }
         }
 
@@ -585,16 +587,18 @@ namespace ConAuction {
                     else {
                         cell.Value = !(bool) cell.Value;
                     }
-                    DataViewModel.SaveCustomerToDB();
+					Customer customer = new Customer(dataGridViewCustomers.Rows[e.RowIndex]);
+					DataViewModel.SaveCustomerToDB(customer);
+					UpdateAuctionSummary();
                 }
             }
         }
 
         private void buttonSave_Click(object sender, EventArgs e) {
-            var strPhone = GetSelectedCustomerColumn("Phone");
-            DataViewModel.SaveCustomerToDB();
-            UpdateFromDb();
-            SelectCustomerRowBasedOnPhone(strPhone);
+			//var strPhone = GetSelectedCustomerColumn("Phone");
+			//DataViewModel.SaveCustomerToDB();
+			//UpdateFromDb();
+			//SelectCustomerRowBasedOnPhone(strPhone);
         }
 
         private void buttonNewProduct_Click(object sender, EventArgs e) {
@@ -680,12 +684,12 @@ namespace ConAuction {
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
-            if (DataViewModel.fDataGridCustomerIsChanged) {
-                var res = MessageBox.Show("Vill du spara ändringar?", "DB", MessageBoxButtons.YesNo);
-                if (res == DialogResult.Yes) {
-                    DataViewModel.SaveCustomerToDB();
-                }
-            }
+			//if (DataViewModel.fDataGridCustomerIsChanged) {
+			//	var res = MessageBox.Show("Vill du spara ändringar?", "DB", MessageBoxButtons.YesNo);
+			//	if (res == DialogResult.Yes) {
+			//		DataViewModel.SaveCustomerToDB();
+			//	}
+			//}
         }
 
         private void buttonUpdate_Click(object sender, EventArgs e) {
@@ -789,7 +793,6 @@ namespace ConAuction {
             path = Path.Combine(path, "ConAuction.json");
             File.WriteAllText(path, text);
         }
-
 
 		private void dataGridViewCustomers_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
 

@@ -474,7 +474,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(76, 21);
 			this.label2.TabIndex = 33;
-			this.label2.Text = "Att betala";
+			this.label2.Text = "Att betala ut";
 			// 
 			// textBoxToPay
 			// 

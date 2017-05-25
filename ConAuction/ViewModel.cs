@@ -136,7 +136,7 @@ namespace ConAuction
 				command.Parameters.AddWithValue("@Name", customer.Name);
 				command.Parameters.AddWithValue("@Phone", customer.Phone);
 				command.Parameters.AddWithValue("@Comment", customer.Note);
-				command.Parameters.AddWithValue("@Finished", true);
+				command.Parameters.AddWithValue("@Finished", customer.Finished);
 				command.Parameters.AddWithValue("@id", customer.Id);
 				command.UpdatedRowSource = UpdateRowSource.None;
 				command.ExecuteNonQuery();
@@ -156,16 +156,6 @@ namespace ConAuction
 			}
 		}
 	
-		public void SaveCustomerToDB() {
-			try {
-				DBadapterCustomer.Update(DataTableCustomer);
-				fDataGridCustomerIsChanged = false;
-			}
-			catch (Exception ex) {
-				MessageBox.Show(ex.Message);
-			}
-		}
-
 		public void DeleteCustomerToDB(int id) {
 			var command = DBconnection.CreateCommand();
 			command.Connection = DBconnection;
@@ -322,12 +312,14 @@ namespace ConAuction
         }
 
 	    public int LeftToPay() {
-			var foundRows = DataTableCustomer.Select("finished=false");
+			var foundRows = DataTableCustomer.Select("ISNULL(finished, false)=false");
 			var sum = 0;
 
 		    foreach (var row in foundRows) {
 			    var id = (int)row["id"];
-				sum += DataTableProduct.NetAmountForCustomer(id);
+			    int net = DataTableProduct.NetAmountForCustomer(id);
+				Trace.WriteLine(id + " " + net);
+				sum += net;
 			   }
 
 			return sum;
