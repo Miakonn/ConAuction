@@ -337,7 +337,7 @@ namespace ConAuction {
 	        buttonSave.Enabled = DataViewModel.fDataGridCustomerIsChanged;
             buttonSendSMS.Visible = Mode == OpMode.Paying;
             buttonSendResult.Visible = (Mode == OpMode.Paying);
-            buttonExport.Visible = (Mode == OpMode.Showing);
+            buttonExport.Visible = (Mode == OpMode.Showing || Mode==OpMode.Paying);
 
             if (DataViewModel.fUpdatingCustomerList) {
                 return;
@@ -787,11 +787,20 @@ namespace ConAuction {
         }
 
         private void buttonExport_Click(object sender, EventArgs e) {
-            var text = DataViewModel.DataTableProduct.ExportProductsToJson();
+			if (Mode == OpMode.Showing) {
+		        var text = DataViewModel.DataTableProduct.ExportProductsToJson();
 
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            path = Path.Combine(path, "ConAuction.json");
-            File.WriteAllText(path, text);
+		        string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+		        path = Path.Combine(path, "ConAuction.json");
+		        File.WriteAllText(path, text);
+	        }
+	        else {
+		        var text = DataViewModel.DataTableProduct.ExportCommaSeparated();
+
+		        string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+		        path = Path.Combine(path, "ConAuctionSold.txt");
+		        File.WriteAllText(path, text);
+	        }
         }
 
 		private void dataGridViewCustomers_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {

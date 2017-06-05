@@ -204,6 +204,21 @@ namespace ConAuction {
             return strB.ToString();
         }
 
+		public static string ExportCommaSeparated(this DataTable table) {
+			var strB = new StringBuilder();
+
+			for (var i = 0; i < table.Rows.Count; i++) {
+				var row = table.Rows[i];
+				var str = string.Format("{0}; {1}; {2}; {3}; {4}",
+					row["Label"], row["Name"], row["Type"], row["Description"], row["Price"]);
+
+				str = str.Replace("\r\n", "\\n");
+				strB.AppendLine(str);
+
+			}
+			return strB.ToString();
+		}
+
 
 		public static string GetCustomerNameFromId(this DataTable table, int customerId) {
 			var foundRows = table.Select("id = " + customerId);
