@@ -87,11 +87,11 @@ namespace ConAuction {
             Refresh();
         }
 
-        private void IterateToNextUnsoldProduct(int step) {
+        private void IterateToNextUnsoldProduct() {
             bool isSold;
 	        bool isFixedPrice;
             do {
-                _currentRowId += step;
+                _currentRowId++;
 				if (_currentRowId >= _tableProducts.Rows.Count) {
                     return;
                 }
@@ -102,19 +102,32 @@ namespace ConAuction {
             } while (isSold || isFixedPrice);
         }
 
+		private void IterateToPreviousAuctionedProduct() {
+			bool isFixedPrice;
+			do {
+				_currentRowId--;
+				if (_currentRowId < 0) {
+					return;
+				}
+				var row = _tableProducts.Rows[_currentRowId];
+				isFixedPrice = ((int)row["FixedPrice"] > 0) && !row["Note"].ToString().ToLowerInvariant().Contains("auktion");
+
+			} while (isFixedPrice);
+		}
+
 	    private void FormProductDisplay_KeyDown(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.PageDown || e.KeyCode == Keys.Down || e.KeyCode == Keys.Space || e.KeyCode == Keys.Right) {
                 if (e.Modifiers == Keys.Control) {
                     _currentRowId += 10;
                 }
-                IterateToNextUnsoldProduct(1);
+                IterateToNextUnsoldProduct();
                 DisplayCurrentProduct();
             }
 			else if (e.KeyCode == Keys.PageUp || e.KeyCode == Keys.Up || e.KeyCode == Keys.Left) {
                 if (e.Modifiers == Keys.Control) {
                     _currentRowId -= 10;
                 }
-				_currentRowId--;
+				IterateToPreviousAuctionedProduct();
                 DisplayCurrentProduct();
             }
             else if (e.KeyCode == Keys.Escape) {
