@@ -30,6 +30,16 @@ namespace ConAuction {
 	        return (obj ==  DBNull.Value) ? 0 : (long) obj;
         }
 
+		public static long TotalSoldFixedPrice(this DataTable table) {
+			var obj = table.Compute("Sum(Price)", "Price > 0 and FixedPrice > 0");
+			return (obj == DBNull.Value) ? 0 : (long)obj;
+		}
+
+		public static long TotalSoldNonFixedPrice(this DataTable table) {
+			var obj = table.Compute("Sum(Price)", "Price > 0 and FixedPrice = 0");
+			return (obj == DBNull.Value) ? 0 : (long)obj;
+		}
+
 		public static int TotalProfit(this DataTable table) {
 			var settingCost = int.Parse(ConfigurationManager.AppSettings["Cost"]);
 			var settingCostFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);

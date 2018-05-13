@@ -354,12 +354,14 @@ namespace ConAuction {
             if (Mode == OpMode.Auctioning || Mode == OpMode.Paying) {
                 var totalSoldCount = DataViewModel.DataTableProduct.TotalSoldCount();
                 textBoxSoldCount.Text = totalSoldCount.ToString();
-                var totalSoldAmount = DataViewModel.DataTableProduct.TotalSoldAmount();
-	            var totalProfit = DataViewModel.DataTableProduct.TotalProfit();
-                textBoxAmount.Text = totalSoldAmount + " (" + totalProfit + ")";
+				var totalSoldAmount = DataViewModel.DataTableProduct.TotalSoldNonFixedPrice();
+				var totalSoldAmountFixed = DataViewModel.DataTableProduct.TotalSoldFixedPrice();
+
+                textBoxAmount.Text = totalSoldAmount + " + "  + totalSoldAmountFixed;
             }
 	        if (Mode == OpMode.Paying) {
-		        textBoxToPay.Text = DataViewModel.LeftToPay().ToString();
+				var totalProfit = DataViewModel.DataTableProduct.TotalProfit();
+				textBoxToPay.Text = DataViewModel.LeftToPay().ToString() + " (" + totalProfit + ")";
 	        }
         }
 
