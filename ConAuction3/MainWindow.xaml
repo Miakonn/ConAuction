@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ConAuction3.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="900" Width="1400">
+        Title="ConAuction" Height="900" Width="1400">
 
 	<Window.Resources>
 		<ResourceDictionary>
@@ -16,8 +16,8 @@
 	</Window.Resources>
 	<DockPanel>
 		<DockPanel DockPanel.Dock="Top" Background="#FBD800">
-			<Image DockPanel.Dock="Left" Source="{StaticResource LinconLogoSmall}" MaxHeight="80" />
-			<Label DockPanel.Dock="Left" FontSize="28" FontWeight="Bold" >Lincon ConAuction V3.0</Label>
+			<Image DockPanel.Dock="Left" Source="{StaticResource LinconLogoSmall}" MaxHeight="80"  Margin="30,0,30,0" />
+			<Label DockPanel.Dock="Left" FontSize="28" FontWeight="Bold" Padding="30" >ConAuction V3.0</Label>
 			<ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="26" MaxWidth="120"  IsEditable="False" SelectedItem="{Binding ModeSelected}" IsReadOnly="True" SelectedIndex="0">
 				<ComboBoxItem Content="Inlämning"></ComboBoxItem>
 				<ComboBoxItem Content="Visning"></ComboBoxItem>
