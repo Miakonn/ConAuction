@@ -15,13 +15,14 @@
 		<DockPanel DockPanel.Dock="Top" Background="#FBD800">
 			<Image DockPanel.Dock="Left" Source="{StaticResource LinconLogoSmall}" MaxHeight="80"  Margin="30,0,30,0" />
 			<Label DockPanel.Dock="Left" FontSize="28" FontWeight="Bold" Padding="30" >ConAuction V3.0</Label>
-			<ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="26" MaxWidth="120"  IsEditable="False" SelectedItem="{Binding ModeSelected}" IsReadOnly="True" SelectedIndex="0">
-				<ComboBoxItem Content="Inlämning"></ComboBoxItem>
-				<ComboBoxItem Content="Visning"></ComboBoxItem>
-				<ComboBoxItem Content="Auktion"></ComboBoxItem>
-				<ComboBoxItem Content="Återlämning"></ComboBoxItem>
-				<ComboBoxItem Content="Projektor"></ComboBoxItem>
+			<ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="26" MaxWidth="120"  IsEditable="False" SelectedItem="{Binding CurrentModeBind}" IsReadOnly="True" SelectedIndex="0">
+				<ComboBoxItem Content="Inlämning" Tag="1" />
+				<ComboBoxItem Content="Visning" Tag="2" />
+				<ComboBoxItem Content="Auktion" Tag="3" />
+				<ComboBoxItem Content="Återlämning" Tag="4" />
+				<ComboBoxItem Content="Projektor" Tag="5" />
 			</ComboBox>
+
 		</DockPanel>
 		<DockPanel>
 			<DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" LastChildFill="True">
@@ -50,10 +51,9 @@
 				<Label Content="{Binding StatusMsgArchiving}"/>
 			</DockPanel>			
 			<DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
+				<Button DockPanel.Dock="Left" Content="Ny kund" Command="{Binding NewCustomerCommand}"  TabIndex="13" Margin="10,5,10,5" />
+				<Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewObjectCommand}"  TabIndex="13" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
-				<Button DockPanel.Dock="Right" Content="RefreshList" Command="{Binding RefreshCommand}"  TabIndex="13" Margin="10,5,10,5" />
-				<Button DockPanel.Dock="Right" Content="DeleteAllSelected" Command="{Binding DeleteCommand}"  TabIndex="12" Margin="10,5,10,5" />
-				<Button DockPanel.Dock="Right" Content="ArchiveAllToZip" Command="{Binding ArchiveToZipCommand}"  TabIndex="10" Margin="10,5,10,5" />
 			</DockPanel>
 
 			<Grid>
