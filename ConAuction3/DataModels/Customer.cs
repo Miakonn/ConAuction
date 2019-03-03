@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace ConAuction.DataModels {
+namespace ConAuction3.DataModels {
     public class Customer {
         public Customer() {}
 

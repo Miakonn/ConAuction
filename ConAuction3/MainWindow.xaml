@@ -44,15 +44,18 @@
 				<Button DockPanel.Dock="Left"  Content="SelectAllShown" Command="{Binding SelectAllShownCommand}"  TabIndex="6" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Left"  Content="UnselectAllShown" Command="{Binding UnselectAllShownCommand}"  TabIndex="5" Margin="10,5,10,5" />
 			</DockPanel>
-			<DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
-				<Label Content="{Binding StatusMsgTotal}"/>
-				<Label Content="{Binding StatusMsgSelection}"/>
+			<DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False"  Background="#FBD800">
+				<Label Content="Binding StatusMsgTotal"/>
+				<Label Content="{Binding StatusTotalCount}"/>
 				<Label Content="{Binding StatusMsgArchiving}"/>
+			</DockPanel>			
+			<DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
 				<Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Right" Content="RefreshList" Command="{Binding RefreshCommand}"  TabIndex="13" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Right" Content="DeleteAllSelected" Command="{Binding DeleteCommand}"  TabIndex="12" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Right" Content="ArchiveAllToZip" Command="{Binding ArchiveToZipCommand}"  TabIndex="10" Margin="10,5,10,5" />
 			</DockPanel>
+
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition />

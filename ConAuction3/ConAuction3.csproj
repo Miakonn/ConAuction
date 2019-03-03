@@ -39,7 +39,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationFramework.Luna" />
-    <Reference Include="PresentationFramework.Royale" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -64,6 +63,7 @@
     <Compile Include="DataModels\Customer.cs" />
     <Compile Include="ViewModels\AuctionVM.cs" />
     <Compile Include="DataModels\DbAccess.cs" />
+    <Compile Include="ViewModels\ProductListVM.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
