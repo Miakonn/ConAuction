@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using ConAuction3.DataModels;
+using ConAuction3.Views;
 
 namespace ConAuction3.ViewModels  {
 
@@ -28,6 +29,7 @@ namespace ConAuction3.ViewModels  {
 
 		private ProductListVM _products;
 
+		private DbAccess _dbAccess;
 
 		private ObservableCollection<Customer> _customersObserved;
 		
@@ -35,8 +37,9 @@ namespace ConAuction3.ViewModels  {
 
 
 		public MyCommand NewCustomerCommand { get; private set; }
-		public ICommand NewObjectCommand { get; private set; }
 		public ICommand SortCommand { get; private set; }
+		public ICommand NewObjectCommand { get; private set; }
+		public ICommand ShowCustomerCommand { get; private set; }
 
 		public int counter = 0;
 
@@ -77,19 +80,36 @@ namespace ConAuction3.ViewModels  {
 
 
 		public AuctionVM() {
-			var dbAccess = new DbAccess();
-			dbAccess.InitDB();
-			_customers = dbAccess.ReadAllCustomers();
-			_products = new ProductListVM( dbAccess.ReadAllProducts());
+			_dbAccess = new DbAccess();
+			_dbAccess.InitDB();
+			_customers = _dbAccess.ReadAllCustomers();
+			_products = new ProductListVM( _dbAccess.ReadAllProducts());
 
 			NewCustomerCommand = new MyCommand(NewCustomer, () => CurrentMode == OpMode.Receiving);
 			NewObjectCommand = new MyCommand(NewObject, () => CurrentMode == OpMode.Receiving);
+			ShowCustomerCommand = new MyCommand(ShowCustomer, () => CurrentMode == OpMode.Receiving);
+
 
 			CurrentMode = OpMode.Receiving;
 		}
 
 		public void NewCustomer() {
-			counter++;
+			var inputDialog = new CustomerDlg(new Customer());
+			if (inputDialog.ShowDialog() == true) {
+				var customer = inputDialog.Result;
+
+				_dbAccess.InsertNewCustomerToDB(customer);
+			}
+			OnPropertyChanged("StatusTotalCount");
+		}
+
+		public void ShowCustomer() {
+			var inputDialog = new CustomerDlg(new Customer());
+			if (inputDialog.ShowDialog() == true) {
+				var customer = inputDialog.Result;
+
+				_dbAccess.InsertNewCustomerToDB(customer);
+			}
 			OnPropertyChanged("StatusTotalCount");
 		}
 

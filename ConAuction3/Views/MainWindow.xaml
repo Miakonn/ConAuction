@@ -7,7 +7,7 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="/PresentationFramework.Luna;component/themes/Luna.Metallic.xaml"/>
-				<ResourceDictionary Source="Resources/ResourceDictionary.xaml" />
+				<ResourceDictionary Source="../Resources/ResourceDictionary.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Window.Resources>
@@ -49,11 +49,16 @@
 			</DockPanel>			
 			<DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
 				<Button DockPanel.Dock="Left" Content="Ny kund" Command="{Binding NewCustomerCommand}"  TabIndex="13" Margin="10,5,10,5" />
+				<Button DockPanel.Dock="Left" Content="Ändra kund" Command="{Binding ShowCustomerCommand}"  TabIndex="13" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewObjectCommand}"  TabIndex="13" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
 			</DockPanel>
 
 			<Grid>
+				<Grid.InputBindings>
+					<MouseBinding Gesture="LeftDoubleClick" Command="{Binding ShowCustomerCommand}"/>
+					<!--<MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ShowCustomerCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>-->
+				</Grid.InputBindings>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition />
 					<ColumnDefinition Width="5"/>
