@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;	
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows.Input;
 using ConAuction3.DataModels;
-using System.Workflow.ComponentModel.Serialization;
 
 namespace ConAuction3.ViewModels  {
 
@@ -20,12 +16,14 @@ namespace ConAuction3.ViewModels  {
 		Overhead = 5
 	}
 
+	  public class ComboBoxItemOpMode {
+        public OpMode ValueMode{ get; set; }
+        public string ValueString { get; set; }
+    }
+
+
 
 	class AuctionVM : INotifyPropertyChanged {
-		private DbAccess _dbAccess;
-
-		private OpMode _mode;
-
 		private  List<Customer> _customers;
 
 		private ProductListVM _products;
@@ -36,23 +34,28 @@ namespace ConAuction3.ViewModels  {
 		private ObservableCollection<Product>  _productsObserved;
 
 
-		public ICommand NewCustomerCommand { get; private set; }
+		public MyCommand NewCustomerCommand { get; private set; }
 		public ICommand NewObjectCommand { get; private set; }
 		public ICommand SortCommand { get; private set; }
 
 		public int counter = 0;
 
-		public string CurrentModeBind {
-			get { return ((int)_mode).ToString(); }
-			set { _mode = (OpMode) int.Parse(value); }
+
+		public List<ComboBoxItemOpMode> OpEnumList {
+			get {
+				return new List<ComboBoxItemOpMode>() {
+					new ComboBoxItemOpMode {ValueMode = OpMode.Initializing, ValueString = "Välj mod"},
+					new ComboBoxItemOpMode {ValueMode = OpMode.Receiving, ValueString = "Inlämning"},
+					new ComboBoxItemOpMode {ValueMode = OpMode.Showing, ValueString = "Visning"},
+					new ComboBoxItemOpMode {ValueMode = OpMode.Auctioning, ValueString = "Auktion"},
+					new ComboBoxItemOpMode {ValueMode = OpMode.Paying, ValueString = "Utbetalning"},
+					new ComboBoxItemOpMode {ValueMode = OpMode.Overhead, ValueString = "Projektor"},
+				};
+			}
 		}
 
-		public OpMode CurrentMode {
-			get { return _mode; }
-			set { _mode = value; }
-		}
-
-
+		public OpMode CurrentMode { get; set; }
+		
 		public ObservableCollection<Customer> Customers {
 			get {
 				return new ObservableCollection<Customer>(_customers);
@@ -74,10 +77,10 @@ namespace ConAuction3.ViewModels  {
 
 
 		public AuctionVM() {
-			_dbAccess = new DbAccess();
-			_dbAccess.InitDB();
-			_customers = _dbAccess.ReadAllCustomers();
-			_products = new ProductListVM( _dbAccess.ReadAllProducts());
+			var dbAccess = new DbAccess();
+			dbAccess.InitDB();
+			_customers = dbAccess.ReadAllCustomers();
+			_products = new ProductListVM( dbAccess.ReadAllProducts());
 
 			NewCustomerCommand = new MyCommand(NewCustomer, () => CurrentMode == OpMode.Receiving);
 			NewObjectCommand = new MyCommand(NewObject, () => CurrentMode == OpMode.Receiving);
@@ -141,6 +144,10 @@ namespace ConAuction3.ViewModels  {
 
 		public void Execute(object parameter) {
 			_execute();
+		}
+
+		public void RaiseExecuteChanged() {
+			CommandManager.InvalidateRequerySuggested();
 		}
 
 		public event EventHandler CanExecuteChanged { 

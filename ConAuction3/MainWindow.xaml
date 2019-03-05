@@ -15,12 +15,9 @@
 		<DockPanel DockPanel.Dock="Top" Background="#FBD800">
 			<Image DockPanel.Dock="Left" Source="{StaticResource LinconLogoSmall}" MaxHeight="80"  Margin="30,0,30,0" />
 			<Label DockPanel.Dock="Left" FontSize="28" FontWeight="Bold" Padding="30" >ConAuction V3.0</Label>
-			<ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="26" MaxWidth="120"  IsEditable="False" SelectedItem="{Binding CurrentModeBind}" IsReadOnly="True" SelectedIndex="0">
-				<ComboBoxItem Content="Inlämning" Tag="1" />
-				<ComboBoxItem Content="Visning" Tag="2" />
-				<ComboBoxItem Content="Auktion" Tag="3" />
-				<ComboBoxItem Content="Återlämning" Tag="4" />
-				<ComboBoxItem Content="Projektor" Tag="5" />
+			<ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="26" MaxWidth="120" ItemsSource="{Binding OpEnumList}"  IsEditable="False" SelectedValue="{Binding CurrentMode}" 
+					  DisplayMemberPath="ValueString" SelectedValuePath="ValueMode" SelectedIndex="0">
+				
 			</ComboBox>
 
 		</DockPanel>
