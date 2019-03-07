@@ -101,12 +101,13 @@ namespace ConAuction3.DataModels
 			try {
 				using (MySqlDataReader reader = cmdDatabase.ExecuteReader()) {
 					while (reader.Read()) {
-						var customer = new Customer();
-						customer.Id = reader.GetString("id");
-						customer.Name = reader.GetStringOrDefault("name");
-						customer.Phone = FormatPhoneNumber(reader.GetStringOrDefault("phone"));
-						customer.Note = reader.GetStringOrDefault("comment");
-						customer.Finished = reader.GetBooleanOrDefault("finished");
+						var customer = new Customer {
+							Id = reader.GetInt32("id"),
+							Name = reader.GetStringOrDefault("name"),
+							Phone = FormatPhoneNumber(reader.GetStringOrDefault("phone")),
+							Note = reader.GetStringOrDefault("comment"),
+							Finished = reader.GetBooleanOrDefault("finished")
+						};
 						customers.Add(customer);
 					}
 					return customers;
@@ -129,17 +130,17 @@ namespace ConAuction3.DataModels
 				using (MySqlDataReader reader = cmdDatabase.ExecuteReader()) {
 
 					while (reader.Read()) {
-						var product = new Product();
-
-						product.Id = reader.GetString("Id");
-						product.Label = FormatPhoneNumber(reader.GetStringOrDefault("Label"));
-						product.Name = reader.GetStringOrDefault("Name");
-						product.Type = reader.GetStringOrDefault("Type");
-						product.Description = reader.GetStringOrDefault("Description");
-						product.Note = reader.GetStringOrDefault("Note");
-						product.Price = reader.GetIntOrDefault("Price");
-						product.FixedPrice = reader.GetIntOrDefault("FixedPrice");
-
+						var product = new Product {
+							Id = reader.GetString("Id"),
+							Label = FormatPhoneNumber(reader.GetStringOrDefault("Label")),
+							Name = reader.GetStringOrDefault("Name"),
+							Type = reader.GetStringOrDefault("Type"),
+							Description = reader.GetStringOrDefault("Description"),
+							Note = reader.GetStringOrDefault("Note"),
+							Price = reader.GetIntOrDefault("Price"),
+							FixedPrice = reader.GetIntOrDefault("FixedPrice"),
+							CustomerId = reader.GetInt32("CustomerId")
+						};
 						products.Add(product);
 					}
 					return products;
@@ -263,7 +264,7 @@ namespace ConAuction3.DataModels
 		//	}
 		//}
 
-        public void InsertNewProductToDB(Product prod, int customerid)
+        public void InsertNewProductToDB(Product prod)
         {
             var sqlTran = DBconnection.BeginTransaction();
 
@@ -290,7 +291,7 @@ namespace ConAuction3.DataModels
                 command.Parameters.AddWithValue("@FixedPrice", prod.FixedPrice);
                 command.Parameters.AddWithValue("@Type", prod.Type);
                 command.Parameters.AddWithValue("@Note", prod.Note);
-                command.Parameters.AddWithValue("@CustomerId", customerid);
+                command.Parameters.AddWithValue("@CustomerId", prod.CustomerId);
 
                 command.UpdatedRowSource = UpdateRowSource.None;
                 command.ExecuteNonQuery();

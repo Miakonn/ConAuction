@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
@@ -42,6 +43,7 @@ namespace ConAuction3.ViewModels  {
 		public ICommand ShowCustomerCommand { get; private set; }
 
 		public int counter = 0;
+		private Customer _selectedCustomer;
 
 
 		public List<ComboBoxItemOpMode> OpEnumList {
@@ -67,10 +69,25 @@ namespace ConAuction3.ViewModels  {
 
 		public ObservableCollection<Product> Products {
 			get {
-				return new ObservableCollection<Product>(_products.ProductList);
+				if (SelectedCustomer != null) {
+					return new ObservableCollection<Product>(_products.ProductList.Where(p => p.CustomerId == SelectedCustomer.Id));
+				}
+				else {
+					return new ObservableCollection<Product>(_products.ProductList);
+				}
 			}
 		}
 
+		public Customer SelectedCustomer {
+			get { return _selectedCustomer; }
+
+			set {
+				_selectedCustomer = value; 
+				OnPropertyChanged("Products");
+			}
+		}
+
+		public Product SelectedProduct { get; set; }
 
 		public string StatusTotalCount {
 			//get { return String.Format("Antal objekt {0} + {1}", _products.TotalCountAuction, _products.TotalCountJumble); }
@@ -82,15 +99,27 @@ namespace ConAuction3.ViewModels  {
 		public AuctionVM() {
 			_dbAccess = new DbAccess();
 			_dbAccess.InitDB();
-			_customers = _dbAccess.ReadAllCustomers();
-			_products = new ProductListVM( _dbAccess.ReadAllProducts());
-
+			UpdateCustomers();
+			UpdateProducts();
+			
 			NewCustomerCommand = new MyCommand(NewCustomer, () => CurrentMode == OpMode.Receiving);
 			NewObjectCommand = new MyCommand(NewObject, () => CurrentMode == OpMode.Receiving);
 			ShowCustomerCommand = new MyCommand(ShowCustomer, () => CurrentMode == OpMode.Receiving);
 
 
 			CurrentMode = OpMode.Receiving;
+		}
+
+		public void UpdateCustomers() {
+			_customers = _dbAccess.ReadAllCustomers();
+			OnPropertyChanged("Customers");
+			OnPropertyChanged("StatusTotalCount");
+		}
+
+		public void UpdateProducts() {
+			_products = new ProductListVM(_dbAccess.ReadAllProducts());
+			OnPropertyChanged("Customers");
+			OnPropertyChanged("StatusTotalCount");
 		}
 
 		public void NewCustomer() {
@@ -100,17 +129,20 @@ namespace ConAuction3.ViewModels  {
 
 				_dbAccess.InsertNewCustomerToDB(customer);
 			}
-			OnPropertyChanged("StatusTotalCount");
+			UpdateCustomers();
 		}
 
 		public void ShowCustomer() {
-			var inputDialog = new CustomerDlg(new Customer());
+			if (SelectedCustomer == null) {
+				return;
+			}
+
+			var inputDialog = new CustomerDlg(SelectedCustomer);
 			if (inputDialog.ShowDialog() == true) {
 				var customer = inputDialog.Result;
-
-				_dbAccess.InsertNewCustomerToDB(customer);
+				_dbAccess.SaveCustomerToDB(customer);
 			}
-			OnPropertyChanged("StatusTotalCount");
+			UpdateCustomers();			
 		}
 
 		public bool NewCustomer_CanExecute() {

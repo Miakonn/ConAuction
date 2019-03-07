@@ -5,12 +5,13 @@ namespace ConAuction3.DataModels {
     public class Product {
         public Product() {}
 
-        public Product(string id, string type, string name, string desc, string limit) {
+		public Product(string id, string type, string name, string desc, string limit, int customerId) {
             Id = id;
             Type = type;
             Name = name;
             Description = desc;
             Note = limit;
+	        CustomerId = customerId;
         }
 
         public string Id { get; set; }
@@ -21,6 +22,7 @@ namespace ConAuction3.DataModels {
         public string Note { get; set; }
         public int Price { get; set; }
         public int FixedPrice { get; set; }
+		public int CustomerId { get; set; } 
 
         public bool IsSold {
             get { return Price > 0; }
