@@ -87,7 +87,7 @@
 				<GridSplitter Grid.Column="1" ResizeDirection="Columns" 
                ResizeBehavior="PreviousAndNext"
               HorizontalAlignment="Stretch" />
-				<ListView Grid.Column="2"  SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedCustomer}">
+				<ListView Grid.Column="2"  SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}">
 					<ListView.View>
 						<GridView>
 							<GridViewColumn Width="40" DisplayMemberBinding="{Binding Id}">

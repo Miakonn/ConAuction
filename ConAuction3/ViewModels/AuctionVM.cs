@@ -44,6 +44,7 @@ namespace ConAuction3.ViewModels  {
 
 		public int counter = 0;
 		private Customer _selectedCustomer;
+		private Product _selectedProduct;
 
 
 		public List<ComboBoxItemOpMode> OpEnumList {
@@ -87,7 +88,14 @@ namespace ConAuction3.ViewModels  {
 			}
 		}
 
-		public Product SelectedProduct { get; set; }
+		public Product SelectedProduct {
+			get { return _selectedProduct; }
+
+			set {
+				_selectedProduct = value;
+				//OnPropertyChanged("Products");
+			}
+		}
 
 		public string StatusTotalCount {
 			//get { return String.Format("Antal objekt {0} + {1}", _products.TotalCountAuction, _products.TotalCountJumble); }
