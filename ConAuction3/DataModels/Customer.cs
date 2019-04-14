@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data;
-
-namespace ConAuction3.DataModels {
+﻿namespace ConAuction3.DataModels {
     public class Customer {
         public Customer() {}
 
@@ -19,8 +16,6 @@ namespace ConAuction3.DataModels {
         public string Note { get; set; }
 		public bool? Finished { get; set; }
 
-	    public string NumberAndName {
-		    get { return Id + " : " + Name; }
-	    }
+	    public string NumberAndName => Id + " : " + Name;
     }
 }

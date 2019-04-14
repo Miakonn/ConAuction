@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data;
-
-namespace ConAuction3.DataModels {
+﻿namespace ConAuction3.DataModels {
     public class Product {
         public Product() {}
 
@@ -24,13 +21,9 @@ namespace ConAuction3.DataModels {
         public int FixedPrice { get; set; }
 		public int CustomerId { get; set; } 
 
-        public bool IsSold {
-            get { return Price > 0; }
-        }
+        public bool IsSold => Price > 0;
 
-        public bool IsFixedPrice {
-            get { return FixedPrice > 0; }
-        }
+        public bool IsFixedPrice => FixedPrice > 0;
 
         public bool SoldForFixedPrice() {
             if (IsFixedPrice && !IsSold) {

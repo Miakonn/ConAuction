@@ -17,9 +17,9 @@ namespace ConAuction3.Views {
 			Note.Text = customer.Note;
 		}
 
-		public Customer Result { get { return new Customer(_customerId, CustomerName.Text, Phone.Text, Note.Text, false); } }
+		public Customer Result => new Customer(_customerId, CustomerName.Text, Phone.Text, Note.Text, false);
 
-		private void OnClick(object sender, RoutedEventArgs e) {
+        private void OnClick(object sender, RoutedEventArgs e) {
 			DialogResult = true;
 		}
 	}

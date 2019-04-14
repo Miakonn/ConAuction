@@ -17,7 +17,7 @@ namespace ConAuction3.DataModels
 
         private MySqlConnection DBconnection;
         //private MySqlDataAdapter DBadapterCustomer;
-        private MySqlDataAdapter DBadapterProduct;
+        // private MySqlDataAdapter DBadapterProduct;
 
  
         public bool InitDB()

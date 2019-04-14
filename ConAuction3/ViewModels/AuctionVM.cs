@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Forms;
 using System.Windows.Input;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
@@ -26,11 +27,11 @@ namespace ConAuction3.ViewModels  {
 
 
 	class AuctionVM : INotifyPropertyChanged {
-		private  List<Customer> _customers;
+		private  CustomerListVM _customersVM;
 
 		private ProductListVM _products;
 
-		private DbAccess _dbAccess;
+		private readonly DbAccess _dbAccess;
 
 		private ObservableCollection<Customer> _customersObserved;
 		
@@ -38,37 +39,31 @@ namespace ConAuction3.ViewModels  {
 
 
 		public MyCommand NewCustomerCommand { get; private set; }
-		public ICommand SortCommand { get; private set; }
-		public ICommand NewObjectCommand { get; private set; }
 		public ICommand ShowCustomerCommand { get; private set; }
-
+		public ICommand SortCommand { get; private set; }
+		public ICommand NewProductCommand { get; private set; }
+		public ICommand ShowProductCommand { get; private set; }
+	
 		public int counter = 0;
 		private Customer _selectedCustomer;
 		private Product _selectedProduct;
 
 
-		public List<ComboBoxItemOpMode> OpEnumList {
-			get {
-				return new List<ComboBoxItemOpMode>() {
-					new ComboBoxItemOpMode {ValueMode = OpMode.Initializing, ValueString = "Välj mod"},
-					new ComboBoxItemOpMode {ValueMode = OpMode.Receiving, ValueString = "Inlämning"},
-					new ComboBoxItemOpMode {ValueMode = OpMode.Showing, ValueString = "Visning"},
-					new ComboBoxItemOpMode {ValueMode = OpMode.Auctioning, ValueString = "Auktion"},
-					new ComboBoxItemOpMode {ValueMode = OpMode.Paying, ValueString = "Utbetalning"},
-					new ComboBoxItemOpMode {ValueMode = OpMode.Overhead, ValueString = "Projektor"},
-				};
-			}
-		}
+		public List<ComboBoxItemOpMode> OpEnumList =>
+            new List<ComboBoxItemOpMode>() {
+                new ComboBoxItemOpMode {ValueMode = OpMode.Initializing, ValueString = "Välj mod"},
+                new ComboBoxItemOpMode {ValueMode = OpMode.Receiving, ValueString = "Inlämning"},
+                new ComboBoxItemOpMode {ValueMode = OpMode.Showing, ValueString = "Visning"},
+                new ComboBoxItemOpMode {ValueMode = OpMode.Auctioning, ValueString = "Auktion"},
+                new ComboBoxItemOpMode {ValueMode = OpMode.Paying, ValueString = "Utbetalning"},
+                new ComboBoxItemOpMode {ValueMode = OpMode.Overhead, ValueString = "Projektor"},
+            };
 
-		public OpMode CurrentMode { get; set; }
+        public OpMode CurrentMode { get; set; }
 		
-		public ObservableCollection<Customer> Customers {
-			get {
-				return new ObservableCollection<Customer>(_customers);
-			}
-		}
+		public ObservableCollection<Customer> Customers => _customersVM.ObservableCustomers;
 
-		public ObservableCollection<Product> Products {
+        public ObservableCollection<Product> Products {
 			get {
 				if (SelectedCustomer != null) {
 					return new ObservableCollection<Product>(_products.ProductList.Where(p => p.CustomerId == SelectedCustomer.Id));
@@ -80,46 +75,58 @@ namespace ConAuction3.ViewModels  {
 		}
 
 		public Customer SelectedCustomer {
-			get { return _selectedCustomer; }
+			get => _selectedCustomer;
 
-			set {
+            set {
 				_selectedCustomer = value; 
 				OnPropertyChanged("Products");
 			}
 		}
 
 		public Product SelectedProduct {
-			get { return _selectedProduct; }
+			get => _selectedProduct;
 
-			set {
+            set {
 				_selectedProduct = value;
-				//OnPropertyChanged("Products");
+				// OnPropertyChanged("Products");
 			}
 		}
 
-		public string StatusTotalCount {
-			//get { return String.Format("Antal objekt {0} + {1}", _products.TotalCountAuction, _products.TotalCountJumble); }
-			get { return String.Format("Antal objekt {0} + {1}", counter, 0); }
-		}
+		public string StatusTotalCount => String.Format("Antal objekt {0} + {1}", counter, 0);
 
 
-
-		public AuctionVM() {
+        public AuctionVM() {
 			_dbAccess = new DbAccess();
-			_dbAccess.InitDB();
+		
+            bool fStarted;
+            do
+            {
+                fStarted = _dbAccess.InitDB();
+                if (!fStarted)
+                {
+                    var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null, MessageBoxButtons.RetryCancel);
+                    if (res != DialogResult.Retry)
+                    {
+                        Application.Exit();
+                        Environment.Exit(-1);
+                    }
+                }
+            } while (!fStarted);
+            
 			UpdateCustomers();
 			UpdateProducts();
-			
-			NewCustomerCommand = new MyCommand(NewCustomer, () => CurrentMode == OpMode.Receiving);
-			NewObjectCommand = new MyCommand(NewObject, () => CurrentMode == OpMode.Receiving);
+            
+            NewCustomerCommand = new MyCommand(NewCustomer, () => CurrentMode == OpMode.Receiving);
 			ShowCustomerCommand = new MyCommand(ShowCustomer, () => CurrentMode == OpMode.Receiving);
-
+			NewProductCommand = new MyCommand(NewProduct, () => CurrentMode == OpMode.Receiving);
+			ShowProductCommand = new MyCommand(ShowProduct, () => CurrentMode == OpMode.Receiving);
+			
 
 			CurrentMode = OpMode.Receiving;
 		}
 
 		public void UpdateCustomers() {
-			_customers = _dbAccess.ReadAllCustomers();
+			_customersVM =  new CustomerListVM(_dbAccess.ReadAllCustomers());
 			OnPropertyChanged("Customers");
 			OnPropertyChanged("StatusTotalCount");
 		}
@@ -154,18 +161,46 @@ namespace ConAuction3.ViewModels  {
 		}
 
 		public bool NewCustomer_CanExecute() {
-			return (counter % 2) == 0 ;
+			return true;
 		}
 
-		public void NewObject() {
-			counter++;
+		public void NewProduct() {
+            if (SelectedCustomer == null) {
+                return;
+            }
+			var inputDialog = new ProductDlg(new Product(), SelectedCustomer);
+			if (inputDialog.ShowDialog() == true) {
+				var product = inputDialog.Result;
+
+				_dbAccess.InsertNewProductToDB(product);
+			}
+			UpdateCustomers();
 			OnPropertyChanged("StatusTotalCount");
 		}
 
-		public bool NewObject_CanExecute() {
-			return (counter % 2) == 1;
+		public bool NewProduct_CanExecute() {
+			return SelectedCustomer != null;
 		}
 
+		public void ShowProduct() {
+            if (SelectedProduct == null) {
+                return;
+            }
+
+            var customer = SelectedCustomer ?? _customersVM.GetCustomerFromId(SelectedProduct.CustomerId);
+            var inputDialog = new ProductDlg(SelectedProduct, customer);
+			if (inputDialog.ShowDialog() == true) {
+				var product = inputDialog.Result;
+
+				_dbAccess.SaveProductToDB(product);
+			}
+			UpdateCustomers();
+			OnPropertyChanged("StatusTotalCount");
+		}
+
+		public bool ShowProduct_CanExecute() {
+			return SelectedProduct != null;
+		}
 
 		#region INotifyPropertyChanged Members
 
@@ -182,22 +217,22 @@ namespace ConAuction3.ViewModels  {
 
 	public class MyCommand : ICommand {
 		public delegate void ExecuteMethod();
-		private Action _execute;
-		private Func<bool> _canExcute;
+		private readonly Action _execute;
+		private readonly Func<bool> _canExecute;
 
 		public MyCommand(Action exec) {
 			_execute = exec;
-			_canExcute = null;
+			_canExecute = null;
 		}
 
 		public MyCommand(Action exec, Func<bool> canExecute) {
 			_execute = exec;
-			_canExcute = canExecute;
+			_canExecute = canExecute;
 		}
 
 		public bool CanExecute(object parameter) {
-			if (_canExcute != null) {
-				return _canExcute();
+			if (_canExecute != null) {
+				return _canExecute();
 			}
 			return true;
 		}
@@ -211,9 +246,9 @@ namespace ConAuction3.ViewModels  {
 		}
 
 		public event EventHandler CanExecuteChanged { 
-			add { CommandManager.RequerySuggested += value; } 
-			remove { CommandManager.RequerySuggested -= value; } 
-		}
+			add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
 	}
 
 }

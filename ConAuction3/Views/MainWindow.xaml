@@ -51,7 +51,8 @@
 			<DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
 				<Button DockPanel.Dock="Left" Content="Ny kund" Command="{Binding NewCustomerCommand}"  TabIndex="13" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Left" Content="Ändra kund" Command="{Binding ShowCustomerCommand}"  TabIndex="13" Margin="10,5,10,5" />
-				<Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewObjectCommand}"  TabIndex="13" Margin="10,5,10,5" />
+				<Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewProductCommand}"  TabIndex="13" Margin="10,5,10,5" />
+				<Button DockPanel.Dock="Left" Content="Ändra objekt" Command="{Binding ShowProductCommand}"  TabIndex="13" Margin="10,5,10,5" />
 				<Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
 			</DockPanel>
 

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Configuration;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using ConAuction3.DataModels;
 
 
@@ -14,11 +9,9 @@ namespace ConAuction3.ViewModels {
 
 		public List<Product> _productList;
 
-		public List<Product> ProductList {  get { return _productList; }  }
-			
-		public int TotalCount {
-			get { return _productList.Count; }
-        }
+		public List<Product> ProductList => _productList;
+
+        public int TotalCount => _productList.Count;
 
         public  int TotalCountAuction {
 			get { return _productList.Count(p => p.FixedPrice == 0); }
