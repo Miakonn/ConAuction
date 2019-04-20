@@ -25,7 +25,11 @@ namespace ConAuction3.ViewModels {
 		public ProductListVM(List<Product> products) {
 			_productList = products;
 		}
-		
+
+        public Product GetProductFromId(long id) {
+            return _productList.Find(p => p.Id == id);
+        }
+
 		//public  int TotalSoldCount(this DataTable table) {
 		//	return (int) table.Compute("Count(Price)", "Price > 0");
 		//}

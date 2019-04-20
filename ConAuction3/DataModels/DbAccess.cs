@@ -131,7 +131,7 @@ namespace ConAuction3.DataModels
 
 					while (reader.Read()) {
 						var product = new Product {
-							Id = reader.GetString("Id"),
+							Id = reader.GetInt64("Id"),
 							Label = FormatPhoneNumber(reader.GetStringOrDefault("Label")),
 							Name = reader.GetStringOrDefault("Name"),
 							Type = reader.GetStringOrDefault("Type"),
@@ -264,7 +264,12 @@ namespace ConAuction3.DataModels
 		//	}
 		//}
 
-        public void InsertNewProductToDB(Product prod)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prod"></param>
+        /// <returns>The db id</returns>
+        public long InsertNewProductToDB(Product prod)
         {
             var sqlTran = DBconnection.BeginTransaction();
 
@@ -279,6 +284,8 @@ namespace ConAuction3.DataModels
                 if (result != DBNull.Value) {
                     nextLabel = (int)command.ExecuteScalar() + 1;
                 }
+
+                prod.Label = nextLabel.ToString();
 
                 command.CommandText =
                     "INSERT INTO Product (Label, Name, Description,Type,  Note, Price, FixedPrice, CustomerId, Year, timestamp)" +
@@ -296,19 +303,25 @@ namespace ConAuction3.DataModels
                 command.UpdatedRowSource = UpdateRowSource.None;
                 command.ExecuteNonQuery();
 
+                var idCreated = command.LastInsertedId;
+
                 // Commit the transaction.
                 sqlTran.Commit();
+
+                return idCreated;
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
 
                 try {
                     sqlTran.Rollback();
+                  
                 }
                 catch (Exception exRollback) {
                     MessageBox.Show(exRollback.Message);
                 }
             }
+            return 0;
         }
 
         public void SaveProductToDB(Product prod)
@@ -365,7 +378,7 @@ namespace ConAuction3.DataModels
             }
         }
 
-        public void DeleteProductToDB(int id)
+        public void DeleteProductToDB(long id)
         {
             var command = DBconnection.CreateCommand();
             command.Connection = DBconnection;

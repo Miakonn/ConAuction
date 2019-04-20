@@ -40,16 +40,15 @@ namespace ConAuction3.ViewModels  {
 
 		public MyCommand NewCustomerCommand { get; private set; }
 		public ICommand ShowCustomerCommand { get; private set; }
-		public ICommand SortCommand { get; private set; }
 		public ICommand NewProductCommand { get; private set; }
 		public ICommand ShowProductCommand { get; private set; }
-	
-		public int counter = 0;
+        public ICommand DeleteProductCommand { get; private set; }
+
+        public int counter = 0;
 		private Customer _selectedCustomer;
 		private Product _selectedProduct;
 
-
-		public List<ComboBoxItemOpMode> OpEnumList =>
+        public List<ComboBoxItemOpMode> OpEnumList =>
             new List<ComboBoxItemOpMode>() {
                 new ComboBoxItemOpMode {ValueMode = OpMode.Initializing, ValueString = "Välj mod"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Receiving, ValueString = "Inlämning"},
@@ -88,11 +87,11 @@ namespace ConAuction3.ViewModels  {
 
             set {
 				_selectedProduct = value;
-				// OnPropertyChanged("Products");
-			}
-		}
+                OnPropertyChanged("SelectedProduct");
+            }
+        }
 
-		public string StatusTotalCount => String.Format("Antal objekt {0} + {1}", counter, 0);
+		public string StatusTotalCount => $"Antal objekt {counter} + {0}";
 
 
         public AuctionVM() {
@@ -120,22 +119,31 @@ namespace ConAuction3.ViewModels  {
 			ShowCustomerCommand = new MyCommand(ShowCustomer, () => CurrentMode == OpMode.Receiving);
 			NewProductCommand = new MyCommand(NewProduct, () => CurrentMode == OpMode.Receiving);
 			ShowProductCommand = new MyCommand(ShowProduct, () => CurrentMode == OpMode.Receiving);
-			
+            DeleteProductCommand = new MyCommand(DeleteProduct, () => CurrentMode == OpMode.Receiving);
 
-			CurrentMode = OpMode.Receiving;
+
+            CurrentMode = OpMode.Receiving;
 		}
 
 		public void UpdateCustomers() {
+            var selectedLastCustomer = SelectedCustomer;
 			_customersVM =  new CustomerListVM(_dbAccess.ReadAllCustomers());
 			OnPropertyChanged("Customers");
 			OnPropertyChanged("StatusTotalCount");
-		}
+            OnPropertyChanged("Products");
+
+            SelectedCustomer = selectedLastCustomer;
+        }
 
 		public void UpdateProducts() {
+            var selectedLastProduct = SelectedProduct;
 			_products = new ProductListVM(_dbAccess.ReadAllProducts());
 			OnPropertyChanged("Customers");
 			OnPropertyChanged("StatusTotalCount");
-		}
+            OnPropertyChanged("Products");
+
+            SelectedProduct = selectedLastProduct;
+        }
 
 		public void NewCustomer() {
 			var inputDialog = new CustomerDlg(new Customer());
@@ -145,9 +153,10 @@ namespace ConAuction3.ViewModels  {
 				_dbAccess.InsertNewCustomerToDB(customer);
 			}
 			UpdateCustomers();
-		}
+            UpdateProducts();
+        }
 
-		public void ShowCustomer() {
+        public void ShowCustomer() {
 			if (SelectedCustomer == null) {
 				return;
 			}
@@ -157,10 +166,11 @@ namespace ConAuction3.ViewModels  {
 				var customer = inputDialog.Result;
 				_dbAccess.SaveCustomerToDB(customer);
 			}
-			UpdateCustomers();			
-		}
+			UpdateCustomers();
+            UpdateProducts();
+        }
 
-		public bool NewCustomer_CanExecute() {
+        public bool NewCustomer_CanExecute() {
 			return true;
 		}
 
@@ -168,13 +178,18 @@ namespace ConAuction3.ViewModels  {
             if (SelectedCustomer == null) {
                 return;
             }
-			var inputDialog = new ProductDlg(new Product(), SelectedCustomer);
+
+            var inputDialog = new ProductDlg(new Product(), SelectedCustomer);
 			if (inputDialog.ShowDialog() == true) {
 				var product = inputDialog.Result;
 
-				_dbAccess.InsertNewProductToDB(product);
-			}
-			UpdateCustomers();
+				var idCreated = _dbAccess.InsertNewProductToDB(product);
+                UpdateCustomers();
+                UpdateProducts();
+
+                SelectedProduct = _products.GetProductFromId(idCreated);
+            }
+
 			OnPropertyChanged("StatusTotalCount");
 		}
 
@@ -202,9 +217,23 @@ namespace ConAuction3.ViewModels  {
 			return SelectedProduct != null;
 		}
 
-		#region INotifyPropertyChanged Members
+        public void DeleteProduct() {
+            if (SelectedProduct == null) {
+                return;
+            }
 
-		public event PropertyChangedEventHandler PropertyChanged;
+            var result = MessageBox.Show("Vill du radera objektet?", "Objekt");
+            if (result == DialogResult.OK) {
+                _dbAccess.DeleteProductToDB(SelectedProduct.Id);
+            }
+            UpdateCustomers();
+            UpdateProducts();
+        }
+
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
 		protected virtual void OnPropertyChanged(string propertyName) {
 			PropertyChangedEventHandler handler = PropertyChanged;

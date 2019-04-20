@@ -2,7 +2,7 @@
     public class Product {
         public Product() {}
 
-		public Product(string id, string type, string name, string desc, string limit, int customerId) {
+		public Product(long id, string type, string name, string desc, string limit, int customerId) {
             Id = id;
             Type = type;
             Name = name;
@@ -11,7 +11,7 @@
 	        CustomerId = customerId;
         }
 
-        public string Id { get; set; }
+        public long Id { get; set; }
         public string Label { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
