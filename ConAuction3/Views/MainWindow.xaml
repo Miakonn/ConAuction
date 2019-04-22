@@ -46,7 +46,8 @@
                         <Button DockPanel.Dock="Left" Content="Ändra kund" Command="{Binding ShowCustomerCommand}"  TabIndex="14" Margin="10,5,10,5" />
                         <Button DockPanel.Dock="Left" Content="Uppdatera" Command="{Binding UpdateCommand}"  TabIndex="15" Margin="10,5,10,5" />
                     </DockPanel>
-                    <ListView  SelectionMode="Extended" ItemsSource="{Binding Customers}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}">
+                    <ListView  SelectionMode="Extended" ItemsSource="{Binding Customers}" IsSynchronizedWithCurrentItem="True" 
+                               SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" MouseDoubleClick="Control_OnMouseDoubleClickCustomer">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="40" DisplayMemberBinding="{Binding Id}">
@@ -75,8 +76,9 @@
                         <Button DockPanel.Dock="Left" Content="Radera objekt" Command="{Binding DeleteProductCommand}"  TabIndex="17" Margin="10,5,10,5" />
                         <Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
                     </DockPanel>
-                    <ListView SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}">
-                    <ListView.View>
+                    <ListView SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
+                              MouseDoubleClick="Control_OnMouseDoubleClickProduct">
+                        <ListView.View>
                         <GridView>
                             <GridViewColumn Width="40" DisplayMemberBinding="{Binding Label}">
                                 <GridViewColumnHeader Content="Id" Command="{Binding SortCommand}" CommandParameter="FullName" />
