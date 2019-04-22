@@ -49,16 +49,16 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="40" DisplayMemberBinding="{Binding Id}">
-                                <GridViewColumnHeader Content="Id" Command="{Binding SortCustomerCommand}" CommandParameter="FullName" />
+                                <GridViewColumnHeader Content="Id" Command="{Binding SortCustomerByIdCommand}" />
                             </GridViewColumn>
                             <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}" >
-                                <GridViewColumnHeader Content="Name" Command="{Binding SortCustomerCommand}" CommandParameter="FileName"/>
+                                <GridViewColumnHeader Content="Name" Command="{Binding SortCustomerByNameCommand}" />
                             </GridViewColumn>
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding Phone}" >
-                                <GridViewColumnHeader Content="Mobilnr" Command="{Binding SortCustomerCommand}" CommandParameter="PatientId" />
+                                <GridViewColumnHeader Content="Mobilnr" />
                             </GridViewColumn>
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
-                                <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="BirthDate" />
+                                <GridViewColumnHeader Content="Not" />
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>

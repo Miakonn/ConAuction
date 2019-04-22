@@ -42,7 +42,8 @@ namespace ConAuction3.ViewModels  {
 		public ICommand NewProductCommand { get; }
 		public ICommand ShowProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
-        public ICommand SortCustomerCommand { get; }
+        public ICommand SortCustomerByNameCommand { get; }
+        public  ICommand SortCustomerByIdCommand { get; }
         public ICommand CancelCommand { get; }
 
         public int counter = 0;
@@ -61,7 +62,7 @@ namespace ConAuction3.ViewModels  {
 
         public OpMode CurrentMode { get; set; }
 		
-		public ObservableCollection<Customer> Customers => _customersVM.ObservableCustomers;
+		public ICollectionView Customers => _customersVM.CustomerView;
 
         public ObservableCollection<Product> Products {
 			get {
@@ -126,7 +127,8 @@ namespace ConAuction3.ViewModels  {
 			ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
 
-            SortCustomerCommand = new MyCommand(SortCustomer, () => true);
+            SortCustomerByNameCommand = new MyCommand(SortCustomerByName, () => true);
+            SortCustomerByIdCommand = new MyCommand(SortCustomerById, () => true);
             CancelCommand = new MyCommand(ExitProgram, () => true);
 
             CurrentMode = OpMode.Receiving;
@@ -139,9 +141,14 @@ namespace ConAuction3.ViewModels  {
         }
 
 
-        public void SortCustomer()
+        public void SortCustomerByName()
         {
-          Trace.WriteLine("dfskjhsdlk");
+            _customersVM.SortBy("Name");
+        }
+
+        public void SortCustomerById()
+        {
+            _customersVM.SortBy("Id");
         }
 
 
