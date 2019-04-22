@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -32,10 +31,6 @@ namespace ConAuction3.ViewModels  {
 
 		private readonly DbAccess _dbAccess;
 
-		private ObservableCollection<Customer> _customersObserved;
-		
-		private ObservableCollection<Product>  _productsObserved;
-
 
 		public MyCommand NewCustomerCommand { get; }
 		public ICommand ShowCustomerCommand { get; }
@@ -43,8 +38,10 @@ namespace ConAuction3.ViewModels  {
 		public ICommand ShowProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
         public ICommand SortCustomerByNameCommand { get; }
-        public  ICommand SortCustomerByIdCommand { get; }
+        public ICommand SortCustomerByIdCommand { get; }
         public ICommand CancelCommand { get; }
+        public ICommand UpdateCommand { get; }
+
 
         public int counter = 0;
 		private Customer _selectedCustomer;
@@ -118,18 +115,18 @@ namespace ConAuction3.ViewModels  {
                 }
             } while (!fStarted);
             
-			UpdateCustomers();
-			UpdateProducts();
-            
+            UpdateFromAll();
+
             NewCustomerCommand = new MyCommand(NewCustomer, NewCustomer_CanExecute);
 			ShowCustomerCommand = new MyCommand(ShowCustomer, ShowCustomer_CanExecute);
 			NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
 			ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
 
-            SortCustomerByNameCommand = new MyCommand(SortCustomerByName, () => true);
-            SortCustomerByIdCommand = new MyCommand(SortCustomerById, () => true);
-            CancelCommand = new MyCommand(ExitProgram, () => true);
+            UpdateCommand = new MyCommand(UpdateFromAll);
+            SortCustomerByNameCommand = new MyCommand(SortCustomerByName);
+            SortCustomerByIdCommand = new MyCommand(SortCustomerById);
+            CancelCommand = new MyCommand(ExitProgram);
 
             CurrentMode = OpMode.Receiving;
 		}
@@ -139,7 +136,6 @@ namespace ConAuction3.ViewModels  {
             Application.Exit();
             Environment.Exit(1);
         }
-
 
         public void SortCustomerByName()
         {
@@ -151,7 +147,12 @@ namespace ConAuction3.ViewModels  {
             _customersVM.SortBy("Id");
         }
 
-
+        private void UpdateFromAll()
+        {
+            UpdateCustomers();
+            UpdateProducts();
+        }
+        
         public void UpdateCustomers() {
             var selectedLastCustomer = SelectedCustomer;
 			_customersVM =  new CustomerListVM(_dbAccess.ReadAllCustomers());
