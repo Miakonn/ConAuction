@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ConAuction3.DataModels;
 using ConAuction3.ViewModels;
@@ -32,7 +33,8 @@ namespace ConAuction3.Views {
             btnDialogOk.IsEnabled = false;
             SetFields(product);
             VerifyAllFieldsFilledIn();
-
+            
+            FixedPricePanel.Visibility = product.IsFixedPrice ? Visibility.Visible : Visibility.Hidden;
             CopyPrevious.IsEnabled = _productListVm != null && _productListVm.CountForCustomer(customer.Id) > 0;
         }
         
@@ -95,12 +97,20 @@ namespace ConAuction3.Views {
             btnDialogOk.IsEnabled = ok;
         }
 
-        private void FieldsChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
+        private void FieldsChanged(object sender, SelectionChangedEventArgs e) {
             VerifyAllFieldsFilledIn();
         }
 
-        private void OnTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) {
+        private void OnTextChanged(object sender, TextChangedEventArgs e) {
             VerifyAllFieldsFilledIn();
+        }
+
+        private void CheckJumble_OnChecked(object sender, RoutedEventArgs e) {
+            FixedPricePanel.Visibility = Visibility.Visible;
+        }
+
+        private void CheckJumble_OnUnchecked(object sender, RoutedEventArgs e) {
+            FixedPricePanel.Visibility = Visibility.Hidden;
         }
     }
 }

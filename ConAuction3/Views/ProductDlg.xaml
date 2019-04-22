@@ -29,19 +29,24 @@
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
 
-            <DockPanel Grid.Row="0"  HorizontalAlignment="Stretch" >
-                <StackPanel Margin="10,5,10,5">
+            <DockPanel Grid.Row="0"  HorizontalAlignment="Stretch">
+               <StackPanel DockPanel.Dock="Left" Margin="10,5,10,5">
                     <Label Content="Nummer" />
                     <TextBox  Name="Label" IsReadOnly="true" MinWidth="75" Background="#FFF5F5F5"/>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Left" Margin="10,5,10,5">
+                    <Label Content="Ägare" />
+                    <TextBox Name="Customer" IsReadOnly="true" MinWidth="200" Background="#FFF5F5F5" />
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Right" Margin="10,5,10,5">
+                    <Label Content="" />
+                    <CheckBox Checked="CheckJumble_OnChecked" Unchecked="CheckJumble_OnUnchecked" >Loppis</CheckBox>
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Typ" />
                     <ComboBox Name="Type" Text="Välj typ" MinWidth="100" IsEditable="False" SelectionChanged="FieldsChanged" />
                 </StackPanel>
-                <StackPanel Margin="10,5,10,5">
-                    <Label Content="Ägare" />
-                    <TextBox Name="Customer" IsReadOnly="true" Background="#FFF5F5F5" />
-                </StackPanel>
+
             </DockPanel>
 
             <DockPanel Grid.Row="1"  HorizontalAlignment="Stretch" >
@@ -49,9 +54,9 @@
                     <Label Content="Namn" />
                     <TextBox  Name="ProductName" MinWidth="400" TextChanged="OnTextChanged"/>
                 </StackPanel>
-                <StackPanel Margin="10,5,10,5">
+                <StackPanel Name="FixedPricePanel" Margin="10,5,10,5">
                     <Label Content="Loppispris" />
-                    <TextBox  Name="FixedPrice" PreviewTextInput="FixedPrice_OnPreviewTextInput" MinWidth="100" />
+                    <TextBox Name="FixedPrice" PreviewTextInput="FixedPrice_OnPreviewTextInput" MinWidth="100" />
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Notering" />
