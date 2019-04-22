@@ -35,7 +35,7 @@
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Typ" />
-                    <TextBox  Name="Type"  MinWidth="100" />
+                    <ComboBox Name="Type" Text="Välj typ" MinWidth="100" IsEditable="False" />
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Ägare" />

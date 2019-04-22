@@ -47,6 +47,7 @@ namespace ConAuction3.ViewModels  {
 		private Customer _selectedCustomer;
 		private Product _selectedProduct;
 
+        // ReSharper disable once UnusedMember.Global
         public List<ComboBoxItemOpMode> OpEnumList =>
             new List<ComboBoxItemOpMode>() {
                 new ComboBoxItemOpMode {ValueMode = OpMode.Initializing, ValueString = "Välj mod"},
@@ -115,7 +116,7 @@ namespace ConAuction3.ViewModels  {
                 }
             } while (!fStarted);
             
-            UpdateFromAll();
+            UpdateAll();
 
             NewCustomerCommand = new MyCommand(NewCustomer, NewCustomer_CanExecute);
 			ShowCustomerCommand = new MyCommand(ShowCustomer, ShowCustomer_CanExecute);
@@ -123,7 +124,7 @@ namespace ConAuction3.ViewModels  {
 			ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
 
-            UpdateCommand = new MyCommand(UpdateFromAll);
+            UpdateCommand = new MyCommand(UpdateAll);
             SortCustomerByNameCommand = new MyCommand(SortCustomerByName);
             SortCustomerByIdCommand = new MyCommand(SortCustomerById);
             CancelCommand = new MyCommand(ExitProgram);
@@ -147,7 +148,7 @@ namespace ConAuction3.ViewModels  {
             _customersVM.SortBy("Id");
         }
 
-        private void UpdateFromAll()
+        private void UpdateAll()
         {
             UpdateCustomers();
             UpdateProducts();
@@ -242,7 +243,7 @@ namespace ConAuction3.ViewModels  {
 
 				_dbAccess.SaveProductToDB(product);
 			}
-			UpdateCustomers();
+			UpdateAll();
 			OnPropertyChanged("StatusTotalCount");
 		}
 

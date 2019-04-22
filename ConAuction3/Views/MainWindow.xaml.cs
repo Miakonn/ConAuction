@@ -7,26 +7,26 @@ namespace ConAuction3.Views {
     /// </summary>
     // ReSharper disable once UnusedMember.Global
     public partial class MainWindow {
-        private AuctionVM viewModel;
+        private AuctionVM _viewModel;
 
         public MainWindow() {
             InitializeComponent();
 
             Loaded += (_, __) => {
-                viewModel = new ViewModels.AuctionVM();
-                DataContext = viewModel;
+                _viewModel = new AuctionVM();
+                DataContext = _viewModel;
             };
         }
 
         private void Control_OnMouseDoubleClickCustomer(object sender, MouseButtonEventArgs e) {
-            if (viewModel.ShowCustomerCommand.CanExecute(null)) {
-                viewModel.ShowCustomerCommand.Execute(null);
+            if (_viewModel.ShowCustomerCommand.CanExecute(null)) {
+                _viewModel.ShowCustomerCommand.Execute(null);
             }
         }
 
         private void Control_OnMouseDoubleClickProduct(object sender, MouseButtonEventArgs e) {
-            if (viewModel.ShowProductCommand.CanExecute(null)) {
-                viewModel.ShowProductCommand.Execute(null);
+            if (_viewModel.ShowProductCommand.CanExecute(null)) {
+                _viewModel.ShowProductCommand.Execute(null);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using ConAuction3.DataModels;
@@ -21,8 +22,9 @@ namespace ConAuction3.Views {
             _customerId = customer.Id;
 
 			Label.Text = product.Label;
-			Type.Text = product.Type;
-			ProductName.Text = product.Name;
+            Type.ItemsSource = ProductTypeList;
+            Type.Text = product.Type;
+            ProductName.Text = product.Name;
 			Customer.Text = customer.NumberAndName;
 			Description.Text = product.Description;
 			FixedPrice.Text = product.FixedPrice.ToString();
@@ -45,7 +47,16 @@ namespace ConAuction3.Views {
 			}
 		}
 
-		public void OnClick(object sender, RoutedEventArgs e) {
+        public List<string> ProductTypeList { get; } = new List<string> {
+            "Brädspel",
+            "Kortspel",
+            "Rollspel",
+            "Figurspel",
+            "Krigsspel",
+            "Övrigt"
+        };
+
+        public void OnClick(object sender, RoutedEventArgs e) {
 			DialogResult = true;
 		}
 

@@ -30,10 +30,6 @@
             </DockPanel>
 
             <Grid Margin="10">
-                <Grid.InputBindings>
-                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ShowCustomerCommand}"/>
-                    <!--<MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ShowCustomerCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>-->
-                </Grid.InputBindings>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="5"/>
