@@ -77,16 +77,23 @@ namespace ConAuction3.ViewModels  {
 			get => _selectedCustomer;
 
             set {
-				_selectedCustomer = value; 
+				_selectedCustomer = value;
+                
 				OnPropertyChanged("Products");
+                OnPropertyChanged("SelectedCustomer");
 			}
-		}
+        }
 
 		public Product SelectedProduct {
 			get => _selectedProduct;
 
             set {
 				_selectedProduct = value;
+
+                if (value != null) {
+                    SelectedCustomer = _customersVM.GetCustomerFromId(_selectedProduct.CustomerId);
+                }
+                
                 OnPropertyChanged("SelectedProduct");
             }
         }

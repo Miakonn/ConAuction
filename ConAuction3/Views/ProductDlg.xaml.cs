@@ -29,7 +29,9 @@ namespace ConAuction3.Views {
             Customer.Text = customer.NumberAndName;
             Type.ItemsSource = ProductTypeList;
 
+            btnDialogOk.IsEnabled = false;
             SetFields(product);
+            VerifyAllFieldsFilledIn();
 
             CopyPrevious.IsEnabled = _productListVm != null && _productListVm.CountForCustomer(customer.Id) > 0;
         }
@@ -86,6 +88,19 @@ namespace ConAuction3.Views {
             var maxId = previousProducts.Max(p => p.Id);
             var previous = previousProducts.Find(p => p.Id == maxId);
             SetFields(previous);
+        }
+
+        private void VerifyAllFieldsFilledIn() {
+            var ok = !string.IsNullOrWhiteSpace(Type.Text) && !string.IsNullOrWhiteSpace(ProductName.Text) && !string.IsNullOrWhiteSpace(Description.Text);
+            btnDialogOk.IsEnabled = ok;
+        }
+
+        private void FieldsChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
+            VerifyAllFieldsFilledIn();
+        }
+
+        private void OnTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) {
+            VerifyAllFieldsFilledIn();
         }
     }
 }

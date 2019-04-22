@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows.Controls;
+using System.Windows.Input;
 using ConAuction3.ViewModels;
 
 namespace ConAuction3.Views {
@@ -27,6 +28,12 @@ namespace ConAuction3.Views {
         private void Control_OnMouseDoubleClickProduct(object sender, MouseButtonEventArgs e) {
             if (_viewModel.ShowProductCommand.CanExecute(null)) {
                 _viewModel.ShowProductCommand.Execute(null);
+            }
+        }
+
+        private void ListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (sender is ListView listView  && e.AddedItems.Count > 0) {
+                listView.ScrollIntoView(e.AddedItems[0]);
             }
         }
     }

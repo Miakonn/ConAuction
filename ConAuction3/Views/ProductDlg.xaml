@@ -36,7 +36,7 @@
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Typ" />
-                    <ComboBox Name="Type" Text="Välj typ" MinWidth="100" IsEditable="False" />
+                    <ComboBox Name="Type" Text="Välj typ" MinWidth="100" IsEditable="False" SelectionChanged="FieldsChanged" />
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Ägare" />
@@ -47,7 +47,7 @@
             <DockPanel Grid.Row="1"  HorizontalAlignment="Stretch" >
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Namn" />
-                    <TextBox  Name="ProductName" MinWidth="400" />
+                    <TextBox  Name="ProductName" MinWidth="400" TextChanged="OnTextChanged"/>
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Loppispris" />
@@ -61,7 +61,8 @@
 
             <StackPanel Grid.Row="2"  HorizontalAlignment="Stretch"  Margin="10,5,10,5">
                 <Label  Content="Beskrivning" />
-                <TextBox  Name="Description" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" MinHeight="80" />
+                <TextBox  Name="Description" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" 
+                          VerticalScrollBarVisibility="Visible" MinHeight="80"  TextChanged="OnTextChanged" />
             </StackPanel>
 
 
