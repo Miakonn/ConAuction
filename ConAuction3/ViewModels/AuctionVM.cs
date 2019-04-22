@@ -213,7 +213,7 @@ namespace ConAuction3.ViewModels  {
                 return;
             }
 
-            var inputDialog = new ProductDlg(new Product(), SelectedCustomer);
+            var inputDialog = new ProductDlg(new Product(), SelectedCustomer, _products);
 			if (inputDialog.ShowDialog() == true) {
 				var product = inputDialog.Result;
 
@@ -237,7 +237,7 @@ namespace ConAuction3.ViewModels  {
             }
 
             var customer = SelectedCustomer ?? _customersVM.GetCustomerFromId(SelectedProduct.CustomerId);
-            var inputDialog = new ProductDlg(SelectedProduct, customer);
+            var inputDialog = new ProductDlg(SelectedProduct, customer, null);
 			if (inputDialog.ShowDialog() == true) {
 				var product = inputDialog.Result;
 

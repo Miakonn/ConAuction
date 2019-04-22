@@ -15,10 +15,11 @@
     </Window.Resources>
 
     <DockPanel Background="#FFF5F5F5">
-        <WrapPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10,15,15,10">
-            <Button IsDefault="True" Name="btnDialogOk" Click="OnClick" MinWidth="60" Margin="10,0,10,0">_Ok</Button>
-            <Button IsCancel="True" MinWidth="60">_Cancel</Button>
-        </WrapPanel>
+        <DockPanel DockPanel.Dock="Bottom" Margin="10,15,15,10" LastChildFill="False">
+            <Button DockPanel.Dock="Left"  Name="CopyPrevious" Click="CopyPrevious_OnClick" MinWidth="60" Margin="10,0,10,0">Kopiera föregående</Button>
+            <Button DockPanel.Dock="Right" IsDefault="True" Name="btnDialogOk" Click="OnClick" MinWidth="60" Margin="10,0,10,0">_Ok</Button>
+            <Button DockPanel.Dock="Right" IsCancel="True" MinWidth="60">_Cancel</Button>
+        </DockPanel>
 
         <Grid>
             <Grid.RowDefinitions>
