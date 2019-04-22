@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -24,9 +25,7 @@ namespace ConAuction3.ViewModels  {
         public string ValueString { get; set; }
     }
 
-
-
-	class AuctionVM : INotifyPropertyChanged {
+    class AuctionVM : INotifyPropertyChanged {
 		private  CustomerListVM _customersVM;
 
 		private ProductListVM _products;
@@ -38,11 +37,13 @@ namespace ConAuction3.ViewModels  {
 		private ObservableCollection<Product>  _productsObserved;
 
 
-		public MyCommand NewCustomerCommand { get; private set; }
-		public ICommand ShowCustomerCommand { get; private set; }
-		public ICommand NewProductCommand { get; private set; }
-		public ICommand ShowProductCommand { get; private set; }
-        public ICommand DeleteProductCommand { get; private set; }
+		public MyCommand NewCustomerCommand { get; }
+		public ICommand ShowCustomerCommand { get; }
+		public ICommand NewProductCommand { get; }
+		public ICommand ShowProductCommand { get; }
+        public ICommand DeleteProductCommand { get; }
+        public ICommand SortCustomerCommand { get; }
+        public ICommand CancelCommand { get; }
 
         public int counter = 0;
 		private Customer _selectedCustomer;
@@ -91,21 +92,25 @@ namespace ConAuction3.ViewModels  {
             }
         }
 
-		public string StatusTotalCount => $"Antal objekt {counter} + {0}";
+        // ReSharper disable once UnusedMember.Global
+        public string StatusAuctionCount => $"Antal auktion: {_products.TotalCountAuction}";
 
+        // ReSharper disable once UnusedMember.Global
+        public string StatusJumbleCount => $"Antal loppis: {_products.TotalCountJumble}";
+
+        public string StatusMsgTotal => $"?";
+        
+        public string StatusMsgArchiving => $"?";
 
         public AuctionVM() {
 			_dbAccess = new DbAccess();
 		
             bool fStarted;
-            do
-            {
+            do {
                 fStarted = _dbAccess.InitDB();
-                if (!fStarted)
-                {
+                if (!fStarted) {
                     var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null, MessageBoxButtons.RetryCancel);
-                    if (res != DialogResult.Retry)
-                    {
+                    if (res != DialogResult.Retry) {
                         Application.Exit();
                         Environment.Exit(-1);
                     }
@@ -115,17 +120,32 @@ namespace ConAuction3.ViewModels  {
 			UpdateCustomers();
 			UpdateProducts();
             
-            NewCustomerCommand = new MyCommand(NewCustomer, () => CurrentMode == OpMode.Receiving);
-			ShowCustomerCommand = new MyCommand(ShowCustomer, () => CurrentMode == OpMode.Receiving);
-			NewProductCommand = new MyCommand(NewProduct, () => CurrentMode == OpMode.Receiving);
-			ShowProductCommand = new MyCommand(ShowProduct, () => CurrentMode == OpMode.Receiving);
-            DeleteProductCommand = new MyCommand(DeleteProduct, () => CurrentMode == OpMode.Receiving);
+            NewCustomerCommand = new MyCommand(NewCustomer, NewCustomer_CanExecute);
+			ShowCustomerCommand = new MyCommand(ShowCustomer, ShowCustomer_CanExecute);
+			NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
+			ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
+            DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
 
+            SortCustomerCommand = new MyCommand(SortCustomer, () => true);
+            CancelCommand = new MyCommand(ExitProgram, () => true);
 
             CurrentMode = OpMode.Receiving;
 		}
 
-		public void UpdateCustomers() {
+        public void ExitProgram()
+        {
+            Application.Exit();
+            Environment.Exit(1);
+        }
+
+
+        public void SortCustomer()
+        {
+          Trace.WriteLine("dfskjhsdlk");
+        }
+
+
+        public void UpdateCustomers() {
             var selectedLastCustomer = SelectedCustomer;
 			_customersVM =  new CustomerListVM(_dbAccess.ReadAllCustomers());
 			OnPropertyChanged("Customers");
@@ -156,6 +176,10 @@ namespace ConAuction3.ViewModels  {
             UpdateProducts();
         }
 
+        public bool NewCustomer_CanExecute() {
+			return CurrentMode == OpMode.Receiving;
+		}
+
         public void ShowCustomer() {
 			if (SelectedCustomer == null) {
 				return;
@@ -170,11 +194,12 @@ namespace ConAuction3.ViewModels  {
             UpdateProducts();
         }
 
-        public bool NewCustomer_CanExecute() {
-			return true;
-		}
+        public bool ShowCustomer_CanExecute()
+        {
+            return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
+        }
 
-		public void NewProduct() {
+        public void NewProduct() {
             if (SelectedCustomer == null) {
                 return;
             }
@@ -194,7 +219,7 @@ namespace ConAuction3.ViewModels  {
 		}
 
 		public bool NewProduct_CanExecute() {
-			return SelectedCustomer != null;
+			return CurrentMode == OpMode.Receiving &&  SelectedCustomer != null;
 		}
 
 		public void ShowProduct() {
@@ -228,6 +253,11 @@ namespace ConAuction3.ViewModels  {
             }
             UpdateCustomers();
             UpdateProducts();
+        }
+
+        public bool DeleteProduct_CanExecute()
+        {
+            return CurrentMode == OpMode.Receiving && SelectedProduct != null;
         }
 
 

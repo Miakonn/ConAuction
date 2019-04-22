@@ -4,7 +4,17 @@
         Title="Product" Height="350"  Width="800"
         WindowStartupLocation="CenterScreen">
 
-    <DockPanel>
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/PresentationFramework.Luna;component/themes/Luna.Metallic.xaml"/>
+                <ResourceDictionary Source="../Resources/ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <DockPanel Background="#FFF5F5F5">
         <WrapPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10,15,15,10">
             <Button IsDefault="True" Name="btnDialogOk" Click="OnClick" MinWidth="60" Margin="10,0,10,0">_Ok</Button>
             <Button IsCancel="True" MinWidth="60">_Cancel</Button>
@@ -20,8 +30,8 @@
 
             <DockPanel Grid.Row="0"  HorizontalAlignment="Stretch" >
                 <StackPanel Margin="10,5,10,5">
-                    <Label Content="Id" />
-                    <TextBox  Name="Label" IsReadOnly="true" MinWidth="75" />
+                    <Label Content="Nummer" />
+                    <TextBox  Name="Label" IsReadOnly="true" MinWidth="75" Background="#FFF5F5F5"/>
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Typ" />
@@ -29,7 +39,7 @@
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Ägare" />
-                    <TextBox Name="Customer" IsReadOnly="true" />
+                    <TextBox Name="Customer" IsReadOnly="true" Background="#FFF5F5F5" />
                 </StackPanel>
             </DockPanel>
 
