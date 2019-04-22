@@ -40,7 +40,7 @@
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Right" Margin="10,5,10,5">
                     <Label Content="" />
-                    <CheckBox Checked="CheckJumble_OnChecked" Unchecked="CheckJumble_OnUnchecked" >Loppis</CheckBox>
+                    <CheckBox Name="CheckBoxJumble" Checked="CheckJumble_OnChecked" Unchecked="CheckJumble_OnUnchecked" >Loppis</CheckBox>
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Typ" />

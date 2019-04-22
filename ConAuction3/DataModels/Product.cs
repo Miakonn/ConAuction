@@ -18,16 +18,18 @@
         public string Description { get; set; }
         public string Note { get; set; }
         public int Price { get; set; }
-        public int FixedPrice { get; set; }
-		public int CustomerId { get; set; } 
+        public int? FixedPrice { get; set; }
+		public int CustomerId { get; set; }
+
+        public string FixedPriceString => FixedPrice.HasValue && FixedPrice.Value > 0 ? FixedPrice.Value.ToString() : "";
 
         public bool IsSold => Price > 0;
 
-        public bool IsFixedPrice => FixedPrice > 0;
+        public bool IsFixedPrice => FixedPrice.HasValue && FixedPrice.Value > 0;
 
         public bool SoldForFixedPrice() {
-            if (IsFixedPrice && !IsSold) {
-                Price = FixedPrice;
+            if (FixedPrice.HasValue && !IsSold) {
+                Price = FixedPrice.Value;
                 return true;
             }
             return false;

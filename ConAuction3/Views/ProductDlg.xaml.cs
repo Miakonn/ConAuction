@@ -33,7 +33,9 @@ namespace ConAuction3.Views {
             btnDialogOk.IsEnabled = false;
             SetFields(product);
             VerifyAllFieldsFilledIn();
-            
+
+            CheckBoxJumble.IsChecked = product.IsFixedPrice;
+
             FixedPricePanel.Visibility = product.IsFixedPrice ? Visibility.Visible : Visibility.Hidden;
             CopyPrevious.IsEnabled = _productListVm != null && _productListVm.CountForCustomer(customer.Id) > 0;
         }
@@ -42,7 +44,7 @@ namespace ConAuction3.Views {
             Type.Text = product.Type;
             ProductName.Text = product.Name;
             Description.Text = product.Description;
-            FixedPrice.Text = product.FixedPrice.ToString();
+            FixedPrice.Text = product.FixedPriceString;
             Note.Text = product.Note;
         }
         
@@ -55,10 +57,16 @@ namespace ConAuction3.Views {
 					CustomerId = _customer.Id,
 					Type = Type.Text,
 					Description = Description.Text,
-					FixedPrice = int.Parse(FixedPrice.Text),
 					Note = Note.Text
 				};
-				return product;
+                if (CheckBoxJumble.IsChecked.HasValue && CheckBoxJumble.IsChecked.Value) {
+                    product.FixedPrice = int.Parse(FixedPrice.Text);
+                }
+                else {
+                    product.FixedPrice = null;
+                }
+
+                return product;
 			}
 		}
 

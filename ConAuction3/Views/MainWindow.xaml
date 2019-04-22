@@ -87,7 +87,7 @@
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
                                 <GridViewColumnHeader Content="Typ" Command="{Binding SortCommand}" CommandParameter="Status" />
                             </GridViewColumn>
-                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPrice}" >
+                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
                                 <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortCommand}" CommandParameter="PatientId" />
                             </GridViewColumn>
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
