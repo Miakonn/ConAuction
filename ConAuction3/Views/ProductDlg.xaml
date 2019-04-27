@@ -41,11 +41,11 @@
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Right" Margin="10,5,10,5">
                     <Label Content="" />
-                    <CheckBox Name="CheckBoxJumble" Checked="CheckJumble_OnChecked" Unchecked="CheckJumble_OnUnchecked" >Loppis</CheckBox>
+                    <CheckBox Name="CheckBoxJumble" Checked="CheckJumble_OnChecked" Unchecked="CheckJumble_OnUnchecked" TabIndex="2" IsTabStop="True" >Loppis</CheckBox>
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Typ" />
-                    <ComboBox Name="Type" Text="Välj typ" MinWidth="100" IsEditable="False" SelectionChanged="FieldsChanged" />
+                    <ComboBox Name="Type" Text="Välj typ" MinWidth="100" IsEditable="False" SelectionChanged="FieldsChanged" TabIndex="1" IsTabStop="True" />
                 </StackPanel>
 
             </DockPanel>
@@ -53,24 +53,25 @@
             <DockPanel Grid.Row="1"  HorizontalAlignment="Stretch" >
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Namn" />
-                    <TextBox  Name="ProductName" MinWidth="400" TextChanged="OnTextChanged" 
+                    <TextBox  Name="ProductName" MinWidth="400" TextChanged="OnTextChanged" TabIndex="3" IsTabStop="True"
                               wpfTextBoxAutoComplete:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding TitleDictionary}"
                               />
                 </StackPanel>
                 <StackPanel Name="FixedPricePanel" Margin="10,5,10,5">
                     <Label Content="Loppispris" />
-                    <TextBox Name="FixedPrice" PreviewTextInput="FixedPrice_OnPreviewTextInput" MinWidth="100" />
+                    <TextBox Name="FixedPrice" PreviewTextInput="FixedPrice_OnPreviewTextInput" MinWidth="100" TabIndex="4" IsTabStop="True" />
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Notering" />
-                    <TextBox Name="Note" />
+                    <TextBox Name="Note" TabIndex="5" IsTabStop="True"/>
                 </StackPanel>
             </DockPanel>
 
             <StackPanel Grid.Row="2"  HorizontalAlignment="Stretch"  Margin="10,5,10,5">
                 <Label  Content="Beskrivning" />
                 <TextBox  Name="Description" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" 
-                          VerticalScrollBarVisibility="Visible" MinHeight="80"  TextChanged="OnTextChanged" />
+                          VerticalScrollBarVisibility="Visible" MinHeight="80"  TextChanged="OnTextChanged" 
+                          TabIndex="6" IsTabStop="True"/>
             </StackPanel>
 
 
