@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Forms;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
+using Application = System.Windows.Forms.Application;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace ConAuction3.ViewModels {
     class AuctionVM : INotifyPropertyChanged {
@@ -29,6 +32,7 @@ namespace ConAuction3.ViewModels {
 
         private Customer _selectedCustomer;
         private Product _selectedProduct;
+        private OpMode _currentMode;
 
         // ReSharper disable once UnusedMember.Global
         public List<ComboBoxItemOpMode> OpEnumList =>
@@ -41,7 +45,15 @@ namespace ConAuction3.ViewModels {
                 new ComboBoxItemOpMode {ValueMode = OpMode.Overhead, ValueString = "Projektor"},
             };
 
-        public OpMode CurrentMode { get; set; }
+        public OpMode CurrentMode {
+            get => _currentMode;
+            set {
+                _currentMode = value;
+                UpdateAll();
+                OnPropertyChanged("FilterCheckVisible");
+                OnPropertyChanged("EditingButtonsVisible");
+            }
+        }
 
         // ReSharper disable once UnusedMember.Global
         public ICollectionView Customers => CustomersVm.CustomerView;
@@ -55,7 +67,7 @@ namespace ConAuction3.ViewModels {
             set {
                 _selectedCustomer = value;
                 if (ProductsVm != null) {
-                    if (_selectedCustomer != null) {
+                    if (_selectedCustomer != null && CurrentMode == OpMode.Receiving) {
                         ProductsVm.FilterById(_selectedCustomer.Id);
                     }
                     else {
@@ -64,7 +76,8 @@ namespace ConAuction3.ViewModels {
                 }
 
                 OnPropertyChanged("Products");
-                OnPropertyChanged("SelectedCustomer");
+                OnPropertyChanged("StatusAuctionCount");
+                OnPropertyChanged("StatusJumbleCount");
             }
         }
 
@@ -87,6 +100,12 @@ namespace ConAuction3.ViewModels {
 
         // ReSharper disable once UnusedMember.Global
         public string StatusJumbleCount => $"Antal loppis: {ProductsVm.TotalCountJumble}";
+
+        // ReSharper disable once UnusedMember.Global
+        public bool FilterCheckVisible => CurrentMode == OpMode.Showing;
+
+        // ReSharper disable once UnusedMember.Global
+        public bool EditingButtonsVisible => CurrentMode == OpMode.Receiving;
 
         #endregion
 
@@ -121,7 +140,6 @@ namespace ConAuction3.ViewModels {
             CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers());
             OnPropertyChanged("Customers");
             OnPropertyChanged("StatusTotalCount");
-            OnPropertyChanged("Products");
 
             SelectedCustomer = selectedLastCustomer;
         }
