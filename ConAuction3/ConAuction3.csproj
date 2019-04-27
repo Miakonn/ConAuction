@@ -69,6 +69,7 @@
     </ApplicationDefinition>
     <Compile Include="ViewModels\CustomerListVM.cs" />
     <Compile Include="ViewModels\MyCommand.cs" />
+    <Compile Include="ViewModels\OpMode.cs" />
     <Compile Include="Views\CustomerDlg.xaml.cs">
       <DependentUpon>CustomerDlg.xaml</DependentUpon>
     </Compile>

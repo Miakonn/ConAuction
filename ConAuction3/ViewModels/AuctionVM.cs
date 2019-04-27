@@ -6,21 +6,6 @@ using ConAuction3.DataModels;
 using ConAuction3.Views;
 
 namespace ConAuction3.ViewModels  {
-
-	public enum OpMode {
-		Initializing = 0,
-		Receiving = 1,
-		Showing = 2,
-		Auctioning = 3,
-		Paying = 4,
-		Overhead = 5
-	}
-
-	  public class ComboBoxItemOpMode {
-        public OpMode ValueMode{ get; set; }
-        public string ValueString { get; set; }
-    }
-
     class AuctionVM : INotifyPropertyChanged {
 
         public CustomerListVM CustomersVm { get; private set; }
@@ -47,7 +32,7 @@ namespace ConAuction3.ViewModels  {
 
         // ReSharper disable once UnusedMember.Global
         public List<ComboBoxItemOpMode> OpEnumList =>
-            new List<ComboBoxItemOpMode>() {
+            new List<ComboBoxItemOpMode> {
                 new ComboBoxItemOpMode {ValueMode = OpMode.Initializing, ValueString = "Välj mod"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Receiving, ValueString = "Inlämning"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Showing, ValueString = "Visning"},
