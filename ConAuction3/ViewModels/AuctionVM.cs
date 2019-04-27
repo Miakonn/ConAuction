@@ -22,6 +22,7 @@ namespace ConAuction3.ViewModels {
         public MyCommand NewProductCommand { get; }
         public MyCommand ShowProductCommand { get; }
         public MyCommand DeleteProductCommand { get; }
+        public MyCommand SellProductCommand { get; }
         public MyCommand CancelCommand { get; }
         public MyCommand UpdateCommand { get; }
 
@@ -140,6 +141,7 @@ namespace ConAuction3.ViewModels {
             NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
             ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
+            SellProductCommand = new MyCommand(SellProduct, SellProduct_CanExecute);
             UpdateCommand = new MyCommand(UpdateAll);
             CancelCommand = new MyCommand(ExitProgram);
 
@@ -194,6 +196,10 @@ namespace ConAuction3.ViewModels {
             Environment.Exit(1);
         }
 
+        public bool NewCustomer_CanExecute() {
+            return CurrentMode == OpMode.Receiving;
+        }
+
         public void NewCustomer() {
             var inputDialog = new CustomerDlg(new Customer());
             if (inputDialog.ShowDialog() == true) {
@@ -205,10 +211,10 @@ namespace ConAuction3.ViewModels {
             UpdateProducts();
         }
 
-        public bool NewCustomer_CanExecute() {
-            return CurrentMode == OpMode.Receiving;
+        public bool ShowCustomer_CanExecute() {
+            return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
         }
-
+        
         public void ShowCustomer() {
             if (SelectedCustomer == null) {
                 return;
@@ -223,7 +229,7 @@ namespace ConAuction3.ViewModels {
             UpdateProducts();
         }
 
-        public bool ShowCustomer_CanExecute() {
+        public bool NewProduct_CanExecute() {
             return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
         }
 
@@ -246,8 +252,8 @@ namespace ConAuction3.ViewModels {
             OnPropertyChanged("StatusTotalCount");
         }
 
-        public bool NewProduct_CanExecute() {
-            return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
+        public bool ShowProduct_CanExecute() {
+            return CurrentMode == OpMode.Receiving && SelectedProduct != null;
         }
 
         public void ShowProduct() {
@@ -266,7 +272,7 @@ namespace ConAuction3.ViewModels {
             OnPropertyChanged("StatusTotalCount");
         }
 
-        public bool ShowProduct_CanExecute() {
+        public bool DeleteProduct_CanExecute() {
             return CurrentMode == OpMode.Receiving && SelectedProduct != null;
         }
 
@@ -279,12 +285,23 @@ namespace ConAuction3.ViewModels {
             if (result == DialogResult.OK) {
                 _dbAccess.DeleteProductToDB(SelectedProduct.Id);
             }
-            UpdateCustomers();
-            UpdateProducts();
+            UpdateAll();
+        }
+ 
+       public bool SellProduct_CanExecute() {
+            return CurrentMode == OpMode.Showing && SelectedProduct != null && SelectedProduct.IsJumble;
         }
 
-        public bool DeleteProduct_CanExecute() {
-            return CurrentMode == OpMode.Receiving && SelectedProduct != null;
+       public void SellProduct() {
+            if (SelectedProduct == null) {
+                return;
+            }
+
+            if (SelectedProduct.SoldForFixedPrice()) {
+                _dbAccess.SaveProductToDB(SelectedProduct);
+            }
+
+           UpdateAll();
         }
 
         #endregion
