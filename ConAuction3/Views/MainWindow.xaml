@@ -11,6 +11,13 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding NewCustomerCommand}" />
+        <KeyBinding Key="F2" Command="{Binding ShowCustomerCommand}" />
+        <KeyBinding Key="F5" Command="{Binding NewProductCommand}" />
+        <KeyBinding Key="F6" Command="{Binding ShowProductCommand}" />
+    </Window.InputBindings>
+
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" Background="#FBD800">
             <Image DockPanel.Dock="Left" Source="{StaticResource LinconLogoSmall}" MaxHeight="80"  Margin="30,0,30,0" />

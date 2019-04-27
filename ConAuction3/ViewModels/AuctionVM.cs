@@ -95,17 +95,7 @@ namespace ConAuction3.ViewModels  {
         public AuctionVM() {
 			_dbAccess = new DbAccess();
 		
-            bool fStarted;
-            do {
-                fStarted = _dbAccess.InitDB();
-                if (!fStarted) {
-                    var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null, MessageBoxButtons.RetryCancel);
-                    if (res != DialogResult.Retry) {
-                        Application.Exit();
-                        Environment.Exit(-1);
-                    }
-                }
-            } while (!fStarted);
+            TryConnectDataBase();
             
             UpdateAll();
 
@@ -114,16 +104,13 @@ namespace ConAuction3.ViewModels  {
 			NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
 			ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
-
             UpdateCommand = new MyCommand(UpdateAll);
             CancelCommand = new MyCommand(ExitProgram);
+
             SortCustomerCommand = new ParameterCommand(CustomersVm.SortBy);
-
             SortProductCommand = new ParameterCommand(ProductsVm.SortBy);
-
-
-
-            CurrentMode = OpMode.Receiving;
+            
+            CurrentMode = OpMode.Initializing;
 		}
 
         public void ExitProgram()
@@ -147,6 +134,21 @@ namespace ConAuction3.ViewModels  {
 
             SelectedCustomer = selectedLastCustomer;
         }
+
+        private void TryConnectDataBase() {
+            bool fStarted;
+            do {
+                fStarted = _dbAccess.InitDB();
+                if (!fStarted) {
+                    var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null, MessageBoxButtons.RetryCancel);
+                    if (res != DialogResult.Retry) {
+                        Application.Exit();
+                        Environment.Exit(-1);
+                    }
+                }
+            } while (!fStarted);
+        }
+
 
 		public void UpdateProducts() {
             var selectedLastProduct = SelectedProduct;
@@ -212,7 +214,7 @@ namespace ConAuction3.ViewModels  {
 		}
 
 		public bool NewProduct_CanExecute() {
-			return CurrentMode == OpMode.Receiving &&  SelectedCustomer != null;
+			return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
 		}
 
 		public void ShowProduct() {
@@ -232,7 +234,7 @@ namespace ConAuction3.ViewModels  {
 		}
 
 		public bool ShowProduct_CanExecute() {
-			return SelectedProduct != null;
+			return CurrentMode == OpMode.Receiving && SelectedProduct != null;
 		}
 
         public void DeleteProduct() {
@@ -252,8 +254,7 @@ namespace ConAuction3.ViewModels  {
         {
             return CurrentMode == OpMode.Receiving && SelectedProduct != null;
         }
-
-
+        
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
