@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ConAuction3.DataModels;
 using ConAuction3.ViewModels;
 
+using ConAuction3.DataModels;
 namespace ConAuction3.Views {
 	/// <summary>
 	/// Interaction logic for ProductDlg.xaml
@@ -15,6 +16,7 @@ namespace ConAuction3.Views {
 		private readonly long _id;
         private readonly Customer _customer;
         private readonly ProductListVM _productListVm;
+        private readonly List<string> _dictionary;
 
 		public ProductDlg(Product product, Customer customer, ProductListVM productListVm) {
 			InitializeComponent();
@@ -22,6 +24,8 @@ namespace ConAuction3.Views {
                 return;
             }
 
+            DataContext = this;
+            
 			_id = product.Id;
             _customer = customer;
             _productListVm = productListVm;
@@ -38,6 +42,19 @@ namespace ConAuction3.Views {
 
             FixedPricePanel.Visibility = product.IsFixedPrice ? Visibility.Visible : Visibility.Hidden;
             CopyPrevious.IsEnabled = _productListVm != null && _productListVm.CountForCustomer(customer.Id) > 0;
+
+
+
+            _dictionary = new List<string>();
+            try {
+                using (var reader = new StreamReader("ConAuctionDictionary.txt")) {
+                    while (!reader.EndOfStream) {
+                        var line = reader.ReadLine();
+                        _dictionary.Add(line);
+                    }
+                }
+            }
+            catch { }
         }
         
         private void SetFields(Product product) {
@@ -47,6 +64,8 @@ namespace ConAuction3.Views {
             FixedPrice.Text = product.FixedPriceString;
             Note.Text = product.Note;
         }
+
+        public IEnumerable<string> TitleDictionary => _dictionary;
         
         public Product Result {
 			get {

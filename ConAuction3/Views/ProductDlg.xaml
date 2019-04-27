@@ -1,6 +1,7 @@
 ﻿<Window x:Class="ConAuction3.Views.ProductDlg"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wpfTextBoxAutoComplete="clr-namespace:WPFTextBoxAutoComplete;assembly=WPFTextBoxAutoComplete"
         Title="Product" Height="350"  Width="800"
         WindowStartupLocation="CenterScreen">
 
@@ -52,7 +53,9 @@
             <DockPanel Grid.Row="1"  HorizontalAlignment="Stretch" >
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Namn" />
-                    <TextBox  Name="ProductName" MinWidth="400" TextChanged="OnTextChanged"/>
+                    <TextBox  Name="ProductName" MinWidth="400" TextChanged="OnTextChanged" 
+                              wpfTextBoxAutoComplete:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding TitleDictionary}"
+                              />
                 </StackPanel>
                 <StackPanel Name="FixedPricePanel" Margin="10,5,10,5">
                     <Label Content="Loppispris" />
