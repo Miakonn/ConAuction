@@ -75,7 +75,7 @@ namespace ConAuction3.ViewModels  {
 				_selectedProduct = value;
 
                 if (_selectedProduct != null) {
-                    SelectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
+                    _selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
                 }
                 
                 OnPropertyChanged("SelectedProduct");
