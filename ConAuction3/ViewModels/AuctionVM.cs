@@ -5,19 +5,20 @@ using System.Windows.Forms;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
 
-namespace ConAuction3.ViewModels  {
+namespace ConAuction3.ViewModels {
     class AuctionVM : INotifyPropertyChanged {
-
+        #region Attributes
+        
         public CustomerListVM CustomersVm { get; private set; }
 
         public ProductListVM ProductsVm { get; private set; }
 
         private readonly DbAccess _dbAccess;
-        
-		public MyCommand NewCustomerCommand { get; }
-		public MyCommand ShowCustomerCommand { get; }
-		public MyCommand NewProductCommand { get; }
-		public MyCommand ShowProductCommand { get; }
+
+        public MyCommand NewCustomerCommand { get; }
+        public MyCommand ShowCustomerCommand { get; }
+        public MyCommand NewProductCommand { get; }
+        public MyCommand ShowProductCommand { get; }
         public MyCommand DeleteProductCommand { get; }
         public MyCommand CancelCommand { get; }
         public MyCommand UpdateCommand { get; }
@@ -26,9 +27,8 @@ namespace ConAuction3.ViewModels  {
         public ParameterCommand SortCustomerCommand { get; }
         public ParameterCommand SortProductCommand { get; }
 
-
-		private Customer _selectedCustomer;
-		private Product _selectedProduct;
+        private Customer _selectedCustomer;
+        private Product _selectedProduct;
 
         // ReSharper disable once UnusedMember.Global
         public List<ComboBoxItemOpMode> OpEnumList =>
@@ -42,18 +42,18 @@ namespace ConAuction3.ViewModels  {
             };
 
         public OpMode CurrentMode { get; set; }
-		
+
         // ReSharper disable once UnusedMember.Global
         public ICollectionView Customers => CustomersVm.CustomerView;
 
         // ReSharper disable once UnusedMember.Global
         public ICollectionView Products => ProductsVm.ProductView;
 
-		public Customer SelectedCustomer {
-			get => _selectedCustomer;
+        public Customer SelectedCustomer {
+            get => _selectedCustomer;
 
             set {
-				_selectedCustomer = value;
+                _selectedCustomer = value;
                 if (ProductsVm != null) {
                     if (_selectedCustomer != null) {
                         ProductsVm.FilterById(_selectedCustomer.Id);
@@ -65,19 +65,19 @@ namespace ConAuction3.ViewModels  {
 
                 OnPropertyChanged("Products");
                 OnPropertyChanged("SelectedCustomer");
-			}
+            }
         }
 
-		public Product SelectedProduct {
-			get => _selectedProduct;
+        public Product SelectedProduct {
+            get => _selectedProduct;
 
             set {
-				_selectedProduct = value;
+                _selectedProduct = value;
 
                 if (_selectedProduct != null) {
                     _selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
                 }
-                
+
                 OnPropertyChanged("SelectedProduct");
             }
         }
@@ -88,48 +88,39 @@ namespace ConAuction3.ViewModels  {
         // ReSharper disable once UnusedMember.Global
         public string StatusJumbleCount => $"Antal loppis: {ProductsVm.TotalCountJumble}";
 
-        public string StatusMsgTotal => $"?";
-        
-        public string StatusMsgArchiving => $"?";
+        #endregion
 
         public AuctionVM() {
-			_dbAccess = new DbAccess();
-		
+            _dbAccess = new DbAccess();
+
             TryConnectDataBase();
-            
+
             UpdateAll();
 
             NewCustomerCommand = new MyCommand(NewCustomer, NewCustomer_CanExecute);
-			ShowCustomerCommand = new MyCommand(ShowCustomer, ShowCustomer_CanExecute);
-			NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
-			ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
+            ShowCustomerCommand = new MyCommand(ShowCustomer, ShowCustomer_CanExecute);
+            NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
+            ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
             UpdateCommand = new MyCommand(UpdateAll);
             CancelCommand = new MyCommand(ExitProgram);
 
             SortCustomerCommand = new ParameterCommand(CustomersVm.SortBy);
             SortProductCommand = new ParameterCommand(ProductsVm.SortBy);
-            
-            CurrentMode = OpMode.Initializing;
-		}
 
-        public void ExitProgram()
-        {
-            Application.Exit();
-            Environment.Exit(1);
+            CurrentMode = OpMode.Initializing;
         }
 
-        private void UpdateAll()
-        {
+        private void UpdateAll() {
             UpdateCustomers();
             UpdateProducts();
         }
-        
+
         public void UpdateCustomers() {
             var selectedLastCustomer = SelectedCustomer;
-			CustomersVm =  new CustomerListVM(_dbAccess.ReadAllCustomers());
-			OnPropertyChanged("Customers");
-			OnPropertyChanged("StatusTotalCount");
+            CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers());
+            OnPropertyChanged("Customers");
+            OnPropertyChanged("StatusTotalCount");
             OnPropertyChanged("Products");
 
             SelectedCustomer = selectedLastCustomer;
@@ -148,49 +139,54 @@ namespace ConAuction3.ViewModels  {
                 }
             } while (!fStarted);
         }
-
-
-		public void UpdateProducts() {
+        
+        public void UpdateProducts() {
             var selectedLastProduct = SelectedProduct;
-			ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
-			OnPropertyChanged("Customers");
-			OnPropertyChanged("StatusTotalCount");
+            ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
+            OnPropertyChanged("Customers");
+            OnPropertyChanged("StatusTotalCount");
             OnPropertyChanged("Products");
 
             SelectedProduct = selectedLastProduct;
         }
 
-		public void NewCustomer() {
-			var inputDialog = new CustomerDlg(new Customer());
-			if (inputDialog.ShowDialog() == true) {
-				var customer = inputDialog.Result;
+        #region COMMANDS
 
-				_dbAccess.InsertNewCustomerToDB(customer);
-			}
-			UpdateCustomers();
+        public void ExitProgram() {
+            Application.Exit();
+            Environment.Exit(1);
+        }
+
+        public void NewCustomer() {
+            var inputDialog = new CustomerDlg(new Customer());
+            if (inputDialog.ShowDialog() == true) {
+                var customer = inputDialog.Result;
+
+                _dbAccess.InsertNewCustomerToDB(customer);
+            }
+            UpdateCustomers();
             UpdateProducts();
         }
 
         public bool NewCustomer_CanExecute() {
-			return CurrentMode == OpMode.Receiving;
-		}
+            return CurrentMode == OpMode.Receiving;
+        }
 
         public void ShowCustomer() {
-			if (SelectedCustomer == null) {
-				return;
-			}
+            if (SelectedCustomer == null) {
+                return;
+            }
 
-			var inputDialog = new CustomerDlg(SelectedCustomer);
-			if (inputDialog.ShowDialog() == true) {
-				var customer = inputDialog.Result;
-				_dbAccess.SaveCustomerToDB(customer);
-			}
-			UpdateCustomers();
+            var inputDialog = new CustomerDlg(SelectedCustomer);
+            if (inputDialog.ShowDialog() == true) {
+                var customer = inputDialog.Result;
+                _dbAccess.SaveCustomerToDB(customer);
+            }
+            UpdateCustomers();
             UpdateProducts();
         }
 
-        public bool ShowCustomer_CanExecute()
-        {
+        public bool ShowCustomer_CanExecute() {
             return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
         }
 
@@ -200,42 +196,42 @@ namespace ConAuction3.ViewModels  {
             }
 
             var inputDialog = new ProductDlg(new Product(), SelectedCustomer, ProductsVm);
-			if (inputDialog.ShowDialog() == true) {
-				var product = inputDialog.Result;
+            if (inputDialog.ShowDialog() == true) {
+                var product = inputDialog.Result;
 
-				var idCreated = _dbAccess.InsertNewProductToDB(product);
+                var idCreated = _dbAccess.InsertNewProductToDB(product);
                 UpdateCustomers();
                 UpdateProducts();
 
                 SelectedProduct = ProductsVm.GetProductFromId(idCreated);
             }
 
-			OnPropertyChanged("StatusTotalCount");
-		}
+            OnPropertyChanged("StatusTotalCount");
+        }
 
-		public bool NewProduct_CanExecute() {
-			return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
-		}
+        public bool NewProduct_CanExecute() {
+            return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
+        }
 
-		public void ShowProduct() {
+        public void ShowProduct() {
             if (SelectedProduct == null) {
                 return;
             }
 
             var customer = SelectedCustomer ?? CustomersVm.GetCustomerFromId(SelectedProduct.CustomerId);
             var inputDialog = new ProductDlg(SelectedProduct, customer, null);
-			if (inputDialog.ShowDialog() == true) {
-				var product = inputDialog.Result;
+            if (inputDialog.ShowDialog() == true) {
+                var product = inputDialog.Result;
 
-				_dbAccess.SaveProductToDB(product);
-			}
-			UpdateAll();
-			OnPropertyChanged("StatusTotalCount");
-		}
+                _dbAccess.SaveProductToDB(product);
+            }
+            UpdateAll();
+            OnPropertyChanged("StatusTotalCount");
+        }
 
-		public bool ShowProduct_CanExecute() {
-			return CurrentMode == OpMode.Receiving && SelectedProduct != null;
-		}
+        public bool ShowProduct_CanExecute() {
+            return CurrentMode == OpMode.Receiving && SelectedProduct != null;
+        }
 
         public void DeleteProduct() {
             if (SelectedProduct == null) {
@@ -250,20 +246,21 @@ namespace ConAuction3.ViewModels  {
             UpdateProducts();
         }
 
-        public bool DeleteProduct_CanExecute()
-        {
+        public bool DeleteProduct_CanExecute() {
             return CurrentMode == OpMode.Receiving && SelectedProduct != null;
         }
-        
+
+        #endregion
+
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-		protected virtual void OnPropertyChanged(string propertyName) {
-			PropertyChangedEventHandler handler = PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName) {
+            PropertyChangedEventHandler handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-		#endregion
-	}
+        #endregion
+    }
 }
