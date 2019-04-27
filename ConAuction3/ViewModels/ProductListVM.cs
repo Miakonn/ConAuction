@@ -60,7 +60,12 @@ namespace ConAuction3.ViewModels {
         public void NoFilter() {
             ProductView.Filter = null;
         }
-        
+
+        public void Filter(bool onlyJumble, bool onlyUnsold) {
+            ProductView.Filter = o => o is Product p && (p.IsJumble || !onlyJumble) && (p.IsSold || !onlyUnsold);
+        }
+
+
         //public  int TotalSoldCount(this DataTable table) {
         //	return (int) table.Compute("Count(Price)", "Price > 0");
         //}

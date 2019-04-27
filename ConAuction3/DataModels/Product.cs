@@ -25,7 +25,7 @@
 
         public bool IsSold => Price > 0;
 
-        public bool IsFixedPrice => FixedPrice.HasValue && FixedPrice.Value > 0;
+        public bool IsJumble => FixedPrice.HasValue && FixedPrice.Value > 0;
 
         public bool SoldForFixedPrice() {
             if (FixedPrice.HasValue && !IsSold) {

@@ -91,9 +91,11 @@
                         <Button DockPanel.Dock="Left" Content="Radera objekt" Command="{Binding DeleteProductCommand}"  TabIndex="17" Margin="10,5,10,5" 
                                 Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5" 
-                                  Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}">Loppis</CheckBox>
+                                  Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  IsChecked="{Binding Path=FilterJumbleOnly}">Bara loppis</CheckBox>
                         <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
-                                  Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}">Osålt</CheckBox>
+                                  Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                  IsChecked="{Binding Path=FilterUnsoldOnly}">Bara osålt</CheckBox>
                         <Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
                     </DockPanel>
                     <ListView Name="ListViewProducts" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"

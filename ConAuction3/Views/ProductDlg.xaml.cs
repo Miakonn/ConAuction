@@ -38,9 +38,9 @@ namespace ConAuction3.Views {
             SetFields(product);
             VerifyAllFieldsFilledIn();
 
-            CheckBoxJumble.IsChecked = product.IsFixedPrice;
+            CheckBoxJumble.IsChecked = product.IsJumble;
 
-            FixedPricePanel.Visibility = product.IsFixedPrice ? Visibility.Visible : Visibility.Hidden;
+            FixedPricePanel.Visibility = product.IsJumble ? Visibility.Visible : Visibility.Hidden;
             CopyPrevious.IsEnabled = _productListVm != null && _productListVm.CountForCustomer(customer.Id) > 0;
 
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Forms;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
@@ -33,6 +32,8 @@ namespace ConAuction3.ViewModels {
         private Customer _selectedCustomer;
         private Product _selectedProduct;
         private OpMode _currentMode;
+        private bool _filterJumbleOnly;
+        private bool _filterUnsoldOnly;
 
         // ReSharper disable once UnusedMember.Global
         public List<ComboBoxItemOpMode> OpEnumList =>
@@ -106,6 +107,24 @@ namespace ConAuction3.ViewModels {
 
         // ReSharper disable once UnusedMember.Global
         public bool EditingButtonsVisible => CurrentMode == OpMode.Receiving;
+
+        // ReSharper disable once UnusedMember.Global
+        public bool FilterJumbleOnly {
+            get => _filterJumbleOnly;
+            set {
+                _filterJumbleOnly = value;
+                ProductsVm.Filter(_filterJumbleOnly, _filterUnsoldOnly);
+            }
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public bool FilterUnsoldOnly {
+            get => _filterUnsoldOnly;
+            set {
+                _filterUnsoldOnly = value;
+                ProductsVm.Filter(_filterJumbleOnly, _filterUnsoldOnly);
+            }
+        }
 
         #endregion
 
