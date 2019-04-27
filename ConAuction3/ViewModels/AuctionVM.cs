@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Input;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
 
@@ -25,25 +22,26 @@ namespace ConAuction3.ViewModels  {
     }
 
     class AuctionVM : INotifyPropertyChanged {
-		private  CustomerListVM _customersVM;
 
-		private ProductListVM _products;
+        public CustomerListVM CustomersVm { get; private set; }
 
-		private readonly DbAccess _dbAccess;
+        public ProductListVM ProductsVm { get; private set; }
 
-
+        private readonly DbAccess _dbAccess;
+        
 		public MyCommand NewCustomerCommand { get; }
-		public ICommand ShowCustomerCommand { get; }
-		public ICommand NewProductCommand { get; }
-		public ICommand ShowProductCommand { get; }
-        public ICommand DeleteProductCommand { get; }
-        public ICommand SortCustomerByNameCommand { get; }
-        public ICommand SortCustomerByIdCommand { get; }
-        public ICommand CancelCommand { get; }
-        public ICommand UpdateCommand { get; }
+		public MyCommand ShowCustomerCommand { get; }
+		public MyCommand NewProductCommand { get; }
+		public MyCommand ShowProductCommand { get; }
+        public MyCommand DeleteProductCommand { get; }
+        public MyCommand CancelCommand { get; }
+        public MyCommand UpdateCommand { get; }
+
+        // Sort commands
+        public ParameterCommand SortCustomerCommand { get; }
+        public ParameterCommand SortProductCommand { get; }
 
 
-        public int counter = 0;
 		private Customer _selectedCustomer;
 		private Product _selectedProduct;
 
@@ -60,26 +58,27 @@ namespace ConAuction3.ViewModels  {
 
         public OpMode CurrentMode { get; set; }
 		
-		public ICollectionView Customers => _customersVM.CustomerView;
+        // ReSharper disable once UnusedMember.Global
+        public ICollectionView Customers => CustomersVm.CustomerView;
 
-        public ObservableCollection<Product> Products {
-			get {
-				if (SelectedCustomer != null) {
-					return new ObservableCollection<Product>(_products.ProductList.Where(p => p.CustomerId == SelectedCustomer.Id));
-				}
-				else {
-					return new ObservableCollection<Product>(_products.ProductList);
-				}
-			}
-		}
+        // ReSharper disable once UnusedMember.Global
+        public ICollectionView Products => ProductsVm.ProductView;
 
 		public Customer SelectedCustomer {
 			get => _selectedCustomer;
 
             set {
 				_selectedCustomer = value;
-                
-				OnPropertyChanged("Products");
+                if (ProductsVm != null) {
+                    if (_selectedCustomer != null) {
+                        ProductsVm.FilterById(_selectedCustomer.Id);
+                    }
+                    else {
+                        ProductsVm.NoFilter();
+                    }
+                }
+
+                OnPropertyChanged("Products");
                 OnPropertyChanged("SelectedCustomer");
 			}
         }
@@ -90,8 +89,8 @@ namespace ConAuction3.ViewModels  {
             set {
 				_selectedProduct = value;
 
-                if (value != null) {
-                    SelectedCustomer = _customersVM.GetCustomerFromId(_selectedProduct.CustomerId);
+                if (_selectedProduct != null) {
+                    SelectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
                 }
                 
                 OnPropertyChanged("SelectedProduct");
@@ -99,10 +98,10 @@ namespace ConAuction3.ViewModels  {
         }
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusAuctionCount => $"Antal auktion: {_products.TotalCountAuction}";
+        public string StatusAuctionCount => $"Antal auktion: {ProductsVm.TotalCountAuction}";
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusJumbleCount => $"Antal loppis: {_products.TotalCountJumble}";
+        public string StatusJumbleCount => $"Antal loppis: {ProductsVm.TotalCountJumble}";
 
         public string StatusMsgTotal => $"?";
         
@@ -132,9 +131,12 @@ namespace ConAuction3.ViewModels  {
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
 
             UpdateCommand = new MyCommand(UpdateAll);
-            SortCustomerByNameCommand = new MyCommand(SortCustomerByName);
-            SortCustomerByIdCommand = new MyCommand(SortCustomerById);
             CancelCommand = new MyCommand(ExitProgram);
+            SortCustomerCommand = new ParameterCommand(CustomersVm.SortBy);
+
+            SortProductCommand = new ParameterCommand(ProductsVm.SortBy);
+
+
 
             CurrentMode = OpMode.Receiving;
 		}
@@ -145,16 +147,6 @@ namespace ConAuction3.ViewModels  {
             Environment.Exit(1);
         }
 
-        public void SortCustomerByName()
-        {
-            _customersVM.SortBy("Name");
-        }
-
-        public void SortCustomerById()
-        {
-            _customersVM.SortBy("Id");
-        }
-
         private void UpdateAll()
         {
             UpdateCustomers();
@@ -163,7 +155,7 @@ namespace ConAuction3.ViewModels  {
         
         public void UpdateCustomers() {
             var selectedLastCustomer = SelectedCustomer;
-			_customersVM =  new CustomerListVM(_dbAccess.ReadAllCustomers());
+			CustomersVm =  new CustomerListVM(_dbAccess.ReadAllCustomers());
 			OnPropertyChanged("Customers");
 			OnPropertyChanged("StatusTotalCount");
             OnPropertyChanged("Products");
@@ -173,7 +165,7 @@ namespace ConAuction3.ViewModels  {
 
 		public void UpdateProducts() {
             var selectedLastProduct = SelectedProduct;
-			_products = new ProductListVM(_dbAccess.ReadAllProducts());
+			ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
 			OnPropertyChanged("Customers");
 			OnPropertyChanged("StatusTotalCount");
             OnPropertyChanged("Products");
@@ -220,7 +212,7 @@ namespace ConAuction3.ViewModels  {
                 return;
             }
 
-            var inputDialog = new ProductDlg(new Product(), SelectedCustomer, _products);
+            var inputDialog = new ProductDlg(new Product(), SelectedCustomer, ProductsVm);
 			if (inputDialog.ShowDialog() == true) {
 				var product = inputDialog.Result;
 
@@ -228,7 +220,7 @@ namespace ConAuction3.ViewModels  {
                 UpdateCustomers();
                 UpdateProducts();
 
-                SelectedProduct = _products.GetProductFromId(idCreated);
+                SelectedProduct = ProductsVm.GetProductFromId(idCreated);
             }
 
 			OnPropertyChanged("StatusTotalCount");
@@ -243,7 +235,7 @@ namespace ConAuction3.ViewModels  {
                 return;
             }
 
-            var customer = SelectedCustomer ?? _customersVM.GetCustomerFromId(SelectedProduct.CustomerId);
+            var customer = SelectedCustomer ?? CustomersVm.GetCustomerFromId(SelectedProduct.CustomerId);
             var inputDialog = new ProductDlg(SelectedProduct, customer, null);
 			if (inputDialog.ShowDialog() == true) {
 				var product = inputDialog.Result;
@@ -283,8 +275,8 @@ namespace ConAuction3.ViewModels  {
 
 		protected virtual void OnPropertyChanged(string propertyName) {
 			PropertyChangedEventHandler handler = PropertyChanged;
-			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-		}
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
 		#endregion
 	}

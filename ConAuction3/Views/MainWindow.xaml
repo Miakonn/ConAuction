@@ -48,16 +48,16 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="40" DisplayMemberBinding="{Binding Id}">
-                                <GridViewColumnHeader Content="Id" Command="{Binding SortCustomerByIdCommand}" />
+                                    <GridViewColumnHeader Content="Id" Command="{Binding SortCustomerCommand}" CommandParameter="Id" />
                             </GridViewColumn>
                             <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}" >
-                                <GridViewColumnHeader Content="Name" Command="{Binding SortCustomerByNameCommand}" />
+                                    <GridViewColumnHeader Content="Name" Command="{Binding SortCustomerCommand}" CommandParameter="Name" />
                             </GridViewColumn>
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding Phone}" >
-                                <GridViewColumnHeader Content="Mobilnr" />
+                                    <GridViewColumnHeader Content="Mobilnr" Command="{Binding SortCustomerCommand}" CommandParameter="Phone" />
                             </GridViewColumn>
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
-                                <GridViewColumnHeader Content="Not" />
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="NOte" />
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
@@ -79,19 +79,19 @@
                         <ListView.View>
                         <GridView>
                             <GridViewColumn Width="40" DisplayMemberBinding="{Binding Label}">
-                                <GridViewColumnHeader Content="Id" Command="{Binding SortCommand}" CommandParameter="FullName" />
+                                    <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="Label" />
                             </GridViewColumn>
                             <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
-                                <GridViewColumnHeader Content="Name" Command="{Binding SortCommand}" CommandParameter="FileName"/>
+                                    <GridViewColumnHeader Content="Name" Command="{Binding SortProductCommand}" CommandParameter="Name"/>
                             </GridViewColumn>
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
-                                <GridViewColumnHeader Content="Typ" Command="{Binding SortCommand}" CommandParameter="Status" />
+                                    <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />
                             </GridViewColumn>
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
-                                <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortCommand}" CommandParameter="PatientId" />
+                                    <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPrice" />
                             </GridViewColumn>
                             <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
-                                <GridViewColumnHeader Content="Not" Command="{Binding SortCommand}" CommandParameter="BirthDate" />
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>

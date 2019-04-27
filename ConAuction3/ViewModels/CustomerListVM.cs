@@ -8,14 +8,13 @@ namespace ConAuction3.ViewModels
 {
     class CustomerListVM {
         private readonly List<Customer> _customers;
-        private readonly ICollectionView _customerView;
 
         public CustomerListVM(List<Customer> customers) {
             _customers = customers;
-            _customerView = CollectionViewSource.GetDefaultView(customers);
+            CustomerView = CollectionViewSource.GetDefaultView(customers);
         }
         
-        public ICollectionView CustomerView => _customerView;
+        public ICollectionView CustomerView { get; }
 
         public Customer GetCustomerFromId(int id) {
             return _customers.Find(c => c.Id == id);
@@ -23,12 +22,17 @@ namespace ConAuction3.ViewModels
 
         public void SortBy(string propertyName) {
             var direction = ListSortDirection.Ascending;
-            var sortCurrent = _customerView.SortDescriptions.FirstOrDefault();
+            var sortCurrent = CustomerView.SortDescriptions.FirstOrDefault();
             if (sortCurrent != null && sortCurrent.PropertyName == propertyName && sortCurrent.Direction == ListSortDirection.Ascending) {
                 direction = ListSortDirection.Descending;
             }
-            _customerView.SortDescriptions.Clear();        
-            _customerView.SortDescriptions.Add(new SortDescription(propertyName, direction));
+            CustomerView.SortDescriptions.Clear();        
+            CustomerView.SortDescriptions.Add(new SortDescription(propertyName, direction));
         }
+
+
+
+
+
     }
 }

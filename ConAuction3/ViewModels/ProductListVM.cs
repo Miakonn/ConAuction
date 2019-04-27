@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 using ConAuction3.DataModels;
 
 
@@ -9,7 +11,9 @@ namespace ConAuction3.ViewModels {
 
 		public List<Product> _productList;
 
-		public List<Product> ProductList => _productList;
+        public ICollectionView ProductView { get; }
+
+        public List<Product> ProductList => _productList;
 
         public int TotalCount => _productList.Count;
 
@@ -20,10 +24,11 @@ namespace ConAuction3.ViewModels {
 		public  int TotalCountJumble  {
 			get { return _productList.Count(p => p.FixedPrice > 0); }
 		}
-
-
+        
 		public ProductListVM(List<Product> products) {
-			_productList = products;
+            _productList = products;
+
+            ProductView = CollectionViewSource.GetDefaultView(products);
 		}
 
         public Product GetProductFromId(long id) {
@@ -38,6 +43,24 @@ namespace ConAuction3.ViewModels {
             return _productList.FindAll(p => p.CustomerId == customerId);
         }
 
+        public void SortBy(string propertyName) {
+            var direction = ListSortDirection.Ascending;
+            var sortCurrent = ProductView.SortDescriptions.FirstOrDefault();
+            if (sortCurrent != null && sortCurrent.PropertyName == propertyName && sortCurrent.Direction == ListSortDirection.Ascending) {
+                direction = ListSortDirection.Descending;
+            }
+            ProductView.SortDescriptions.Clear();
+            ProductView.SortDescriptions.Add(new SortDescription(propertyName, direction));
+        }
+
+        public void FilterById(long customerId) {
+            ProductView.Filter = o => o is Product p && p.CustomerId == customerId;
+        }
+
+        public void NoFilter() {
+            ProductView.Filter = null;
+        }
+        
         //public  int TotalSoldCount(this DataTable table) {
         //	return (int) table.Compute("Count(Price)", "Price > 0");
         //}

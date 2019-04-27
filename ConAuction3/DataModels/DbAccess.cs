@@ -2,8 +2,6 @@
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
-using System.IO;
-using ConAuction3.DataModels;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
@@ -16,9 +14,7 @@ namespace ConAuction3.DataModels
 
 
         private MySqlConnection DBconnection;
-        //private MySqlDataAdapter DBadapterCustomer;
-        // private MySqlDataAdapter DBadapterProduct;
-
+       
  
         public bool InitDB()
         {
