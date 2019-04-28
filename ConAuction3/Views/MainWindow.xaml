@@ -20,8 +20,10 @@
     <Window.InputBindings>
         <KeyBinding Key="F1" Command="{Binding NewCustomerCommand}" />
         <KeyBinding Key="F2" Command="{Binding ShowCustomerCommand}" />
-        <KeyBinding Key="F5" Command="{Binding NewProductCommand}" />
-        <KeyBinding Key="F6" Command="{Binding ShowProductCommand}" />
+        <KeyBinding Key="F5" Command="{Binding UpdateCommand}" />
+        <KeyBinding Key="F9" Command="{Binding NewProductCommand}" />
+        <KeyBinding Key="F10" Command="{Binding ShowProductCommand}" />
+        <KeyBinding Key="F11" Command="{Binding SellProductCommand}" />
         <KeyBinding Key="F12" Command="{Binding GotoProductCommand}" />
     </Window.InputBindings>
 
@@ -52,10 +54,15 @@
                 <DockPanel Grid.Column="0">
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
                         <Button DockPanel.Dock="Left" Content="Ny kund" Command="{Binding NewCustomerCommand}"  TabIndex="10" Margin="10,5,10,5"
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Button.ToolTip><ToolTip>F1</ToolTip></Button.ToolTip>
+                        </Button>
                         <Button DockPanel.Dock="Left" Content="Ändra kund" Command="{Binding ShowCustomerCommand}"  TabIndex="11" Margin="10,5,10,5"
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <Button DockPanel.Dock="Left" Content="Uppdatera" Command="{Binding UpdateCommand}"  TabIndex="12" Margin="10,5,10,5" />
+                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Button.ToolTip> <ToolTip>F2</ToolTip> </Button.ToolTip></Button>
+                        <Button DockPanel.Dock="Left" Content="Uppdatera" Command="{Binding UpdateCommand}"  TabIndex="12" Margin="10,5,10,5" >
+                            <Button.ToolTip> <ToolTip>F5</ToolTip> </Button.ToolTip>
+                        </Button>
                     </DockPanel>
                     <ListView Name="ListViewCustomers" SelectionMode="Extended" ItemsSource="{Binding Customers}" IsSynchronizedWithCurrentItem="True" 
                                SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" MouseDoubleClick="Control_OnMouseDoubleClickCustomer" 
@@ -84,9 +91,13 @@
                 <DockPanel Grid.Column="2">
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
                         <Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewProductCommand}"  TabIndex="15" Margin="10,5,10,5"
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                            <Button.ToolTip> <ToolTip>F9</ToolTip></Button.ToolTip>
+                        </Button>
                         <Button DockPanel.Dock="Left" Content="Ändra objekt" Command="{Binding ShowProductCommand}"  TabIndex="16" Margin="10,5,10,5"
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Button.ToolTip> <ToolTip>F10</ToolTip> </Button.ToolTip>
+                        </Button>
                         <Button DockPanel.Dock="Left" Content="Radera objekt" Command="{Binding DeleteProductCommand}"  TabIndex="17" Margin="10,5,10,5" 
                                 Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5" 
@@ -95,10 +106,14 @@
                         <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
                                   Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" 
                                   IsChecked="{Binding Path=FilterUnsoldOnly}">Bara osålt</CheckBox>
-                        <Button DockPanel.Dock="Left" Content="Sålt!" Command="{Binding SellProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
-                                Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <Button DockPanel.Dock="Left" Content="Sälj" Command="{Binding SellProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
+                                Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                            <Button.ToolTip> <ToolTip>F11</ToolTip> </Button.ToolTip>
+                        </Button>
                         <Button DockPanel.Dock="Left" Content="Gå till..." Command="{Binding GotoProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
-                                Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                            <Button.ToolTip> <ToolTip>F12</ToolTip> </Button.ToolTip>
+                        </Button>
                         <Button DockPanel.Dock="Left" Content="Exportera" Command="{Binding ExportProductsCommand}"  TabIndex="18" Margin="10,5,10,5" 
                                 Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
