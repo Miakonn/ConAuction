@@ -24,12 +24,22 @@
         public string FixedPriceString => FixedPrice.HasValue && FixedPrice.Value > 0 ? FixedPrice.Value.ToString() : "";
 
         public bool IsSold => Price > 0;
+        
+        public string IsSoldStr => IsSold ? "Såld" : "";
 
         public bool IsJumble => FixedPrice.HasValue && FixedPrice.Value > 0;
 
         public bool SoldForFixedPrice() {
             if (FixedPrice.HasValue && !IsSold) {
                 Price = FixedPrice.Value;
+                return true;
+            }
+            return false;
+        }
+
+        public bool UndoSoldFor() {
+            if (FixedPrice.HasValue && IsSold) {
+                Price = 0;
                 return true;
             }
             return false;

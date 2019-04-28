@@ -57,14 +57,10 @@ namespace ConAuction {
         public int Price { get; set; }
         public int FixedPrice { get; set; }
 
-        public bool IsSold {
-            get { return Price > 0; }
-        }
+        public bool IsSold => Price > 0;
 
-        public bool IsFixedPrice {
-            get { return FixedPrice > 0; }
-        }
-
+        public bool IsFixedPrice => FixedPrice > 0;
+        
         public bool SoldForFixedPrice() {
             if (IsFixedPrice && !IsSold) {
                 Price = FixedPrice;

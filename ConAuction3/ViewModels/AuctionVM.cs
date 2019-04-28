@@ -24,6 +24,7 @@ namespace ConAuction3.ViewModels {
         public MyCommand ShowProductCommand { get; }
         public MyCommand DeleteProductCommand { get; }
         public MyCommand SellProductCommand { get; }
+        public MyCommand UndoSoldProductCommand { get; }
         public MyCommand ExportProductsCommand { get; }
         public MyCommand CancelCommand { get; }
         public MyCommand UpdateCommand { get; }
@@ -38,6 +39,7 @@ namespace ConAuction3.ViewModels {
         private OpMode _currentMode;
         private bool _filterJumbleOnly;
         private bool _filterUnsoldOnly;
+        private bool _isProductSold;
 
         // ReSharper disable once UnusedMember.Global
         public List<ComboBoxItemOpMode> OpEnumList =>
@@ -57,6 +59,7 @@ namespace ConAuction3.ViewModels {
                 UpdateAll();
                 OnPropertyChanged("FilterCheckVisible");
                 OnPropertyChanged("EditingButtonsVisible");
+                OnPropertyChanged("ModeIsShowing");
             }
         }
 
@@ -94,8 +97,8 @@ namespace ConAuction3.ViewModels {
 
                 if (_selectedProduct != null) {
                     _selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
+                    OnPropertyChanged("SelectedCustomer");
                 }
-
                 OnPropertyChanged("SelectedProduct");
             }
         }
@@ -109,6 +112,9 @@ namespace ConAuction3.ViewModels {
         // ReSharper disable once UnusedMember.Global
         public bool FilterCheckVisible => CurrentMode == OpMode.Showing;
 
+        // ReSharper disable once UnusedMember.Global
+        public bool ModeIsShowing => CurrentMode == OpMode.Showing;
+        
         // ReSharper disable once UnusedMember.Global
         public bool EditingButtonsVisible => CurrentMode == OpMode.Receiving;
 
@@ -130,6 +136,15 @@ namespace ConAuction3.ViewModels {
             }
         }
 
+        // ReSharper disable once UnusedMember.Global
+        public bool IsProductSold {
+            get { return _isProductSold; }
+            set {
+                _isProductSold = value;
+                OnPropertyChanged("IsProductSold");
+            }
+        }
+
         #endregion
 
         public AuctionVM() {
@@ -146,6 +161,7 @@ namespace ConAuction3.ViewModels {
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
             GotoProductCommand = new MyCommand(GotoProduct, GotoProduct_CanExecute);
             SellProductCommand = new MyCommand(SellProduct, SellProduct_CanExecute);
+            UndoSoldProductCommand = new MyCommand(UndoSoldProduct, UndoSoldProduct_CanExecute);
             ExportProductsCommand = new MyCommand(ExportProducts, ExportProducts_CanExecute);
             UpdateCommand = new MyCommand(UpdateAll);
             CancelCommand = new MyCommand(ExitProgram);
@@ -162,12 +178,26 @@ namespace ConAuction3.ViewModels {
         }
 
         public void UpdateCustomers() {
-            var selectedLastCustomer = SelectedCustomer;
+            var selectedLastCustomerId = SelectedCustomer?.Id;
             CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers());
             OnPropertyChanged("Customers");
             OnPropertyChanged("StatusTotalCount");
 
-            SelectedCustomer = selectedLastCustomer;
+            if (selectedLastCustomerId.HasValue) {
+                SelectedCustomer = CustomersVm.GetCustomerFromId(selectedLastCustomerId.Value);
+            }
+        }
+
+        public void UpdateProducts() {
+            var selectedLastProductId = SelectedProduct?.Id;
+            ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
+            OnPropertyChanged("Customers");
+            OnPropertyChanged("StatusTotalCount");
+            OnPropertyChanged("Products");
+
+            if (selectedLastProductId.HasValue) {
+                SelectedProduct = ProductsVm.GetProductFromId(selectedLastProductId.Value);
+            }
         }
 
         private void TryConnectDataBase() {
@@ -182,16 +212,6 @@ namespace ConAuction3.ViewModels {
                     }
                 }
             } while (!fStarted);
-        }
-
-        public void UpdateProducts() {
-            var selectedLastProduct = SelectedProduct;
-            ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
-            OnPropertyChanged("Customers");
-            OnPropertyChanged("StatusTotalCount");
-            OnPropertyChanged("Products");
-
-            SelectedProduct = selectedLastProduct;
         }
 
         #region COMMANDS
@@ -258,7 +278,7 @@ namespace ConAuction3.ViewModels {
         }
 
         public bool ShowProduct_CanExecute() {
-            return CurrentMode == OpMode.Receiving && SelectedProduct != null;
+            return (CurrentMode == OpMode.Receiving || CurrentMode == OpMode.Showing) && SelectedProduct != null;
         }
 
         public void ShowProduct() {
@@ -294,7 +314,7 @@ namespace ConAuction3.ViewModels {
         }
 
         public bool SellProduct_CanExecute() {
-            return CurrentMode == OpMode.Showing && SelectedProduct != null && SelectedProduct.IsJumble;
+            return CurrentMode == OpMode.Showing && SelectedProduct != null && SelectedProduct.IsJumble && !SelectedProduct.IsSold;
         }
 
         public void SellProduct() {
@@ -303,6 +323,22 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.SoldForFixedPrice()) {
+                _dbAccess.SaveProductToDB(SelectedProduct);
+            }
+
+            UpdateAll();
+        }
+        
+        public bool UndoSoldProduct_CanExecute() {
+            return CurrentMode == OpMode.Showing && SelectedProduct != null && SelectedProduct.IsJumble &&  SelectedProduct.IsSold;
+        }
+
+        public void UndoSoldProduct() {
+            if (SelectedProduct == null) {
+                return;
+            }
+
+            if (SelectedProduct.UndoSoldFor()) {
                 _dbAccess.SaveProductToDB(SelectedProduct);
             }
 

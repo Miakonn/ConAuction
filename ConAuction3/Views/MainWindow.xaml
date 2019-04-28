@@ -11,8 +11,8 @@
                 <ResourceDictionary Source="/PresentationFramework.Luna;component/themes/Luna.Metallic.xaml"/>
                 <ResourceDictionary Source="../Resources/ResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:BoolToVisibilityConverter x:Key="BooleanToVisibilityConverter" TrueValue="Visible"
-                                                  FalseValue="Collapsed" />
+            <converters:BoolToVisibilityConverter x:Key="BooleanToInvertedVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible" />
+            <converters:BoolToVisibilityConverter x:Key="BooleanToVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -23,7 +23,8 @@
         <KeyBinding Key="F5" Command="{Binding UpdateCommand}" />
         <KeyBinding Key="F9" Command="{Binding NewProductCommand}" />
         <KeyBinding Key="F10" Command="{Binding ShowProductCommand}" />
-        <KeyBinding Key="F11" Command="{Binding SellProductCommand}" />
+        <KeyBinding Key="F11" Command="{Binding SellProductCommand}"  />
+        <KeyBinding Key="F11" Modifiers="Shift" Command="{Binding UndoSoldProductCommand}" />
         <KeyBinding Key="F12" Command="{Binding GotoProductCommand}" />
     </Window.InputBindings>
 
@@ -55,35 +56,42 @@
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
                         <Button DockPanel.Dock="Left" Content="Ny kund" Command="{Binding NewCustomerCommand}"  TabIndex="10" Margin="10,5,10,5"
                                 Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Button.ToolTip><ToolTip>F1</ToolTip></Button.ToolTip>
+                            <Button.ToolTip>
+                                <ToolTip>F1</ToolTip>
+                            </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Ändra kund" Command="{Binding ShowCustomerCommand}"  TabIndex="11" Margin="10,5,10,5"
                                 Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Button.ToolTip> <ToolTip>F2</ToolTip> </Button.ToolTip></Button>
+                            <Button.ToolTip>
+                                <ToolTip>F2</ToolTip>
+                            </Button.ToolTip>
+                        </Button>
                         <Button DockPanel.Dock="Left" Content="Uppdatera" Command="{Binding UpdateCommand}"  TabIndex="12" Margin="10,5,10,5" >
-                            <Button.ToolTip> <ToolTip>F5</ToolTip> </Button.ToolTip>
+                            <Button.ToolTip>
+                                <ToolTip>F5</ToolTip>
+                            </Button.ToolTip>
                         </Button>
                     </DockPanel>
                     <ListView Name="ListViewCustomers" SelectionMode="Extended" ItemsSource="{Binding Customers}" IsSynchronizedWithCurrentItem="True" 
                                SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" MouseDoubleClick="Control_OnMouseDoubleClickCustomer" 
                                SelectionChanged="ListView_OnSelectionChanged">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Width="40" DisplayMemberBinding="{Binding Id}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding Id}">
                                     <GridViewColumnHeader Content="Id" Command="{Binding SortCustomerCommand}" CommandParameter="Id" />
-                            </GridViewColumn>
-                            <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}" >
+                                </GridViewColumn>
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}" >
                                     <GridViewColumnHeader Content="Name" Command="{Binding SortCustomerCommand}" CommandParameter="Name" />
-                            </GridViewColumn>
-                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Phone}" >
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Phone}" >
                                     <GridViewColumnHeader Content="Mobilnr" Command="{Binding SortCustomerCommand}" CommandParameter="Phone" />
-                            </GridViewColumn>
-                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="NOte" />
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </DockPanel>
                 <GridSplitter Grid.Column="1" ResizeDirection="Columns" 
                ResizeBehavior="PreviousAndNext"
@@ -92,11 +100,15 @@
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
                         <Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewProductCommand}"  TabIndex="15" Margin="10,5,10,5"
                                 Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
-                            <Button.ToolTip> <ToolTip>F9</ToolTip></Button.ToolTip>
+                            <Button.ToolTip>
+                                <ToolTip>F9</ToolTip>
+                            </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Ändra objekt" Command="{Binding ShowProductCommand}"  TabIndex="16" Margin="10,5,10,5"
                                 Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Button.ToolTip> <ToolTip>F10</ToolTip> </Button.ToolTip>
+                            <Button.ToolTip>
+                                <ToolTip>F10</ToolTip>
+                            </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Radera objekt" Command="{Binding DeleteProductCommand}"  TabIndex="17" Margin="10,5,10,5" 
                                 Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -107,12 +119,22 @@
                                   Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" 
                                   IsChecked="{Binding Path=FilterUnsoldOnly}">Bara osålt</CheckBox>
                         <Button DockPanel.Dock="Left" Content="Sälj" Command="{Binding SellProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
-                                Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
-                            <Button.ToolTip> <ToolTip>F11</ToolTip> </Button.ToolTip>
+                                Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                            <Button.ToolTip>
+                                <ToolTip>F11</ToolTip>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button DockPanel.Dock="Left" Content="Ångra såld" Command="{Binding UndoSoldProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
+                                Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                            <Button.ToolTip>
+                                <ToolTip>Skift-F11</ToolTip>
+                            </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Gå till..." Command="{Binding GotoProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
                                 Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
-                            <Button.ToolTip> <ToolTip>F12</ToolTip> </Button.ToolTip>
+                            <Button.ToolTip>
+                                <ToolTip>F12</ToolTip>
+                            </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Exportera" Command="{Binding ExportProductsCommand}"  TabIndex="18" Margin="10,5,10,5" 
                                 Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -122,25 +144,28 @@
                               MouseDoubleClick="Control_OnMouseDoubleClickProduct"
                               SelectionChanged="ListView_OnSelectionChanged">
                         <ListView.View>
-                        <GridView>
+                            <GridView>
                             <GridViewColumn Width="40" DisplayMemberBinding="{Binding Label}">
                                     <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="Label" />
-                            </GridViewColumn>
-                            <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
+                                </GridViewColumn>
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
                                     <GridViewColumnHeader Content="Name" Command="{Binding SortProductCommand}" CommandParameter="Name"/>
-                            </GridViewColumn>
-                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
                                     <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />
-                            </GridViewColumn>
-                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
                                     <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPrice" />
-                            </GridViewColumn>
-                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding IsSoldStr}" >
+                                    <GridViewColumnHeader Content="Sålt" Command="{Binding SortProductCommand}" CommandParameter="IsSoldStr" />
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </DockPanel>
             </Grid>
         </DockPanel>
