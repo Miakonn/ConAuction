@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
@@ -10,7 +11,7 @@ using MessageBox = System.Windows.Forms.MessageBox;
 namespace ConAuction3.ViewModels {
     class AuctionVM : INotifyPropertyChanged {
         #region Attributes
-        
+
         public CustomerListVM CustomersVm { get; private set; }
 
         public ProductListVM ProductsVm { get; private set; }
@@ -23,6 +24,7 @@ namespace ConAuction3.ViewModels {
         public MyCommand ShowProductCommand { get; }
         public MyCommand DeleteProductCommand { get; }
         public MyCommand SellProductCommand { get; }
+        public MyCommand ExportProductsCommand { get; }
         public MyCommand CancelCommand { get; }
         public MyCommand UpdateCommand { get; }
 
@@ -142,6 +144,7 @@ namespace ConAuction3.ViewModels {
             ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
             SellProductCommand = new MyCommand(SellProduct, SellProduct_CanExecute);
+            ExportProductsCommand = new MyCommand(ExportProducts, ExportProducts_CanExecute);
             UpdateCommand = new MyCommand(UpdateAll);
             CancelCommand = new MyCommand(ExitProgram);
 
@@ -178,7 +181,7 @@ namespace ConAuction3.ViewModels {
                 }
             } while (!fStarted);
         }
-        
+
         public void UpdateProducts() {
             var selectedLastProduct = SelectedProduct;
             ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
@@ -214,7 +217,7 @@ namespace ConAuction3.ViewModels {
         public bool ShowCustomer_CanExecute() {
             return CurrentMode == OpMode.Receiving && SelectedCustomer != null;
         }
-        
+
         public void ShowCustomer() {
             if (SelectedCustomer == null) {
                 return;
@@ -287,12 +290,12 @@ namespace ConAuction3.ViewModels {
             }
             UpdateAll();
         }
- 
-       public bool SellProduct_CanExecute() {
+
+        public bool SellProduct_CanExecute() {
             return CurrentMode == OpMode.Showing && SelectedProduct != null && SelectedProduct.IsJumble;
         }
 
-       public void SellProduct() {
+        public void SellProduct() {
             if (SelectedProduct == null) {
                 return;
             }
@@ -301,8 +304,42 @@ namespace ConAuction3.ViewModels {
                 _dbAccess.SaveProductToDB(SelectedProduct);
             }
 
-           UpdateAll();
+            UpdateAll();
         }
+
+        public bool ExportProducts_CanExecute() {
+            return CurrentMode == OpMode.Showing;
+        }
+
+        public void ExportProducts() {
+            if (CurrentMode == OpMode.Showing) {
+                using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                    openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    openFileDialog.FileName = "ConAuction.json";
+                    openFileDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
+                    openFileDialog.FilterIndex = 2;
+                    openFileDialog.RestoreDirectory = true;
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                        //Get the path of specified file
+                        var filePath = openFileDialog.FileName;
+                        var text = ProductsVm.ExportProductsToJson();
+                        File.WriteAllText(filePath, text);
+                    }
+                }
+
+
+            }
+            else {
+                var text = ProductsVm.ExportCommaSeparated();
+
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                path = Path.Combine(path, "ConAuctionSold.txt");
+                File.WriteAllText(path, text);
+            }
+            ProductsVm.ExportProductsToJson();
+        }
+
 
         #endregion
 

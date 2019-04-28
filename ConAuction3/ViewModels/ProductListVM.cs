@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Windows.Data;
 using ConAuction3.DataModels;
 
@@ -222,55 +223,54 @@ namespace ConAuction3.ViewModels {
         //	return false;
         //}
 
-        //private  string WriteJsonObj(string label, string value) {
-        //	label = label.Replace('"', '\'');
-        //	value = value.Replace('"', '\'');
-        //	if (string.IsNullOrEmpty(value)) {
-        //		value = "-";
-        //	}
-        //	return string.Format("\"{0}\":\"{1}\"", label, value);
-        //}
+        private string WriteJsonObj(string label, string value) {
+            label = label.Replace('"', '\'');
+            value = value.Replace('"', '\'');
+            if (string.IsNullOrEmpty(value)) {
+                value = "-";
+            }
+            return string.Format("\"{0}\":\"{1}\"", label, value);
+        }
 
-        //public  string ExportProductsToJson(this DataTable table) {
-        //   var strB = new StringBuilder();
-        //	strB.AppendLine("[");
+        public string ExportProductsToJson() {
+            var strB = new StringBuilder();
+            strB.Append("[");
+            
+            var enumerator = ProductView.GetEnumerator();
+            string delimiter = "";
+            while (enumerator.MoveNext()) {
+                if (!(enumerator.Current is Product product)) {
+                    continue;
+                }
+                strB.AppendLine(delimiter);
+                delimiter = ",";
+                var str = string.Format("{{{0}, {1}, {2}, {3}}}",
+                    WriteJsonObj("Label", product.Label),
+                    WriteJsonObj("Name", product.Name),
+                    WriteJsonObj("Type", product.Type),
+                    WriteJsonObj("Description", product.Description));
+                strB.Append(str);
+            }
+            strB.AppendLine("");
+            strB.AppendLine("]");
+            return strB.ToString();
+        }
 
-        //	for(var i=0; i < table.Rows.Count; i++) {
-        //		var row = table.Rows[i];
-        //		if ((int) row["Price"] > 0) {
-        //			continue;
-        //		}
-        //		var suffix = (i != (table.Rows.Count - 1)) ? "," : "";							
-        //		var str = string.Format("{{{0}, {1}, {2}, {3}}}{4}", 
-        //			WriteJsonObj("Label", row["Label"].ToString()),
-        //			WriteJsonObj("Name", row["Name"].ToString()),
-        //			WriteJsonObj("Type", row["Type"].ToString()),
-        //			WriteJsonObj("Description", row["Description"].ToString()),
-        //			suffix
-        //			);
+        public string ExportCommaSeparated() {
+            var strB = new StringBuilder();
+            var enumerator = ProductView.GetEnumerator();
+            while (enumerator.MoveNext()) {
+                if (!(enumerator.Current is Product product)) {
+                    continue;
+                }
+                var str = $"{product.Label}; {product.Name}; {product.Type}; {product.Description}; {product.Price}";
 
-        //		str = str.Replace("\r\n", "\\n");
-        //		strB.AppendLine(str);
+                str = str.Replace("\r\n", "\\n");
+                strB.AppendLine(str);
 
-        //	}
-        //	strB.AppendLine("]");
-        //	return strB.ToString();
-        //}
-
-        //public  string ExportCommaSeparated(this DataTable table) {
-        //	var strB = new StringBuilder();
-
-        //	for (var i = 0; i < table.Rows.Count; i++) {
-        //		var row = table.Rows[i];
-        //		var str = string.Format("{0}; {1}; {2}; {3}; {4}",
-        //			row["Label"], row["Name"], row["Type"], row["Description"], row["Price"]);
-
-        //		str = str.Replace("\r\n", "\\n");
-        //		strB.AppendLine(str);
-
-        //	}
-        //	return strB.ToString();
-        //}
+            }
+            return strB.ToString();
+        }
 
 
         //public  string GetCustomerNameFromId(this DataTable table, int customerId) {
