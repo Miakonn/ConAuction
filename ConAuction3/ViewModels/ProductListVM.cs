@@ -36,6 +36,10 @@ namespace ConAuction3.ViewModels {
             return _productList.Find(p => p.Id == id);
         }
 
+        public Product GetProductFromLabel(string label) {
+            return _productList.Find(p => p.Label == label);
+        }
+
         public int CountForCustomer(int customerId) {
             return _productList.Count(p => p.CustomerId == customerId);
         }

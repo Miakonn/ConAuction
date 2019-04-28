@@ -27,6 +27,7 @@ namespace ConAuction3.ViewModels {
         public MyCommand ExportProductsCommand { get; }
         public MyCommand CancelCommand { get; }
         public MyCommand UpdateCommand { get; }
+        public MyCommand GotoProductCommand { get; }
 
         // Sort commands
         public ParameterCommand SortCustomerCommand { get; }
@@ -143,6 +144,7 @@ namespace ConAuction3.ViewModels {
             NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
             ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
+            GotoProductCommand = new MyCommand(GotoProduct, GotoProduct_CanExecute);
             SellProductCommand = new MyCommand(SellProduct, SellProduct_CanExecute);
             ExportProductsCommand = new MyCommand(ExportProducts, ExportProducts_CanExecute);
             UpdateCommand = new MyCommand(UpdateAll);
@@ -305,6 +307,17 @@ namespace ConAuction3.ViewModels {
             }
 
             UpdateAll();
+        }
+
+        public bool GotoProduct_CanExecute() {
+            return true;
+        }
+
+        public void GotoProduct() {
+            string label = PromptDialog.Prompt("Produktnummer", "Gå till");
+            if (!string.IsNullOrWhiteSpace(label)) {
+               SelectedProduct = ProductsVm.GetProductFromLabel(label);
+            }
         }
 
         public bool ExportProducts_CanExecute() {
