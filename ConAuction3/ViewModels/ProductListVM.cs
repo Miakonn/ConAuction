@@ -67,7 +67,7 @@ namespace ConAuction3.ViewModels {
         }
 
         public void Filter(bool onlyJumble, bool onlyUnsold) {
-            ProductView.Filter = o => o is Product p && (p.IsJumble || !onlyJumble) && (p.IsSold || !onlyUnsold);
+            ProductView.Filter = o => o is Product p && (p.IsJumble || !onlyJumble) && (!p.IsSold || !onlyUnsold);
         }
 
 
@@ -233,7 +233,7 @@ namespace ConAuction3.ViewModels {
             if (string.IsNullOrEmpty(value)) {
                 value = "-";
             }
-            return string.Format("\"{0}\":\"{1}\"", label, value);
+            return $"\"{label}\":\"{value}\"";
         }
 
         public string ExportProductsToJson() {
