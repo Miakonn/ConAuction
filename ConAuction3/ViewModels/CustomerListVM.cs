@@ -30,9 +30,8 @@ namespace ConAuction3.ViewModels
             CustomerView.SortDescriptions.Add(new SortDescription(propertyName, direction));
         }
 
-
-
-
-
+        public List<Customer> CustomersLeftToGetPaid () {
+            return _customers.FindAll(c => c.Finished.HasValue && !c.Finished.Value);
+        }
     }
 }

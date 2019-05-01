@@ -40,10 +40,29 @@
 
         </DockPanel>
         <DockPanel>
-            <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False"  Background="#FBD800">
-                <Label Content="{Binding StatusAuctionCount}"/>
-                <Label Content="{Binding StatusJumbleCount}"/>
-            </DockPanel>
+            <Grid DockPanel.Dock ="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <DockPanel Grid.Column="0" HorizontalAlignment="Stretch" LastChildFill="False"  Background="#FBD800">
+                    <Label FontSize="18" FontWeight="Bold">Auktion</Label>
+                    <Label FontSize="18" Content="{Binding StatusCountAuction}"/>
+                    <Label FontSize="18" Content="{Binding StatusCountSoldAuction}"/>
+                    <Label FontSize="18" Content="{Binding StatusAmountSoldAuction}"/>
+                </DockPanel>
+                <DockPanel Grid.Column="1" HorizontalAlignment="Stretch" LastChildFill="False"  Background="#FBD800">
+                    <Label FontSize="18" Content="{Binding StatusLeftToPay}"/>
+                    <Label FontSize="18" Content="{Binding StatusProfit}"/>
+                </DockPanel>
+                <DockPanel Grid.Column="2" HorizontalAlignment="Stretch" LastChildFill="False"  Background="#FBD800">
+                    <Label FontSize="18" FontWeight="Bold">Loppis</Label>
+                    <Label FontSize="18" Content="{Binding StatusCountJumble}"/>
+                    <Label FontSize="18" Content="{Binding StatusCountSoldJumble}"/>
+                    <Label FontSize="18" Content="{Binding StatusAmountSoldJumble}"/>
+                </DockPanel>
+            </Grid>
 
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>

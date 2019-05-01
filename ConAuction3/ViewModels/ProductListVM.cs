@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Data;
 using ConAuction3.DataModels;
 
@@ -16,17 +20,36 @@ namespace ConAuction3.ViewModels {
 
         public List<Product> ProductList => _productList;
 
+        #region Settings
+
+        private int CostAuction = int.Parse(ConfigurationManager.AppSettings["Cost"]);
+        private int CostJumble= int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+
+        #endregion
+
+
+        #region Calculations
+
         public int TotalCount => _productList.Count;
 
-        public  int TotalCountAuction {
-			get { return _productList.Count(p => p.FixedPrice == 0); }
-        }
+        public  int CountAuction => _productList.Count(p => !p.IsJumble);
 
-		public  int TotalCountJumble  {
-			get { return _productList.Count(p => p.FixedPrice > 0); }
-		}
-        
-		public ProductListVM(List<Product> products) {
+        public  int CountJumble => _productList.Count(p => p.IsJumble);
+
+        public int CountSoldAuction => _productList.Count(p => p.IsSold && !p.IsJumble);
+
+        public int CountSoldJumble => _productList.Count(p => p.IsSold && p.IsJumble);
+
+        public int AmountSoldAuction => _productList.Sum(p => p.IsJumble ? 0: p.Price);
+
+        public int AmountSoldJumble => _productList.Sum(p => p.IsJumble ? p.Price : 0);
+
+        public int Profit => CostAuction * CountAuction + CostJumble * CountJumble;
+
+    
+        #endregion
+
+        public ProductListVM(List<Product> products) {
             _productList = products;
 
             ProductView = CollectionViewSource.GetDefaultView(products);
@@ -71,61 +94,10 @@ namespace ConAuction3.ViewModels {
         }
 
 
-        //public  int TotalSoldCount(this DataTable table) {
-        //	return (int) table.Compute("Count(Price)", "Price > 0");
-        //}
-
-        //public  long TotalSoldAmount(this DataTable table) {
-        //	var obj = table.Compute("Sum(Price)", "Price > 0");
-        //	return (obj ==  DBNull.Value) ? 0 : (long) obj;
-        //}
-
-        //public  long TotalSoldFixedPrice(this DataTable table) {
-        //	var obj = table.Compute("Sum(Price)", "Price > 0 and FixedPrice > 0");
-        //	return (obj == DBNull.Value) ? 0 : (long)obj;
-        //}
-
-        //public  long TotalSoldNonFixedPrice(this DataTable table) {
-        //	var obj = table.Compute("Sum(Price)", "Price > 0 and FixedPrice = 0");
-        //	return (obj == DBNull.Value) ? 0 : (long)obj;
-        //}
-
-        //public  int TotalProfit(this DataTable table) {
-        //	var settingCost = int.Parse(ConfigurationManager.AppSettings["Cost"]);
-        //	var settingCostFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
-
-        //	var countFixed = TotalCountFixedPrice(table);
-        //	var countTotal = TotalCount(table);
-        //	var countStd = countTotal - countFixed;
-
-        //	return (countStd * settingCost + countFixed * settingCostFixed);
-        //}
-
-        //public  int NoOfSoldForCustomer(this DataTable table, int customerId) {
-        //	return (int) table.Compute("Count(Price)", "Price > 0 and CustomerId=" + customerId);
-        //}
 
 
 
-        //public  int NoOfUnsoldForCustomer(this DataTable table, int customerId) {
-        //	return CountForCustomer(table, customerId) - NoOfSoldForCustomer(table, customerId);
-        //}
 
-        //public  DataRow GetRowForProductId(this DataTable table, int productId) {
-        //	var foundRows = table.Select("id = " + productId);
-        //	if (foundRows.Length > 0) {
-        //		return foundRows[0];
-        //	}
-        //	return null;
-        //}
-
-        //public  int GetCustomerIdForProductId(this DataTable table, int productId) {
-        //	var foundRows = table.Select("id = " + productId);
-        //	if (foundRows.Length > 0) {
-        //		return (int)foundRows[0]["CustomerId"];
-        //	}
-        //	return 0;
-        //}
 
         //public  int GetLastProductIdForCustomer(this DataTable table, int customerId) {
         //	var foundRows = table.Select("CustomerId = " + customerId);
@@ -133,11 +105,6 @@ namespace ConAuction3.ViewModels {
         //	return foundRows.Select(row => (int) row["id"]).Concat(new[] {0}).Max();
         //}
 
-        //public  int TotalAmountForCustomer(this DataTable table, int customerId) {
-        //	var foundRows = table.Select("CustomerId = " + customerId + " and ISNULL(Price, 0) > 0");
-
-        //	return foundRows.Sum(row => (int) row["Price"]);
-        //}
 
         //public  string ExportCustomerReceipt(this DataTable table, int customerId, string customerName) {
         //	var foundRows = table.Select("CustomerId = " + customerId + " and ISNULL(Price, 0) > 0");
@@ -193,40 +160,31 @@ namespace ConAuction3.ViewModels {
         //	return strB.ToString();
         //}
 
-        //public  int TotalCostForCustomer(this DataTable table, int customerId) {
-        //	var sum = 0;
-        //	try {
-        //		var settingCost = int.Parse(ConfigurationManager.AppSettings["Cost"]);
-        //		var settingCostFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
-        //		var foundRows = table.Select("CustomerId = " + customerId);
 
-        //		foreach (var row in foundRows) {
-        //			if (!string.IsNullOrEmpty(row["FixedPrice"].ToString())) {
-        //				var isFixedPrice = (int) row["FixedPrice"] > 0;
-        //				sum += isFixedPrice ? settingCostFixed : settingCost;
-        //			}
-        //		}
-        //	}
-        //	catch (Exception ex) {
-        //		MessageBox.Show(ex.Message);
-        //	}
+        private List<Product> GetProductsForCustomer(int customerId) {
+            return _productList.FindAll(p => p.CustomerId == customerId);
+        }
 
-        //	return sum;
-        //}
+        public  int TotalCostForCustomer(int customerId) {
+        	  return GetProductsForCustomer(customerId).Sum(p => p.IsJumble ? CostJumble : CostAuction);
+        }
 
-        //public  int NetAmountForCustomer(this DataTable table, int customerId) {
-        //	return table.TotalAmountForCustomer(customerId) - table.TotalCostForCustomer(customerId);
-        //}
+        public int NetAmountForCustomer(int customerId) {
+            return GetProductsForCustomer(customerId).Sum(p => (p.IsJumble ? CostJumble : CostAuction) - p.Price);
+        }
 
-        //public  bool IsDirty(this DataTable table) {
-        //	var changes = table.GetChanges();
-
-        //	if (changes != null && changes.Rows.Count > 0) {
-        //		return true;
-        //	}
-        //	return false;
-        //}
-
+        public int TotalAmountForCustomer(int customerId) {
+            return GetProductsForCustomer(customerId).Sum(p => p.Price);
+        }
+        
+        public  int NoOfSoldForCustomer(int customerId) {
+        	return GetProductsForCustomer(customerId).Count(p => p.IsSold);
+        }
+        
+        public  int NoOfUnsoldForCustomer(int customerId) {
+        	return GetProductsForCustomer(customerId).Count(p => !p.IsSold);
+        }
+        
         private string WriteJsonObj(string label, string value) {
             label = label.Replace('"', '\'');
             value = value.Replace('"', '\'');
@@ -277,21 +235,6 @@ namespace ConAuction3.ViewModels {
         }
 
 
-        //public  string GetCustomerNameFromId(this DataTable table, int customerId) {
-        //	var foundRows = table.Select("id = " + customerId);
-        //	if (foundRows.Length > 0) {
-        //		return foundRows[0]["id"] + ": " + foundRows[0]["Name"];
-        //	}
-        //	return null;		    
-        //}
-
-        //public  Customer GetCustomerFromId(this DataTable table, int customerId) {
-        //	var foundRows = table.Select("id = " + customerId);
-        //	if (foundRows.Length > 0) {
-        //		return new Customer(foundRows[0]);
-        //	}
-        //	return null;
-        //}
 
     }
 }

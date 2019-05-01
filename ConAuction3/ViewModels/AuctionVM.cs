@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
@@ -84,8 +85,6 @@ namespace ConAuction3.ViewModels {
                 }
 
                 OnPropertyChanged("Products");
-                OnPropertyChanged("StatusAuctionCount");
-                OnPropertyChanged("StatusJumbleCount");
             }
         }
 
@@ -104,10 +103,29 @@ namespace ConAuction3.ViewModels {
         }
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusAuctionCount => $"Antal auktion: {ProductsVm.TotalCountAuction}";
+        public string StatusCountAuction => $"Antal: {ProductsVm.CountAuction}";
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusJumbleCount => $"Antal loppis: {ProductsVm.TotalCountJumble}";
+        public string StatusCountJumble => $"Antal: {ProductsVm.CountJumble}";
+
+        // ReSharper disable once UnusedMember.Global
+        public string StatusCountSoldAuction => ProductsVm.CountSoldAuction > 0 ? $"Antal sålda: {ProductsVm.CountSoldAuction}" : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string StatusCountSoldJumble => ProductsVm.CountSoldJumble > 0 ? $"Antal sålda: {ProductsVm.CountSoldJumble}" : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string StatusAmountSoldAuction => ProductsVm.AmountSoldAuction > 0 ? $"Summa: {ProductsVm.AmountSoldAuction}:-" : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string StatusAmountSoldJumble => ProductsVm.AmountSoldJumble > 0 ? $"Summa: {ProductsVm.AmountSoldJumble}:-" : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string StatusLeftToPay => LeftToPay() > 0 ? $"Utbetala: {LeftToPay()}:-" : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string StatusProfit => ProductsVm.Profit > 0 ? $"Vinst: {ProductsVm.Profit}:-" : "";
+
 
         // ReSharper disable once UnusedMember.Global
         public bool FilterCheckVisible => CurrentMode == OpMode.Showing;
@@ -192,7 +210,16 @@ namespace ConAuction3.ViewModels {
             var selectedLastProductId = SelectedProduct?.Id;
             ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
             OnPropertyChanged("Customers");
-            OnPropertyChanged("StatusTotalCount");
+            OnPropertyChanged("StatusCountAuction");
+            OnPropertyChanged("StatusAuctionCount");
+            OnPropertyChanged("StatusCountJumble");
+            OnPropertyChanged("StatusAmountSoldAuction");
+            OnPropertyChanged("StatusAmountSoldJumble");
+            OnPropertyChanged("StatusCountSoldAuction");
+            OnPropertyChanged("StatusCountSoldJumble");
+            OnPropertyChanged("StatusLeftToPay");
+            OnPropertyChanged("StatusProfit");
+
             OnPropertyChanged("Products");
 
             if (selectedLastProductId.HasValue) {
@@ -391,6 +418,13 @@ namespace ConAuction3.ViewModels {
 
 
         #endregion
+
+
+        private int LeftToPay() {
+            var customersLeftToGetPaid = CustomersVm.CustomersLeftToGetPaid();
+            return customersLeftToGetPaid.Sum(c => ProductsVm.NetAmountForCustomer(c.Id));
+        }
+
 
         #region INotifyPropertyChanged Members
 
