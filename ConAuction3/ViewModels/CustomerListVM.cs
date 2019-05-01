@@ -9,8 +9,11 @@ namespace ConAuction3.ViewModels
     class CustomerListVM {
         private readonly List<Customer> _customers;
 
-        public CustomerListVM(List<Customer> customers) {
+        private readonly AuctionVM _auction;
+
+        public CustomerListVM(List<Customer> customers, AuctionVM products) {
             _customers = customers;
+            _auction = products;
             CustomerView = CollectionViewSource.GetDefaultView(customers);
         }
         
@@ -29,9 +32,31 @@ namespace ConAuction3.ViewModels
             CustomerView.SortDescriptions.Clear();        
             CustomerView.SortDescriptions.Add(new SortDescription(propertyName, direction));
         }
-
-        public List<Customer> CustomersLeftToGetPaid () {
+        
+        public void Filter(bool activeOnly, bool finishedOnly) {
+            CustomerView.Filter = o => o is Customer c && (IsCustomerActive(c) || !activeOnly) && (!c.IsFinished || !finishedOnly);
+        }
+        
+        public void NoFilter() {
+            CustomerView.Filter = null;
+        }
+        
+        public IEnumerable<Customer> CustomersLeftToGetPaid () {
             return _customers.FindAll(c => c.Finished.HasValue && !c.Finished.Value);
         }
+
+        public IEnumerable<Product> Products(Customer customer) {
+            return _auction.ProductsVm.ProductsForCustomer(customer.Id);
+        }
+
+        public bool IsCustomerActive(Customer customer) {
+            return Products(customer).Any();
+        }
+
+        public int LeftToPay() {
+            var customersLeftToGetPaid = CustomersLeftToGetPaid();
+            return customersLeftToGetPaid.Sum(c => _auction.ProductsVm.NetAmountForCustomer(c.Id));
+        }
+
     }
 }

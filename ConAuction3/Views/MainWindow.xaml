@@ -73,6 +73,10 @@
 
                 <DockPanel Grid.Column="0">
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
+                        <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
+                                  Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                  IsChecked="{Binding Path=FilterCustomerFinishedOnly}">Bara oklara</CheckBox>
+
                         <Button DockPanel.Dock="Left" Content="Ny kund" Command="{Binding NewCustomerCommand}"  TabIndex="10" Margin="10,5,10,5"
                                 Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Button.ToolTip>

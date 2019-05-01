@@ -1,16 +1,5 @@
 ﻿namespace ConAuction3.DataModels {
     public class Product {
-        public Product() {}
-
-		public Product(long id, string type, string name, string desc, string limit, int customerId) {
-            Id = id;
-            Type = type;
-            Name = name;
-            Description = desc;
-            Note = limit;
-	        CustomerId = customerId;
-        }
-
         public long Id { get; set; }
         public string Label { get; set; }
         public string Type { get; set; }
@@ -25,6 +14,7 @@
 
         public bool IsSold => Price > 0;
         
+        // ReSharper disable once UnusedMember.Global
         public string IsSoldStr => IsSold ? "Såld" : "";
 
         public bool IsJumble => FixedPrice.HasValue && FixedPrice.Value > 0;

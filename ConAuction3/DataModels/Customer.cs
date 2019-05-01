@@ -1,4 +1,6 @@
-﻿namespace ConAuction3.DataModels {
+﻿using System.Windows.Annotations;
+
+namespace ConAuction3.DataModels {
     public class Customer {
         public Customer() {}
 
@@ -17,5 +19,9 @@
 		public bool? Finished { get; set; }
 
 	    public string NumberAndName => Id + " : " + Name;
+
+        public bool IsFinished => Finished.HasValue && Finished.Value;
+
+
     }
 }

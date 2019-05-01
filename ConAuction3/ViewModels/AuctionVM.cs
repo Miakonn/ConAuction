@@ -40,6 +40,8 @@ namespace ConAuction3.ViewModels {
         private OpMode _currentMode;
         private bool _filterJumbleOnly;
         private bool _filterUnsoldOnly;
+        private bool _filterCustomerActiveOnly;
+        private bool _filterCustomerFinishedOnly;
         private bool _isProductSold;
 
         // ReSharper disable once UnusedMember.Global
@@ -61,6 +63,7 @@ namespace ConAuction3.ViewModels {
                 OnPropertyChanged("FilterCheckVisible");
                 OnPropertyChanged("EditingButtonsVisible");
                 OnPropertyChanged("ModeIsShowing");
+                OnPropertyChanged("ModeIsPaying");
             }
         }
 
@@ -82,8 +85,10 @@ namespace ConAuction3.ViewModels {
                     else {
                         ProductsVm.NoFilter();
                     }
-                }
 
+                    _selectedProduct = null;
+                }
+                OnPropertyChanged("SelectedCustomer");
                 OnPropertyChanged("Products");
             }
         }
@@ -103,16 +108,16 @@ namespace ConAuction3.ViewModels {
         }
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusCountAuction => $"Antal: {ProductsVm.CountAuction}";
+        public string StatusCountAuction => $"Inlämnade: {ProductsVm.CountAuction}";
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusCountJumble => $"Antal: {ProductsVm.CountJumble}";
+        public string StatusCountJumble => $"Inlämnade: {ProductsVm.CountJumble}";
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusCountSoldAuction => ProductsVm.CountSoldAuction > 0 ? $"Antal sålda: {ProductsVm.CountSoldAuction}" : "";
+        public string StatusCountSoldAuction => ProductsVm.CountSoldAuction > 0 ? $"Sålda: {ProductsVm.CountSoldAuction}" : "";
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusCountSoldJumble => ProductsVm.CountSoldJumble > 0 ? $"Antal sålda: {ProductsVm.CountSoldJumble}" : "";
+        public string StatusCountSoldJumble => ProductsVm.CountSoldJumble > 0 ? $"Sålda: {ProductsVm.CountSoldJumble}" : "";
 
         // ReSharper disable once UnusedMember.Global
         public string StatusAmountSoldAuction => ProductsVm.AmountSoldAuction > 0 ? $"Summa: {ProductsVm.AmountSoldAuction}:-" : "";
@@ -121,18 +126,20 @@ namespace ConAuction3.ViewModels {
         public string StatusAmountSoldJumble => ProductsVm.AmountSoldJumble > 0 ? $"Summa: {ProductsVm.AmountSoldJumble}:-" : "";
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusLeftToPay => LeftToPay() > 0 ? $"Utbetala: {LeftToPay()}:-" : "";
+        public string StatusLeftToPay => CustomersVm.LeftToPay() > 0 ? $"Utbetala: {CustomersVm.LeftToPay()}:-" : "";
 
         // ReSharper disable once UnusedMember.Global
         public string StatusProfit => ProductsVm.Profit > 0 ? $"Vinst: {ProductsVm.Profit}:-" : "";
-
-
+        
         // ReSharper disable once UnusedMember.Global
         public bool FilterCheckVisible => CurrentMode == OpMode.Showing;
 
         // ReSharper disable once UnusedMember.Global
         public bool ModeIsShowing => CurrentMode == OpMode.Showing;
         
+        // ReSharper disable once UnusedMember.Global
+        public bool ModeIsPaying => CurrentMode == OpMode.Paying;
+
         // ReSharper disable once UnusedMember.Global
         public bool EditingButtonsVisible => CurrentMode == OpMode.Receiving;
 
@@ -151,6 +158,24 @@ namespace ConAuction3.ViewModels {
             set {
                 _filterUnsoldOnly = value;
                 ProductsVm.Filter(_filterJumbleOnly, _filterUnsoldOnly);
+            }
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public bool FilterCustomerActiveOnly {
+            get => _filterCustomerActiveOnly;
+            set {
+                _filterCustomerActiveOnly = value;
+                CustomersVm.Filter(_filterCustomerActiveOnly, _filterCustomerFinishedOnly);
+            }
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public bool FilterCustomerFinishedOnly {
+            get => _filterCustomerFinishedOnly;
+            set {
+                _filterCustomerFinishedOnly = value;
+                CustomersVm.Filter(true, _filterCustomerFinishedOnly);
             }
         }
 
@@ -191,25 +216,25 @@ namespace ConAuction3.ViewModels {
         }
 
         private void UpdateAll() {
-            UpdateCustomers();
-            UpdateProducts();
-        }
-
-        public void UpdateCustomers() {
             var selectedLastCustomerId = SelectedCustomer?.Id;
-            CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers());
-            OnPropertyChanged("Customers");
-            OnPropertyChanged("StatusTotalCount");
+            var selectedLastProductId = SelectedProduct?.Id;
 
-            if (selectedLastCustomerId.HasValue) {
+            CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers(), this);
+            ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
+
+            if (selectedLastProductId.HasValue) {
+                SelectedProduct = ProductsVm.GetProductFromId(selectedLastProductId.Value);
+            }
+            else if (selectedLastCustomerId.HasValue) {
                 SelectedCustomer = CustomersVm.GetCustomerFromId(selectedLastCustomerId.Value);
             }
-        }
 
-        public void UpdateProducts() {
-            var selectedLastProductId = SelectedProduct?.Id;
-            ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
+            ResetFilter();
+
             OnPropertyChanged("Customers");
+            OnPropertyChanged("Products");
+
+            OnPropertyChanged("StatusTotalCount");
             OnPropertyChanged("StatusCountAuction");
             OnPropertyChanged("StatusAuctionCount");
             OnPropertyChanged("StatusCountJumble");
@@ -220,12 +245,17 @@ namespace ConAuction3.ViewModels {
             OnPropertyChanged("StatusLeftToPay");
             OnPropertyChanged("StatusProfit");
 
-            OnPropertyChanged("Products");
-
-            if (selectedLastProductId.HasValue) {
-                SelectedProduct = ProductsVm.GetProductFromId(selectedLastProductId.Value);
+        }
+        
+        private void ResetFilter() {
+            if (CurrentMode == OpMode.Showing) {
+                ProductsVm.Filter(_filterJumbleOnly, _filterUnsoldOnly);
+            }
+            else if (CurrentMode == OpMode.Paying) {
+                CustomersVm.Filter(true, _filterCustomerFinishedOnly);
             }
         }
+
 
         private void TryConnectDataBase() {
             bool fStarted;
@@ -259,8 +289,7 @@ namespace ConAuction3.ViewModels {
 
                 _dbAccess.InsertNewCustomerToDB(customer);
             }
-            UpdateCustomers();
-            UpdateProducts();
+            UpdateAll();
         }
 
         public bool ShowCustomer_CanExecute() {
@@ -277,8 +306,7 @@ namespace ConAuction3.ViewModels {
                 var customer = inputDialog.Result;
                 _dbAccess.SaveCustomerToDB(customer);
             }
-            UpdateCustomers();
-            UpdateProducts();
+            UpdateAll();
         }
 
         public bool NewProduct_CanExecute() {
@@ -295,8 +323,7 @@ namespace ConAuction3.ViewModels {
                 var product = inputDialog.Result;
 
                 var idCreated = _dbAccess.InsertNewProductToDB(product);
-                UpdateCustomers();
-                UpdateProducts();
+                UpdateAll();
 
                 SelectedProduct = ProductsVm.GetProductFromId(idCreated);
             }
@@ -418,13 +445,6 @@ namespace ConAuction3.ViewModels {
 
 
         #endregion
-
-
-        private int LeftToPay() {
-            var customersLeftToGetPaid = CustomersVm.CustomersLeftToGetPaid();
-            return customersLeftToGetPaid.Sum(c => ProductsVm.NetAmountForCustomer(c.Id));
-        }
-
 
         #region INotifyPropertyChanged Members
 
