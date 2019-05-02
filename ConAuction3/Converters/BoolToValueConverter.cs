@@ -47,7 +47,11 @@ namespace ConAuction3.Converters {
             return value != null && value.Equals(TrueValue);
         }
     }
+
+    public class BoolToIntConverter : BoolToValueConverter<int> { }
     public class BoolToVisibilityConverter : BoolToValueConverter<Visibility> { }
     public class BoolToBoolConverter : BoolToValueConverter<bool> { }
+
+  
 
 }

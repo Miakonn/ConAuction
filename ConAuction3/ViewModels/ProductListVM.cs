@@ -170,7 +170,7 @@ namespace ConAuction3.ViewModels {
         }
 
         public int NetAmountForCustomer(int customerId) {
-            return GetProductsForCustomer(customerId).Sum(p => (p.IsJumble ? CostJumble : CostAuction) - p.Price);
+            return GetProductsForCustomer(customerId).Sum(p => p.Price - (p.IsJumble ? CostJumble : CostAuction));
         }
 
         public int TotalAmountForCustomer(int customerId) {

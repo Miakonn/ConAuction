@@ -4,4 +4,8 @@
 	<BitmapImage x:Key="LinconLogoSmall" UriSource="LinconAuktionLiten.png" />
 	<BitmapImage x:Key="LinconLogoFull" UriSource="LinconAuktionLiten3.png" />
 	<BitmapImage x:Key="LinconLogoFullTransparent" UriSource="LinconAuktionLiten-utan.png" />
+
+    <Style TargetType="{x:Type GridViewColumnHeader}">
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+    </Style>
 </ResourceDictionary>

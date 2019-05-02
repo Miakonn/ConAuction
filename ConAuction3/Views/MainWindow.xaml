@@ -13,6 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:BoolToVisibilityConverter x:Key="BooleanToInvertedVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible" />
             <converters:BoolToVisibilityConverter x:Key="BooleanToVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed" />
+            <converters:BoolToIntConverter x:Key="BooleanToInt50Converter" TrueValue="50" FalseValue="0" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -28,7 +29,7 @@
         <KeyBinding Key="F12" Command="{Binding GotoProductCommand}" />
     </Window.InputBindings>
 
-    <DockPanel>
+    <DockPanel Background="#FBD800">
         <DockPanel DockPanel.Dock="Top" Background="#FBD800">
             <Image DockPanel.Dock="Left" Source="{StaticResource LinconLogoSmall}" MaxHeight="80"  Margin="30,0,30,0" />
             <Label DockPanel.Dock="Left" FontSize="28" FontWeight="Bold" Padding="30" >ConAuction V3.0</Label>
@@ -95,6 +96,32 @@
                             </Button.ToolTip>
                         </Button>
                     </DockPanel>
+                    <Grid DockPanel.Dock="Bottom" Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding SelectedName, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
+                        <Label Grid.Column="1" Grid.Row="0" Content="Antal osålda" />
+                        <TextBox Grid.Column="2" Grid.Row="0" Text="{Binding SelectedUnsoldCount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
+                        <Label Grid.Column="1" Grid.Row="1" Content="Brutto sålt" />
+                        <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding SelectedAmount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
+                        <Label Grid.Column="1" Grid.Row="2" Content="Netto" />
+                        <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding SelectedNetAmount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
+                        <Button Grid.Column="3" Grid.Row="2" Content="Utbetalt" Command="{Binding PayCustomerCommand}" Width="70
+                                " Margin="10,5,10,5">
+                            <Button.ToolTip>
+                                <ToolTip></ToolTip>
+                            </Button.ToolTip>
+                        </Button>
+                    </Grid>
                     <ListView Name="ListViewCustomers" SelectionMode="Extended" ItemsSource="{Binding Customers}" IsSynchronizedWithCurrentItem="True" 
                                SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" MouseDoubleClick="Control_OnMouseDoubleClickCustomer" 
                                SelectionChanged="ListView_OnSelectionChanged">
@@ -110,15 +137,21 @@
                                     <GridViewColumnHeader Content="Mobilnr" Command="{Binding SortCustomerCommand}" CommandParameter="Phone" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
-                                    <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="NOte" />
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="Note" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="{Binding ModeIsPaying, Converter={StaticResource BooleanToInt50Converter}}" >
+                                    <GridViewColumnHeader Content="Utbetalat" Command="{Binding SortCustomerCommand}" CommandParameter="IsFinished" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsHitTestVisible="False" IsChecked="{Binding IsFinished, Mode=OneWay }" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>
                 </DockPanel>
-                <GridSplitter Grid.Column="1" ResizeDirection="Columns" 
-               ResizeBehavior="PreviousAndNext"
-              HorizontalAlignment="Stretch" />
+                <GridSplitter Grid.Column="1" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" />
                 <DockPanel Grid.Column="2">
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
                         <Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewProductCommand}"  TabIndex="15" Margin="10,5,10,5"

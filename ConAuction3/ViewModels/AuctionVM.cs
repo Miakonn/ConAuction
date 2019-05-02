@@ -21,6 +21,7 @@ namespace ConAuction3.ViewModels {
 
         public MyCommand NewCustomerCommand { get; }
         public MyCommand ShowCustomerCommand { get; }
+        public MyCommand PayCustomerCommand { get; }
         public MyCommand NewProductCommand { get; }
         public MyCommand ShowProductCommand { get; }
         public MyCommand DeleteProductCommand { get; }
@@ -90,6 +91,10 @@ namespace ConAuction3.ViewModels {
                 }
                 OnPropertyChanged("SelectedCustomer");
                 OnPropertyChanged("Products");
+                OnPropertyChanged("SelectedUnsoldCount");
+                OnPropertyChanged("SelectedAmount");
+                OnPropertyChanged("SelectedNetAmount");
+                OnPropertyChanged("SelectedName");
             }
         }
 
@@ -142,6 +147,18 @@ namespace ConAuction3.ViewModels {
 
         // ReSharper disable once UnusedMember.Global
         public bool EditingButtonsVisible => CurrentMode == OpMode.Receiving;
+
+        // ReSharper disable once UnusedMember.Global
+        public string SelectedUnsoldCount => SelectedCustomer != null ? ProductsVm.NoOfUnsoldForCustomer(SelectedCustomer.Id).ToString() : "";
+        
+        // ReSharper disable once UnusedMember.Global
+        public string SelectedAmount => SelectedCustomer != null ? ProductsVm.TotalAmountForCustomer(SelectedCustomer.Id).ToString() : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string SelectedNetAmount => SelectedCustomer != null ? ProductsVm.NetAmountForCustomer(SelectedCustomer.Id).ToString() : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string SelectedName => SelectedCustomer != null ? SelectedCustomer.NumberAndName : "";
 
         // ReSharper disable once UnusedMember.Global
         public bool FilterJumbleOnly {
@@ -199,6 +216,7 @@ namespace ConAuction3.ViewModels {
 
             NewCustomerCommand = new MyCommand(NewCustomer, NewCustomer_CanExecute);
             ShowCustomerCommand = new MyCommand(ShowCustomer, ShowCustomer_CanExecute);
+            PayCustomerCommand = new MyCommand(PayCustomer, PayCustomer_CanExecute);
             NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
             ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
@@ -306,6 +324,23 @@ namespace ConAuction3.ViewModels {
                 var customer = inputDialog.Result;
                 _dbAccess.SaveCustomerToDB(customer);
             }
+            UpdateAll();
+        }
+
+        public bool PayCustomer_CanExecute() {
+            return CurrentMode == OpMode.Paying && SelectedCustomer != null && !SelectedCustomer.IsFinished;
+        }
+
+        public void PayCustomer() {
+            if (SelectedCustomer == null) {
+                return;
+            }
+
+            if (!SelectedCustomer.IsFinished) {
+                SelectedCustomer.Finished = true;
+                _dbAccess.SaveCustomerToDB(SelectedCustomer);
+            }
+
             UpdateAll();
         }
 
