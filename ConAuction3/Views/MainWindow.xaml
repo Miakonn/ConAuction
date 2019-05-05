@@ -115,8 +115,16 @@
                         <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding SelectedAmount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
                         <Label Grid.Column="1" Grid.Row="2" Content="Netto" />
                         <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding SelectedNetAmount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
-                        <Button Grid.Column="3" Grid.Row="2" Content="Utbetalt" Command="{Binding PayCustomerCommand}" Width="70
-                                " Margin="10,5,10,5">
+                        <Button Grid.Column="3" Grid.Row="2" Content="Utbetalt" Command="{Binding PayCustomerCommand}" MinWidth="70"
+                                Visibility="{Binding PayCustomerCanExecute , Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                Margin="10,5,10,5">
+                            <Button.ToolTip>
+                                <ToolTip></ToolTip>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button Grid.Column="3" Grid.Row="2" Content="Ångra utbetalt" Command="{Binding UndoPayCustomerCommand}" MinWidth="70" 
+                                Visibility="{Binding UndoPayCustomerCanExecute , Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                Margin="10,5,10,5">
                             <Button.ToolTip>
                                 <ToolTip></ToolTip>
                             </Button.ToolTip>
@@ -133,19 +141,19 @@
                                 <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}" >
                                     <GridViewColumnHeader Content="Name" Command="{Binding SortCustomerCommand}" CommandParameter="Name" />
                                 </GridViewColumn>
-                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Phone}" >
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding PhoneFormatted}" >
                                     <GridViewColumnHeader Content="Mobilnr" Command="{Binding SortCustomerCommand}" CommandParameter="Phone" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="Note" />
                                 </GridViewColumn>
-                                <GridViewColumn Width="{Binding ModeIsPaying, Converter={StaticResource BooleanToInt50Converter}}" >
+                                <GridViewColumn Width="{Binding ModeIsPaying, Converter={StaticResource BooleanToInt50Converter}}" DisplayMemberBinding="{Binding IsFinishedStr}">
                                     <GridViewColumnHeader Content="Utbetalat" Command="{Binding SortCustomerCommand}" CommandParameter="IsFinished" />
-                                    <GridViewColumn.CellTemplate>
+                                    <!--<GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox IsHitTestVisible="False" IsChecked="{Binding IsFinished, Mode=OneWay }" />
                                         </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
+                                    </GridViewColumn.CellTemplate>-->
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>

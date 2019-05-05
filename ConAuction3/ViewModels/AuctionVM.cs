@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using ConAuction3.DataModels;
 using ConAuction3.Views;
@@ -22,6 +21,7 @@ namespace ConAuction3.ViewModels {
         public MyCommand NewCustomerCommand { get; }
         public MyCommand ShowCustomerCommand { get; }
         public MyCommand PayCustomerCommand { get; }
+        public MyCommand UndoPayCustomerCommand { get; }
         public MyCommand NewProductCommand { get; }
         public MyCommand ShowProductCommand { get; }
         public MyCommand DeleteProductCommand { get; }
@@ -88,13 +88,15 @@ namespace ConAuction3.ViewModels {
                     }
 
                     _selectedProduct = null;
+                    OnPropertyChanged(nameof(SelectedProduct));
                 }
-                OnPropertyChanged("SelectedCustomer");
-                OnPropertyChanged("Products");
-                OnPropertyChanged("SelectedUnsoldCount");
-                OnPropertyChanged("SelectedAmount");
-                OnPropertyChanged("SelectedNetAmount");
-                OnPropertyChanged("SelectedName");
+                OnPropertyChanged(nameof(SelectedCustomer));
+                OnPropertyChanged(nameof(SelectedUnsoldCount));
+                OnPropertyChanged(nameof(SelectedAmount));
+                OnPropertyChanged(nameof(SelectedNetAmount));
+                OnPropertyChanged(nameof(SelectedName));
+                OnPropertyChanged(nameof(PayCustomerCanExecute));
+                OnPropertyChanged(nameof(UndoPayCustomerCanExecute));
             }
         }
 
@@ -217,6 +219,7 @@ namespace ConAuction3.ViewModels {
             NewCustomerCommand = new MyCommand(NewCustomer, NewCustomer_CanExecute);
             ShowCustomerCommand = new MyCommand(ShowCustomer, ShowCustomer_CanExecute);
             PayCustomerCommand = new MyCommand(PayCustomer, PayCustomer_CanExecute);
+            UndoPayCustomerCommand = new MyCommand(UndoPayCustomer, UndoPayCustomer_CanExecute);
             NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
             ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
@@ -240,31 +243,28 @@ namespace ConAuction3.ViewModels {
             CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers(), this);
             ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
 
+
+            ResetFilter();
+
+            OnPropertyChanged(nameof(StatusCountAuction));
+            OnPropertyChanged(nameof(StatusCountJumble));
+            OnPropertyChanged(nameof(StatusAmountSoldAuction));
+            OnPropertyChanged(nameof(StatusAmountSoldJumble));
+            OnPropertyChanged(nameof(StatusCountSoldAuction));
+            OnPropertyChanged(nameof(StatusCountSoldJumble));
+            OnPropertyChanged(nameof(StatusLeftToPay));
+            OnPropertyChanged(nameof(StatusProfit));
+            OnPropertyChanged(nameof(Customers));
+            OnPropertyChanged(nameof(Products));
+
             if (selectedLastProductId.HasValue) {
                 SelectedProduct = ProductsVm.GetProductFromId(selectedLastProductId.Value);
             }
             else if (selectedLastCustomerId.HasValue) {
                 SelectedCustomer = CustomersVm.GetCustomerFromId(selectedLastCustomerId.Value);
             }
-
-            ResetFilter();
-
-            OnPropertyChanged("Customers");
-            OnPropertyChanged("Products");
-
-            OnPropertyChanged("StatusTotalCount");
-            OnPropertyChanged("StatusCountAuction");
-            OnPropertyChanged("StatusAuctionCount");
-            OnPropertyChanged("StatusCountJumble");
-            OnPropertyChanged("StatusAmountSoldAuction");
-            OnPropertyChanged("StatusAmountSoldJumble");
-            OnPropertyChanged("StatusCountSoldAuction");
-            OnPropertyChanged("StatusCountSoldJumble");
-            OnPropertyChanged("StatusLeftToPay");
-            OnPropertyChanged("StatusProfit");
-
         }
-        
+
         private void ResetFilter() {
             if (CurrentMode == OpMode.Showing) {
                 ProductsVm.Filter(_filterJumbleOnly, _filterUnsoldOnly);
@@ -305,7 +305,7 @@ namespace ConAuction3.ViewModels {
             if (inputDialog.ShowDialog() == true) {
                 var customer = inputDialog.Result;
 
-                _dbAccess.InsertNewCustomerToDB(customer);
+                _dbAccess.InsertNewCustomerToDb(customer);
             }
             UpdateAll();
         }
@@ -322,10 +322,12 @@ namespace ConAuction3.ViewModels {
             var inputDialog = new CustomerDlg(SelectedCustomer);
             if (inputDialog.ShowDialog() == true) {
                 var customer = inputDialog.Result;
-                _dbAccess.SaveCustomerToDB(customer);
+                _dbAccess.SaveCustomerToDb(customer);
             }
             UpdateAll();
         }
+
+        public bool PayCustomerCanExecute => PayCustomer_CanExecute();
 
         public bool PayCustomer_CanExecute() {
             return CurrentMode == OpMode.Paying && SelectedCustomer != null && !SelectedCustomer.IsFinished;
@@ -338,7 +340,26 @@ namespace ConAuction3.ViewModels {
 
             if (!SelectedCustomer.IsFinished) {
                 SelectedCustomer.Finished = true;
-                _dbAccess.SaveCustomerToDB(SelectedCustomer);
+                _dbAccess.SaveCustomerToDb(SelectedCustomer);
+            }
+
+            UpdateAll();
+        }
+
+        public bool UndoPayCustomerCanExecute => UndoPayCustomer_CanExecute();
+
+        public bool UndoPayCustomer_CanExecute() {
+            return CurrentMode == OpMode.Paying && SelectedCustomer != null && SelectedCustomer.IsFinished;
+        }
+
+        public void UndoPayCustomer() {
+            if (SelectedCustomer == null) {
+                return;
+            }
+
+            if (SelectedCustomer.IsFinished) {
+                SelectedCustomer.Finished = false;
+                _dbAccess.SaveCustomerToDb(SelectedCustomer);
             }
 
             UpdateAll();
@@ -357,7 +378,7 @@ namespace ConAuction3.ViewModels {
             if (inputDialog.ShowDialog() == true) {
                 var product = inputDialog.Result;
 
-                var idCreated = _dbAccess.InsertNewProductToDB(product);
+                var idCreated = _dbAccess.InsertNewProductToDb(product);
                 UpdateAll();
 
                 SelectedProduct = ProductsVm.GetProductFromId(idCreated);
@@ -380,7 +401,7 @@ namespace ConAuction3.ViewModels {
             if (inputDialog.ShowDialog() == true) {
                 var product = inputDialog.Result;
 
-                _dbAccess.SaveProductToDB(product);
+                _dbAccess.SaveProductToDb(product);
             }
             UpdateAll();
             OnPropertyChanged("StatusTotalCount");
@@ -397,7 +418,7 @@ namespace ConAuction3.ViewModels {
 
             var result = MessageBox.Show("Vill du radera objektet?", "Objekt");
             if (result == DialogResult.OK) {
-                _dbAccess.DeleteProductToDB(SelectedProduct.Id);
+                _dbAccess.DeleteProductToDb(SelectedProduct.Id);
             }
             UpdateAll();
         }
@@ -412,7 +433,7 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.SoldForFixedPrice()) {
-                _dbAccess.SaveProductToDB(SelectedProduct);
+                _dbAccess.SaveProductToDb(SelectedProduct);
             }
 
             UpdateAll();
@@ -428,7 +449,7 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.UndoSoldFor()) {
-                _dbAccess.SaveProductToDB(SelectedProduct);
+                _dbAccess.SaveProductToDb(SelectedProduct);
             }
 
             UpdateAll();
