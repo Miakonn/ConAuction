@@ -31,6 +31,7 @@ namespace ConAuction3.ViewModels {
         public MyCommand CancelCommand { get; }
         public MyCommand UpdateCommand { get; }
         public MyCommand GotoProductCommand { get; }
+        public MyCommand SendSmsCommand { get; }
 
         // Sort commands
         public ParameterCommand SortCustomerCommand { get; }
@@ -44,6 +45,10 @@ namespace ConAuction3.ViewModels {
         private bool _filterCustomerActiveOnly;
         private bool _filterCustomerFinishedOnly;
         private bool _isProductSold;
+
+        private string _LastSmsMessage =
+            "Auktionen är avslutad. Du kan hämta ut dina pengar mellan kl 9 och 13 under lördagen. /LinCon auktionen";
+
 
         // ReSharper disable once UnusedMember.Global
         public List<ComboBoxItemOpMode> OpEnumList =>
@@ -227,6 +232,7 @@ namespace ConAuction3.ViewModels {
             SellProductCommand = new MyCommand(SellProduct, SellProduct_CanExecute);
             UndoSoldProductCommand = new MyCommand(UndoSoldProduct, UndoSoldProduct_CanExecute);
             ExportProductsCommand = new MyCommand(ExportProducts, ExportProducts_CanExecute);
+            SendSmsCommand = new MyCommand(SendSms, SendSms_CanExecute);
             UpdateCommand = new MyCommand(UpdateAll);
             CancelCommand = new MyCommand(ExitProgram);
 
@@ -464,6 +470,19 @@ namespace ConAuction3.ViewModels {
             if (!string.IsNullOrWhiteSpace(label)) {
                SelectedProduct = ProductsVm.GetProductFromLabel(label);
             }
+        }
+
+        public bool SendSms_CanExecute() {
+            return SelectedCustomer != null;
+        }
+
+        public void SendSms() {
+            if (SelectedCustomer == null) {
+                return;
+            }
+            _LastSmsMessage = PromptDialog.Prompt("Meddelande till " + SelectedCustomer.Name, "Skicka SMS", _LastSmsMessage);
+
+            SendSMS.Send(SelectedCustomer.Phone, _LastSmsMessage);
         }
 
         public bool ExportProducts_CanExecute() {

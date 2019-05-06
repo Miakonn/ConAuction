@@ -25,10 +25,12 @@ namespace ConAuction3.Views {
         }
 
         void PromptDialog_Loaded(object sender, RoutedEventArgs e) {
-            if (_inputType == InputType.Password)
+            if (_inputType == InputType.Password) {
                 txtPasswordResponse.Focus();
-            else
+            }
+            else {
                 txtResponse.Focus();
+            }
         }
 
         public static string Prompt(string question, string title, string defaultValue = "", InputType inputType = InputType.Text) {

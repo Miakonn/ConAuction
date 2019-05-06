@@ -95,6 +95,8 @@
                                 <ToolTip>F5</ToolTip>
                             </Button.ToolTip>
                         </Button>
+                        <Button DockPanel.Dock="Left" Content="Skicka SMS..." Command="{Binding SendSmsCommand}"  TabIndex="12" Margin="10,5,10,5" 
+                                Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </DockPanel>
                     <Grid DockPanel.Dock="Bottom" Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="10">
                         <Grid.ColumnDefinitions>
