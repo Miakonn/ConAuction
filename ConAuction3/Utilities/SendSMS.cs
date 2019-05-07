@@ -15,7 +15,7 @@ namespace ConAuction3 {
         public static void Send(string phoneNo, string message) {
             var dest = FixPhoneNo(phoneNo);
 
-            const string pw = "kYJhMyCn";
+            const string pw = "7dk5FVQF";
             const string user = "andersblom";
             const string sender = "46705542120";
             const string url = "https://se-1.cellsynt.net/sms.php";
