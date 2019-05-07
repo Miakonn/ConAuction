@@ -249,8 +249,8 @@ namespace ConAuction3.ViewModels {
             UpdateCommand = new MyCommand(UpdateAll);
             CancelCommand = new MyCommand(ExitProgram);
 
-            SortCustomerCommand = new ParameterCommand(CustomersVm.SortBy);
-            SortProductCommand = new ParameterCommand(ProductsVm.SortBy);
+            SortCustomerCommand = new ParameterCommand(CustomersVmSortBy);
+            SortProductCommand = new ParameterCommand(ProductsVmSortBy);
 
             CurrentMode = OpMode.Initializing;
         }
@@ -313,6 +313,16 @@ namespace ConAuction3.ViewModels {
         public void ExitProgram() {
             Application.Exit();
             Environment.Exit(1);
+        }
+
+        private void CustomersVmSortBy(string propertyName) {
+            CustomersVm.SortBy(propertyName);
+            OnPropertyChanged(nameof(Products));
+        }
+
+        private void ProductsVmSortBy(string propertyName) {
+            ProductsVm.SortBy(propertyName);
+            OnPropertyChanged(nameof(Customers));
         }
 
         public bool NewCustomer_CanExecute() {
