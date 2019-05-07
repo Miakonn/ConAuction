@@ -14,6 +14,12 @@
 
         public bool IsSold => Price > 0;
         
+        public Product() {}
+
+        public Product(string label) {
+            Label = label;
+        }
+
         // ReSharper disable once UnusedMember.Global
         public string IsSoldStr => IsSold ? "Såld" : "";
 

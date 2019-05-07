@@ -66,10 +66,11 @@ namespace ConAuction3.ViewModels {
             set {
                 _currentMode = value;
                 UpdateAll();
-                OnPropertyChanged("FilterCheckVisible");
-                OnPropertyChanged("EditingButtonsVisible");
-                OnPropertyChanged("ModeIsShowing");
-                OnPropertyChanged("ModeIsPaying");
+                OnPropertyChanged(nameof(FilterCheckVisible));
+                OnPropertyChanged(nameof(EditingButtonsVisible));
+                OnPropertyChanged(nameof(ModeIsShowing));
+                OnPropertyChanged(nameof(ModeIsPaying));
+                OnPropertyChanged(nameof(ModeIsReceiving));
             }
         }
 
@@ -153,6 +154,9 @@ namespace ConAuction3.ViewModels {
         public bool ModeIsPaying => CurrentMode == OpMode.Paying;
 
         // ReSharper disable once UnusedMember.Global
+        public bool ModeIsReceiving => CurrentMode == OpMode.Receiving;
+
+        // ReSharper disable once UnusedMember.Global
         public bool EditingButtonsVisible => CurrentMode == OpMode.Receiving;
 
         // ReSharper disable once UnusedMember.Global
@@ -204,14 +208,23 @@ namespace ConAuction3.ViewModels {
         }
 
         // ReSharper disable once UnusedMember.Global
+        public bool CheckPage1 { get; set; }
+
+        // ReSharper disable once UnusedMember.Global
+        public bool CheckPage2 { get; set; }
+
+        // ReSharper disable once UnusedMember.Global
+        public bool CheckPage3 { get; set; }
+
+        // ReSharper disable once UnusedMember.Global
         public bool IsProductSold {
-            get { return _isProductSold; }
+            get => _isProductSold;
             set {
                 _isProductSold = value;
                 OnPropertyChanged("IsProductSold");
             }
         }
-
+        
         #endregion
 
         public AuctionVM() {
@@ -380,7 +393,13 @@ namespace ConAuction3.ViewModels {
                 return;
             }
 
-            var inputDialog = new ProductDlg(new Product(), SelectedCustomer, ProductsVm);
+            var freeLabel = ProductsVm.GetNextFreeLabel(CheckPage1, CheckPage2, CheckPage3);
+            if (string.IsNullOrEmpty(freeLabel)) {
+                MessageBox.Show("Ingen nummersida är vald!");
+                return;
+            }
+
+            var inputDialog = new ProductDlg(new Product(freeLabel), SelectedCustomer, ProductsVm);
             if (inputDialog.ShowDialog() == true) {
                 var product = inputDialog.Result;
 

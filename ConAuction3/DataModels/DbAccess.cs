@@ -12,6 +12,8 @@ namespace ConAuction3.DataModels {
 
         private MySqlConnection DbConnection;
 
+        private string Year;
+
         public bool InitDB() {
             try {
                 // Initialize mysql connection
@@ -22,6 +24,8 @@ namespace ConAuction3.DataModels {
                     MessageBox.Show("Cannot connect to server.");
                     return false;
                 }
+
+                Year = ConfigurationManager.AppSettings["Year"];
             }
             catch (MySqlException ex) {
                 MessageBox.Show(ex.Message);
@@ -63,12 +67,11 @@ namespace ConAuction3.DataModels {
         public List<Product> ReadAllProducts() {
             var products = new List<Product>(900);
             var query =
-                    "select Id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice from Product where year=" +
-                    ConfigurationManager.AppSettings["Year"];
-            MySqlCommand cmdDatabase = new MySqlCommand(query, DbConnection);
+                "select Id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice from Product where year=" +
+                Year;
+            var cmdDatabase = new MySqlCommand(query, DbConnection);
             try {
-                using (MySqlDataReader reader = cmdDatabase.ExecuteReader()) {
-
+                using (var reader = cmdDatabase.ExecuteReader()) {
                     while (reader.Read()) {
                         var product = new Product {
                             Id = reader.GetInt64("Id"),
@@ -206,21 +209,17 @@ namespace ConAuction3.DataModels {
             command.Transaction = sqlTran;
             command.Connection = DbConnection;
             try {
-                command.CommandText = "select max(Label) from Product where Year=" +
-                                      ConfigurationManager.AppSettings["Year"];
-                var result = command.ExecuteScalar();
-                var nextLabel = 1;
-                if (result != DBNull.Value) {
-                    nextLabel = (int)command.ExecuteScalar() + 1;
+                command.CommandText =  $"select count(*) from Product where Label={prod.Label} and Year={Year}";
+                var result = (long)command.ExecuteScalar();
+                if (result > 0L) {
+                    throw new Exception("Objektnumret redan använt!");
                 }
-
-                prod.Label = nextLabel.ToString();
-
+                
                 command.CommandText =
                     "INSERT INTO Product (Label, Name, Description,Type,  Note, Price, FixedPrice, CustomerId, Year, timestamp)" +
                     "VALUES (@Label, @Name, @Description, @Type, @Note,@price, @Fixedprice, @CustomerId ," +
-                    ConfigurationManager.AppSettings["Year"] + ", Now());";
-                command.Parameters.AddWithValue("@Label", nextLabel);
+                    Year + ", Now());";
+                command.Parameters.AddWithValue("@Label", prod.Label);
                 command.Parameters.AddWithValue("@Name", prod.Name);
                 command.Parameters.AddWithValue("@Description", prod.Description);
                 command.Parameters.AddWithValue("@Price", prod.Price);

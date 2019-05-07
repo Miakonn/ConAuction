@@ -229,12 +229,34 @@ namespace ConAuction3.ViewModels {
 
                 str = str.Replace("\r\n", "\\n");
                 strB.AppendLine(str);
-
             }
             return strB.ToString();
         }
 
+        public string GetNextFreeLabel(bool page1, bool page2, bool page3) {
+            if (!page1 && !page2 && !page3) {
+                return "";
+            }
 
+
+            for (int label = 1;; label++) {
+                var page = label % 3;
+                if ((page == 1 && page1) || (page == 2 && page2) || (page == 0 && page3)) {
+                    if (IsLabelFree(label)) {
+                        return label.ToString();
+                    }
+                }
+            }
+        }
+
+        private bool IsLabelFree(int label) {
+            foreach (var product in _productList) {
+                if (product.Label == label.ToString()) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
     }
 }
