@@ -97,6 +97,21 @@
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Skicka SMS..." Command="{Binding SendSmsCommand}"  TabIndex="12" Margin="10,5,10,5" 
                                 Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                        <Button DockPanel.Dock="Left" Content="Utbetalt" Command="{Binding PayCustomerCommand}" MinWidth="70"
+                                Visibility="{Binding PayCustomerCanExecute , Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                Margin="10,5,10,5">
+                            <Button.ToolTip>
+                                <ToolTip></ToolTip>
+                            </Button.ToolTip>
+                        </Button>
+                        <Button DockPanel.Dock="Left" Content="Ångra utbetalt" Command="{Binding UndoPayCustomerCommand}" MinWidth="70" 
+                                Visibility="{Binding UndoPayCustomerCanExecute , Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                Margin="10,5,10,5">
+                            <Button.ToolTip>
+                                <ToolTip></ToolTip>
+                            </Button.ToolTip>
+                        </Button>
                     </DockPanel>
                     <Grid DockPanel.Dock="Bottom" Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="10">
                         <Grid.ColumnDefinitions>
@@ -117,20 +132,6 @@
                         <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding SelectedAmount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
                         <Label Grid.Column="1" Grid.Row="2" Content="Netto" />
                         <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding SelectedNetAmount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
-                        <Button Grid.Column="3" Grid.Row="2" Content="Utbetalt" Command="{Binding PayCustomerCommand}" MinWidth="70"
-                                Visibility="{Binding PayCustomerCanExecute , Converter={StaticResource BooleanToVisibilityConverter}}" 
-                                Margin="10,5,10,5">
-                            <Button.ToolTip>
-                                <ToolTip></ToolTip>
-                            </Button.ToolTip>
-                        </Button>
-                        <Button Grid.Column="3" Grid.Row="2" Content="Ångra utbetalt" Command="{Binding UndoPayCustomerCommand}" MinWidth="70" 
-                                Visibility="{Binding UndoPayCustomerCanExecute , Converter={StaticResource BooleanToVisibilityConverter}}" 
-                                Margin="10,5,10,5">
-                            <Button.ToolTip>
-                                <ToolTip></ToolTip>
-                            </Button.ToolTip>
-                        </Button>
                     </Grid>
                     <ListView Name="ListViewCustomers" SelectionMode="Extended" ItemsSource="{Binding Customers}" IsSynchronizedWithCurrentItem="True" 
                                SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" MouseDoubleClick="Control_OnMouseDoubleClickCustomer" 
