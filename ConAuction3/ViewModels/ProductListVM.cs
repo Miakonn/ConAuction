@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
-using System.Data;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Windows.Data;
 using ConAuction3.DataModels;
 

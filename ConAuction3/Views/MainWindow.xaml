@@ -36,12 +36,12 @@
             <WrapPanel DockPanel.Dock="Right" Orientation="Vertical"
                        Visibility="{Binding ModeIsReceiving, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <CheckBox  TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
-                           IsChecked="{Binding Path=CheckPage1}"
+                           IsChecked="{Binding Path=LabelPage1}"
                            >Sida 1</CheckBox>
                 <CheckBox  TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
-                           IsChecked="{Binding Path=CheckPage2}" >Sida 2</CheckBox>
+                           IsChecked="{Binding Path=LabelPage2}" >Sida 2</CheckBox>
                 <CheckBox  TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
-                           IsChecked="{Binding Path=CheckPage3}" >Sida 3</CheckBox>
+                           IsChecked="{Binding Path=LabelPage3}" >Sida 3</CheckBox>
             </WrapPanel>
            
             <ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="40" MaxWidth="150" ItemsSource="{Binding OpEnumList}"  IsEditable="False"

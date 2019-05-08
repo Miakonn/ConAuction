@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
 using ConAuction3.DataModels;
@@ -48,6 +49,10 @@ namespace ConAuction3.ViewModels {
 
         private string _LastSmsMessage =
             "Auktionen är avslutad. Du kan hämta ut dina pengar mellan kl 9 och 13 under lördagen. /LinCon auktionen";
+
+        private bool _labelPage1;
+        private bool _labelPage2;
+        private bool _labelPage3;
 
 
         // ReSharper disable once UnusedMember.Global
@@ -208,13 +213,31 @@ namespace ConAuction3.ViewModels {
         }
 
         // ReSharper disable once UnusedMember.Global
-        public bool CheckPage1 { get; set; }
+        public bool LabelPage1 {
+            get => _labelPage1;
+            set {
+                _labelPage1 = value;
+                SavingAppSettings();
+            }
+        }
 
         // ReSharper disable once UnusedMember.Global
-        public bool CheckPage2 { get; set; }
+        public bool LabelPage2 {
+            get => _labelPage2;
+            set {
+                _labelPage2 = value;
+                SavingAppSettings();
+            }
+        }
 
         // ReSharper disable once UnusedMember.Global
-        public bool CheckPage3 { get; set; }
+        public bool LabelPage3 {
+            get => _labelPage3;
+            set {
+                _labelPage3 = value;
+                SavingAppSettings();
+            }
+        }
 
         // ReSharper disable once UnusedMember.Global
         public bool IsProductSold {
@@ -253,6 +276,11 @@ namespace ConAuction3.ViewModels {
             SortProductCommand = new ParameterCommand(ProductsVmSortBy);
 
             CurrentMode = OpMode.Initializing;
+
+            _labelPage1 = Boolean.Parse(ConfigurationManager.AppSettings["LabelPage1"]);
+            _labelPage2 = Boolean.Parse(ConfigurationManager.AppSettings["LabelPage2"]);
+            _labelPage3 = Boolean.Parse(ConfigurationManager.AppSettings["LabelPage3"]);
+
         }
 
         private void UpdateAll() {
@@ -403,7 +431,7 @@ namespace ConAuction3.ViewModels {
                 return;
             }
 
-            var freeLabel = ProductsVm.GetNextFreeLabel(CheckPage1, CheckPage2, CheckPage3);
+            var freeLabel = ProductsVm.GetNextFreeLabel(LabelPage1, LabelPage2, LabelPage3);
             if (string.IsNullOrEmpty(freeLabel)) {
                 MessageBox.Show("Ingen nummersida är vald!");
                 return;
@@ -549,6 +577,24 @@ namespace ConAuction3.ViewModels {
 
 
         #endregion
+
+        private void SavingAppSettings() {
+            try {
+                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                var settings = configFile.AppSettings.Settings;
+
+                settings["LabelPage1"].Value = LabelPage1.ToString();
+                settings["LabelPage2"].Value = LabelPage2.ToString();
+                settings["LabelPage3"].Value = LabelPage3.ToString();
+
+                configFile.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+            }
+            catch (ConfigurationErrorsException) {
+                MessageBox.Show("Error writing app settings");
+            }
+        }
+
 
         #region INotifyPropertyChanged Members
 
