@@ -90,13 +90,13 @@
                                   IsChecked="{Binding Path=FilterCustomerFinishedOnly}">Bara oklara</CheckBox>
 
                         <Button DockPanel.Dock="Left" Content="Ny kund" Command="{Binding NewCustomerCommand}"  TabIndex="10" Margin="10,5,10,5"
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                Visibility="{Binding ModeIsReceiving, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Button.ToolTip>
                                 <ToolTip>F1</ToolTip>
                             </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Ändra kund" Command="{Binding ShowCustomerCommand}"  TabIndex="11" Margin="10,5,10,5"
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                Visibility="{Binding ModeIsReceiving, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Button.ToolTip>
                                 <ToolTip>F2</ToolTip>
                             </Button.ToolTip>
@@ -146,7 +146,8 @@
                     </Grid>
                     <ListView Name="ListViewCustomers" SelectionMode="Extended" ItemsSource="{Binding Customers}" IsSynchronizedWithCurrentItem="True" 
                                SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" MouseDoubleClick="Control_OnMouseDoubleClickCustomer" 
-                               SelectionChanged="ListView_OnSelectionChanged">
+                               SelectionChanged="ListView_OnSelectionChanged"
+                               Visibility="{Binding ModeIsAuctioning , Converter={StaticResource BooleanToInvertedVisibilityConverter}}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Width="40" DisplayMemberBinding="{Binding Id}">
@@ -177,24 +178,24 @@
                 <DockPanel Grid.Column="2">
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
                         <Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewProductCommand}"  TabIndex="15" Margin="10,5,10,5"
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                                Visibility="{Binding ModeIsReceiving, Converter={StaticResource BooleanToVisibilityConverter}}" >
                             <Button.ToolTip>
                                 <ToolTip>F9</ToolTip>
                             </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Ändra objekt" Command="{Binding ShowProductCommand}"  TabIndex="16" Margin="10,5,10,5"
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                Visibility="{Binding ModeIsReceivingOrShowing, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Button.ToolTip>
                                 <ToolTip>F10</ToolTip>
                             </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Radera objekt" Command="{Binding DeleteProductCommand}"  TabIndex="17" Margin="10,5,10,5" 
-                                Visibility="{Binding EditingButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                Visibility="{Binding ModeIsReceiving, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5" 
-                                  Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}"
                                   IsChecked="{Binding Path=FilterJumbleOnly}">Bara loppis</CheckBox>
                         <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
-                                  Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                  Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" 
                                   IsChecked="{Binding Path=FilterUnsoldOnly}">Bara osålt</CheckBox>
                         <Button DockPanel.Dock="Left" Content="Sälj" Command="{Binding SellProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
                                 Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" >
@@ -209,13 +210,13 @@
                             </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Gå till..." Command="{Binding GotoProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
-                                Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                                Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" >
                             <Button.ToolTip>
                                 <ToolTip>F12</ToolTip>
                             </Button.ToolTip>
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Exportera" Command="{Binding ExportProductsCommand}"  TabIndex="18" Margin="10,5,10,5" 
-                                Visibility="{Binding FilterCheckVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
                     </DockPanel>
                     <ListView Name="ListViewProducts" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"

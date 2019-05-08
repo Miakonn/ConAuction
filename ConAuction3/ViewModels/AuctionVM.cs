@@ -71,11 +71,11 @@ namespace ConAuction3.ViewModels {
             set {
                 _currentMode = value;
                 UpdateAll();
-                OnPropertyChanged(nameof(FilterCheckVisible));
-                OnPropertyChanged(nameof(EditingButtonsVisible));
                 OnPropertyChanged(nameof(ModeIsShowing));
+                OnPropertyChanged(nameof(ModeIsAuctioning));
                 OnPropertyChanged(nameof(ModeIsPaying));
                 OnPropertyChanged(nameof(ModeIsReceiving));
+                OnPropertyChanged(nameof(ModeIsReceivingOrShowing));
             }
         }
 
@@ -148,9 +148,9 @@ namespace ConAuction3.ViewModels {
 
         // ReSharper disable once UnusedMember.Global
         public string StatusProfit => ProductsVm.Profit > 0 ? $"Vinst: {ProductsVm.Profit}:-" : "";
-        
+
         // ReSharper disable once UnusedMember.Global
-        public bool FilterCheckVisible => CurrentMode == OpMode.Showing;
+        public bool ModeIsReceivingOrShowing => CurrentMode == OpMode.Receiving || CurrentMode == OpMode.Showing;
 
         // ReSharper disable once UnusedMember.Global
         public bool ModeIsShowing => CurrentMode == OpMode.Showing;
@@ -162,8 +162,8 @@ namespace ConAuction3.ViewModels {
         public bool ModeIsReceiving => CurrentMode == OpMode.Receiving;
 
         // ReSharper disable once UnusedMember.Global
-        public bool EditingButtonsVisible => CurrentMode == OpMode.Receiving;
-
+        public bool ModeIsAuctioning => CurrentMode == OpMode.Auctioning;
+        
         // ReSharper disable once UnusedMember.Global
         public string SelectedUnsoldCount => SelectedCustomer != null ? ProductsVm.NoOfUnsoldForCustomer(SelectedCustomer.Id).ToString() : "";
         
@@ -289,8 +289,7 @@ namespace ConAuction3.ViewModels {
 
             CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers(), this);
             ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
-
-
+            
             ResetFilter();
 
             OnPropertyChanged(nameof(StatusCountAuction));
@@ -319,6 +318,8 @@ namespace ConAuction3.ViewModels {
             else if (CurrentMode == OpMode.Paying) {
                 CustomersVm.Filter(true, _filterCustomerFinishedOnly);
             }
+            CustomersVm.SortBy("Name");
+            ProductsVm.SortBy("Label");
         }
 
 
