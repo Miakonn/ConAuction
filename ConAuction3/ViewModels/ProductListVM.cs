@@ -90,11 +90,10 @@ namespace ConAuction3.ViewModels {
             ProductView.Filter = o => o is Product p && (p.IsJumble || !onlyJumble) && (!p.IsSold || !onlyUnsold);
         }
 
-
-
-
-
-
+        public void FilterOnlyAuction() {
+            ProductView.Filter = o => o is Product p && !p.IsJumble;
+        }
+        
 
         //public  int GetLastProductIdForCustomer(this DataTable table, int customerId) {
         //	var foundRows = table.Select("CustomerId = " + customerId);

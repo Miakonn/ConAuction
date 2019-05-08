@@ -91,13 +91,14 @@ namespace ConAuction3.ViewModels {
             set {
                 _selectedCustomer = value;
                 if (ProductsVm != null) {
-                    if (_selectedCustomer != null && CurrentMode == OpMode.Receiving) {
-                        ProductsVm.FilterById(_selectedCustomer.Id);
+                    if (CurrentMode == OpMode.Receiving || CurrentMode == OpMode.Paying) {
+                        if (_selectedCustomer != null) {
+                            ProductsVm.FilterById(_selectedCustomer.Id);
+                        }
+                        else{
+                            ProductsVm.NoFilter();
+                        }
                     }
-                    else {
-                        ProductsVm.NoFilter();
-                    }
-
                     _selectedProduct = null;
                     OnPropertyChanged(nameof(SelectedProduct));
                 }
@@ -286,7 +287,10 @@ namespace ConAuction3.ViewModels {
         private void UpdateAll() {
             var selectedLastCustomerId = SelectedCustomer?.Id;
             var selectedLastProductId = SelectedProduct?.Id;
-
+            if (CurrentMode == OpMode.Auctioning) {
+                selectedLastCustomerId = null;
+            }
+            
             CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers(), this);
             ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
             
@@ -317,6 +321,9 @@ namespace ConAuction3.ViewModels {
             }
             else if (CurrentMode == OpMode.Paying) {
                 CustomersVm.Filter(true, _filterCustomerFinishedOnly);
+            }
+            else if (CurrentMode == OpMode.Auctioning) {
+                ProductsVm.FilterOnlyAuction();
             }
             CustomersVm.SortBy("Name");
             ProductsVm.SortBy("Label");

@@ -21,7 +21,10 @@
         }
 
         // ReSharper disable once UnusedMember.Global
-        public string IsSoldStr => IsSold ? "Såld" : "";
+        public string SoldForStr {
+            get => IsSold ? Price.ToString() : "";
+            set { Price = string.IsNullOrWhiteSpace(value) ? 0 : int.Parse(value); }
+        }
 
         public bool IsJumble => FixedPrice.HasValue && FixedPrice.Value > 0;
 

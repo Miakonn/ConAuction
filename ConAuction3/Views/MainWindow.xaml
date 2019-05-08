@@ -13,7 +13,10 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:BoolToVisibilityConverter x:Key="BooleanToInvertedVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible" />
             <converters:BoolToVisibilityConverter x:Key="BooleanToVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed" />
+            <converters:BoolToIntConverter x:Key="BooleanToInt80Converter" TrueValue="80" FalseValue="0" />
             <converters:BoolToIntConverter x:Key="BooleanToInt50Converter" TrueValue="50" FalseValue="0" />
+            <converters:BoolToIntConverter x:Key="BooleanToInt50Inverter" TrueValue="0" FalseValue="50" />
+            <converters:BoolToBoolConverter x:Key="BooleanInverter" TrueValue="False" FalseValue="True" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -239,8 +242,19 @@
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
                                 </GridViewColumn>
-                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding IsSoldStr}" >
-                                    <GridViewColumnHeader Content="Sålt" Command="{Binding SortProductCommand}" CommandParameter="IsSoldStr" />
+                                <GridViewColumn Width="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToInt80Converter}}" >
+                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="SoldForStr" />
+                                        <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding SoldForStr, Mode=TwoWay}" 
+                                                     Width="50" 
+                                                     IsReadOnly="{Binding ModeIsAuctioning, Converter={StaticResource BooleanInverter}}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToInt50Inverter}}" 
+                                                DisplayMemberBinding="{Binding SoldForStr}" >
+                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="SoldForStr" />
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
