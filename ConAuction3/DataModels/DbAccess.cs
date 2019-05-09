@@ -14,6 +14,10 @@ namespace ConAuction3.DataModels {
 
         private string Year;
 
+        private static DbAccess _instance;
+
+        public static DbAccess Instance => _instance ?? (_instance = new DbAccess());
+
         public bool InitDB() {
             try {
                 // Initialize mysql connection
@@ -286,7 +290,7 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        public void SaveProductPriceToDB(int id, int price, string note) {
+        public void SaveProductPriceToDB(long id, int price, string note) {
             var command = DbConnection.CreateCommand();
             command.Connection = DbConnection;
             try {

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ConAuction3.ViewModels;
 
@@ -34,6 +35,22 @@ namespace ConAuction3.Views {
         private void ListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (sender is ListView listView  && e.AddedItems.Count > 0) {
                 listView.ScrollIntoView(e.AddedItems[0]);
+            }
+        }
+
+        private void PriceTb_OnPreviewKeyUp(object sender, KeyEventArgs e) {
+            if (!(sender is UIElement element)) {
+                return;
+            }
+
+            switch (e.Key) {
+                case Key.Enter:
+                case Key.Down:
+                    element.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                    break;
+                case Key.Up:
+                    element.MoveFocus(new TraversalRequest(FocusNavigationDirection.Previous));
+                    break;
             }
         }
     }

@@ -23,7 +23,15 @@
         // ReSharper disable once UnusedMember.Global
         public string SoldForStr {
             get => IsSold ? Price.ToString() : "";
-            set { Price = string.IsNullOrWhiteSpace(value) ? 0 : int.Parse(value); }
+            set {
+                if (!string.IsNullOrWhiteSpace(value) && int.TryParse(value, out var price)) {
+                    Price = price;
+                    DbAccess.Instance.SaveProductPriceToDB(Id, price, Note);
+                }
+                else {
+                    Price = 0;
+                }
+            }
         }
 
         public bool IsJumble => FixedPrice.HasValue && FixedPrice.Value > 0;

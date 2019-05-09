@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
 using ConAuction3.DataModels;
+using ConAuction3.Utilities;
 using ConAuction3.Views;
 using Application = System.Windows.Forms.Application;
 using MessageBox = System.Windows.Forms.MessageBox;
@@ -16,9 +17,7 @@ namespace ConAuction3.ViewModels {
         public CustomerListVM CustomersVm { get; private set; }
 
         public ProductListVM ProductsVm { get; private set; }
-
-        private readonly DbAccess _dbAccess;
-
+        
         public MyCommand NewCustomerCommand { get; }
         public MyCommand ShowCustomerCommand { get; }
         public MyCommand PayCustomerCommand { get; }
@@ -252,8 +251,6 @@ namespace ConAuction3.ViewModels {
         #endregion
 
         public AuctionVM() {
-            _dbAccess = new DbAccess();
-
             TryConnectDataBase();
 
             UpdateAll();
@@ -291,8 +288,8 @@ namespace ConAuction3.ViewModels {
                 selectedLastCustomerId = null;
             }
             
-            CustomersVm = new CustomerListVM(_dbAccess.ReadAllCustomers(), this);
-            ProductsVm = new ProductListVM(_dbAccess.ReadAllProducts());
+            CustomersVm = new CustomerListVM(DbAccess.Instance.ReadAllCustomers(), this);
+            ProductsVm = new ProductListVM(DbAccess.Instance.ReadAllProducts());
             
             ResetFilter();
 
@@ -333,7 +330,7 @@ namespace ConAuction3.ViewModels {
         private void TryConnectDataBase() {
             bool fStarted;
             do {
-                fStarted = _dbAccess.InitDB();
+                fStarted = DbAccess.Instance.InitDB();
                 if (!fStarted) {
                     var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null, MessageBoxButtons.RetryCancel);
                     if (res != DialogResult.Retry) {
@@ -370,7 +367,7 @@ namespace ConAuction3.ViewModels {
             if (inputDialog.ShowDialog() == true) {
                 var customer = inputDialog.Result;
 
-                _dbAccess.InsertNewCustomerToDb(customer);
+                DbAccess.Instance.InsertNewCustomerToDb(customer);
             }
             UpdateAll();
         }
@@ -387,7 +384,7 @@ namespace ConAuction3.ViewModels {
             var inputDialog = new CustomerDlg(SelectedCustomer);
             if (inputDialog.ShowDialog() == true) {
                 var customer = inputDialog.Result;
-                _dbAccess.SaveCustomerToDb(customer);
+                DbAccess.Instance.SaveCustomerToDb(customer);
             }
             UpdateAll();
         }
@@ -405,7 +402,7 @@ namespace ConAuction3.ViewModels {
 
             if (!SelectedCustomer.IsFinished) {
                 SelectedCustomer.Finished = true;
-                _dbAccess.SaveCustomerToDb(SelectedCustomer);
+                DbAccess.Instance.SaveCustomerToDb(SelectedCustomer);
             }
 
             UpdateAll();
@@ -424,7 +421,7 @@ namespace ConAuction3.ViewModels {
 
             if (SelectedCustomer.IsFinished) {
                 SelectedCustomer.Finished = false;
-                _dbAccess.SaveCustomerToDb(SelectedCustomer);
+                DbAccess.Instance.SaveCustomerToDb(SelectedCustomer);
             }
 
             UpdateAll();
@@ -449,7 +446,7 @@ namespace ConAuction3.ViewModels {
             if (inputDialog.ShowDialog() == true) {
                 var product = inputDialog.Result;
 
-                var idCreated = _dbAccess.InsertNewProductToDb(product);
+                var idCreated = DbAccess.Instance.InsertNewProductToDb(product);
                 UpdateAll();
 
                 SelectedProduct = ProductsVm.GetProductFromId(idCreated);
@@ -472,7 +469,7 @@ namespace ConAuction3.ViewModels {
             if (inputDialog.ShowDialog() == true) {
                 var product = inputDialog.Result;
 
-                _dbAccess.SaveProductToDb(product);
+                DbAccess.Instance.SaveProductToDb(product);
             }
             UpdateAll();
             OnPropertyChanged("StatusTotalCount");
@@ -489,7 +486,7 @@ namespace ConAuction3.ViewModels {
 
             var result = MessageBox.Show("Vill du radera objektet?", "Objekt");
             if (result == DialogResult.OK) {
-                _dbAccess.DeleteProductToDb(SelectedProduct.Id);
+                DbAccess.Instance.DeleteProductToDb(SelectedProduct.Id);
             }
             UpdateAll();
         }
@@ -504,7 +501,7 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.SoldForFixedPrice()) {
-                _dbAccess.SaveProductToDb(SelectedProduct);
+                DbAccess.Instance.SaveProductToDb(SelectedProduct);
             }
 
             UpdateAll();
@@ -520,7 +517,7 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.UndoSoldFor()) {
-                _dbAccess.SaveProductToDb(SelectedProduct);
+                DbAccess.Instance.SaveProductToDb(SelectedProduct);
             }
 
             UpdateAll();

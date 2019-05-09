@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ConAuction3.ViewModels {
+namespace ConAuction3.Utilities {
     public class MyCommand : ICommand {
         public delegate void ExecuteMethod();
         private readonly Action _execute;

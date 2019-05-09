@@ -223,11 +223,17 @@
                         <Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
                     </DockPanel>
                     <ListView Name="ListViewProducts" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
-                              MouseDoubleClick="Control_OnMouseDoubleClickProduct"
+                              MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
                               SelectionChanged="ListView_OnSelectionChanged">
+                        <ListView.ItemContainerStyle>
+                            <Style>
+                                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
                         <ListView.View>
                             <GridView>
-                            <GridViewColumn Width="40" DisplayMemberBinding="{Binding Label}">
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding Label}">
                                     <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="Label" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
@@ -246,8 +252,8 @@
                                     <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="SoldForStr" />
                                         <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding SoldForStr, Mode=TwoWay}" 
-                                                     Width="50" 
+                                            <TextBox Text="{Binding SoldForStr, Mode=TwoWay}" PreviewKeyUp="PriceTb_OnPreviewKeyUp"
+                                                     Width="50"
                                                      IsReadOnly="{Binding ModeIsAuctioning, Converter={StaticResource BooleanInverter}}" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
