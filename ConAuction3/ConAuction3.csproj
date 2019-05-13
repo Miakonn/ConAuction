@@ -73,11 +73,13 @@
     <Compile Include="Converters\BoolToValueConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\StringNullOrEmptyToVisibilityConverter.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Utilities\SendMail.cs" />
     <Compile Include="Utilities\SendSMS.cs" />
     <Compile Include="ViewModels\CustomerListVM.cs" />
     <Compile Include="Utilities\MyCommand.cs" />
     <Compile Include="Utilities\OpMode.cs" />
+    <Compile Include="ViewModels\ProductDisplayVM.cs" />
     <Compile Include="Views\CustomerDlg.xaml.cs">
       <DependentUpon>CustomerDlg.xaml</DependentUpon>
     </Compile>
@@ -87,6 +89,9 @@
     <Compile Include="ViewModels\ProductListVM.cs" />
     <Compile Include="Views\ProductDlg.xaml.cs">
       <DependentUpon>ProductDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductDisplayDlg.xaml.cs">
+      <DependentUpon>ProductDisplayDlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PromptDialog.xaml.cs">
       <DependentUpon>PromptDialog.xaml</DependentUpon>
@@ -113,6 +118,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProductDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductDisplayDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="LinconAuktionLiten.ico" />
+    <Resource Include="TextFiles\ConAuctionDictionary.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\LinconAuktionLiten-utan.png" />
@@ -161,9 +171,12 @@
     <Resource Include="Resources\LinconAuktionLiten.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ConAuctionDictionary.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Resource Include="TextFiles\ConAuctionFinish.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="TextFiles\ConAuctionRules.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

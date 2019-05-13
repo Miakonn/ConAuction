@@ -69,6 +69,14 @@ namespace ConAuction3.ViewModels {
             get => _currentMode;
             set {
                 _currentMode = value;
+                if (_currentMode == OpMode.Overhead) {
+                    var dlg = new ProductDisplayDlg(ProductsVm);
+                    dlg.Show();
+                    _currentMode = OpMode.Initializing;
+                    return;
+                }
+
+
                 UpdateAll();
                 OnPropertyChanged(nameof(ModeIsShowing));
                 OnPropertyChanged(nameof(ModeIsAuctioning));
