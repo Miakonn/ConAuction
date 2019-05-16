@@ -8,12 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using ConAuction3.Annotations;
+using ConAuction3.DataModels;
 using ConAuction3.Utilities;
 
 namespace ConAuction3.ViewModels {
     public class ProductDisplayVM : INotifyPropertyChanged {
         private ProductListVM _productListVm;
+        private List<Product> _productsAuction;
 
+        private Product CurrentProduct;
+        private int CurrentIndex;
         private int CurrentLabel;
         private int MaxLabel;
 
@@ -24,32 +28,52 @@ namespace ConAuction3.ViewModels {
 
         public MyCommand NextProductCommand { get; }
         public MyCommand FirstProductCommand { get; }
+        public MyCommand Next10ProductCommand { get; }
         public MyCommand PreviousProductCommand { get; }
+        public MyCommand Previous10ProductCommand { get; }
         public ObjectCommand CloseCommand { get; }
 
         public ProductDisplayVM(ProductListVM productListVm) {
             _productListVm = productListVm;
+            _productsAuction = productListVm.ProductsToSellAtAuction;
 
-            PreviousProductCommand = new MyCommand(PreviousProduct);
-            NextProductCommand = new MyCommand(NextProduct);
+            Previous10ProductCommand = new MyCommand(GotoPrevious10Product);
+            PreviousProductCommand = new MyCommand(GotoPreviousProduct);
+            NextProductCommand = new MyCommand(GotoNextProduct);
+            Next10ProductCommand = new MyCommand(GotoNext10Product);
             FirstProductCommand = new MyCommand(FirstProduct);
             CloseCommand = new ObjectCommand(CloseWindow);
 
-            CurrentLabel = 0;
+            CurrentProduct = null;
+            CurrentIndex = -1;
             MaxLabel = 1000;
             UpdateFields();
         }
 
-        public void NextProduct() {
-
+        public void GotoNextProduct() {
+            CurrentIndex++;
+            UpdateFields();
         }
 
-        public void PreviousProduct() {
+        public void GotoPreviousProduct() {
+            CurrentIndex--;
+            UpdateFields();
+        }
 
+        public void GotoNext10Product() {
+            CurrentIndex+= 10;
+            UpdateFields();
+        }
+
+        public void GotoPrevious10Product() {
+            CurrentIndex-= 10;
+            UpdateFields();
         }
 
         public void FirstProduct() {
-            
+            CurrentIndex = 0;
+            CurrentProduct = _productsAuction[CurrentIndex];
+            UpdateFields();
         }
 
         public void CloseWindow(Object parameter) {
@@ -58,17 +82,30 @@ namespace ConAuction3.ViewModels {
         }
 
         private void UpdateFields() {
-            ProductLabel = string.Empty;
-            ProductType = string.Empty;
-            ProductName = string.Empty;
-
-            if (CurrentLabel == 0) {
-                ProductDescription = ReadStartFile();
+            if (CurrentIndex < 0) {
+                CurrentIndex = -1;
+                CurrentProduct = null;
             }
-            else if (CurrentLabel > MaxLabel ) {
-                ProductDescription = ReadEndFile();
+            else if (CurrentIndex >= _productsAuction.Count) {
+                CurrentIndex = _productsAuction.Count;
+                CurrentProduct = null;
             }
-
+            else {
+                CurrentProduct = _productsAuction[CurrentIndex];
+            }
+            if (CurrentProduct == null) {
+                ProductDescription = CurrentIndex < 0 ? ReadStartFile() : ReadEndFile();
+                ProductLabel = string.Empty;
+                ProductType = string.Empty;
+                ProductName = string.Empty;
+            }
+            else {
+                ProductLabel = CurrentProduct.Label;
+                ProductType = CurrentProduct.Type;
+                ProductName = CurrentProduct.Name;
+                ProductDescription = CurrentProduct.Description;
+            }
+            
             OnPropertyChanged(nameof(ProductLabel));
             OnPropertyChanged(nameof(ProductType));
             OnPropertyChanged(nameof(ProductName));

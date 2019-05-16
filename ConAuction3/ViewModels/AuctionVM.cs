@@ -75,8 +75,7 @@ namespace ConAuction3.ViewModels {
                     _currentMode = OpMode.Initializing;
                     return;
                 }
-
-
+                
                 UpdateAll();
                 OnPropertyChanged(nameof(ModeIsShowing));
                 OnPropertyChanged(nameof(ModeIsAuctioning));

@@ -31,7 +31,9 @@ namespace ConAuction3.ViewModels {
 
         public  int CountAuction => _productList.Count(p => !p.IsJumble);
 
-        public  int CountJumble => _productList.Count(p => p.IsJumble);
+        public bool IsAnyUnsoldAuction => _productList.Any(p => !p.IsJumble && !p.IsSold);
+
+        public int CountJumble => _productList.Count(p => p.IsJumble);
 
         public int CountSoldAuction => _productList.Count(p => p.IsSold && !p.IsJumble);
 
@@ -43,7 +45,14 @@ namespace ConAuction3.ViewModels {
 
         public int Profit => CostAuction * CountAuction + CostJumble * CountJumble;
 
-    
+        public List<Product> ProductsToSellAtAuction {
+            get {
+                var list = _productList.FindAll(p => !p.IsJumble);
+                list.Sort();
+                return list;
+            }
+        }
+
         #endregion
 
         public ProductListVM(List<Product> products) {

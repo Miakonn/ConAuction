@@ -18,29 +18,32 @@
 
     <Window.InputBindings>
         <KeyBinding Key=" " Command="" />
-        <KeyBinding Key="Down" Command="{Binding NextProductCommand}" />
+        <KeyBinding Key="Home" Command="{Binding FirstProductCommand}" />
         <KeyBinding Key="Space" Command="{Binding NextProductCommand}" />
         <KeyBinding Key="Up" Command="{Binding PreviousProductCommand}" />
-        <KeyBinding Key="Escape" Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=Kalle}" />
+        <KeyBinding Key="Down" Command="{Binding NextProductCommand}" />
+        <KeyBinding Key="PageUp" Command="{Binding Previous10ProductCommand}" />
+         <KeyBinding Key="PageDown" Command="{Binding Next10ProductCommand}" />
+       <KeyBinding Key="Escape" Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=Kalle}" />
     </Window.InputBindings>
 
     <Grid  Background="#FBD800">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="130" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
-            <Image DockPanel.Dock="Top" Source="{StaticResource LinconLogoSmall}" Width="70" Margin="10,10,10,10" />
+            <Image DockPanel.Dock="Top" Source="{StaticResource LinconLogoSmall}" Width="120" Margin="10,10,10,10" />
         </DockPanel>
 
         
         <DockPanel Grid.Column="1" Grid.Row="0" >
             <DockPanel DockPanel.Dock="Top">
-                <Label DockPanel.Dock="Left" Content="{Binding ProductLabel}" FontSize="28" FontWeight="Bold" Padding="10,10,50,10"></Label>
-                <Label Content="{Binding ProductType}" FontSize="28" FontWeight="Bold" Padding="10" ></Label>
+                <Label DockPanel.Dock="Left" Content="{Binding ProductLabel}" FontSize="50" FontWeight="Bold" Margin="50" Padding="10,10,50,10"></Label>
+                <Label Content="{Binding ProductType}" FontSize="50" FontWeight="Bold" Margin="50" ></Label>
             </DockPanel>
-            <Label DockPanel.Dock="Top" Content="{Binding ProductName}" FontSize="28" FontWeight="Bold" Padding="10" ></Label>
-            <Label DockPanel.Dock="Top" Content="{Binding ProductDescription}" FontSize="24" Padding="10"></Label>
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Center" Content="{Binding ProductName}" FontSize="50" FontWeight="Bold" Padding="10" ></Label>
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Center" Content="{Binding ProductDescription}" FontSize="40" Padding="10"></Label>
 
         </DockPanel>
 

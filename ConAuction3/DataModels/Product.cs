@@ -1,5 +1,8 @@
-﻿namespace ConAuction3.DataModels {
-    public class Product {
+﻿using System;
+using System.Globalization;
+
+namespace ConAuction3.DataModels {
+    public class Product : IComparable {
         public long Id { get; set; }
         public string Label { get; set; }
         public string Type { get; set; }
@@ -50,6 +53,10 @@
                 return true;
             }
             return false;
+        }
+
+        public int CompareTo(object obj) {
+            return obj is Product comparePart ? string.Compare(this.Label, comparePart.Label, StringComparison.Ordinal) : 1;
         }
     }
 }
