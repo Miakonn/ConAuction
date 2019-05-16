@@ -9,29 +9,22 @@ using ConAuction3.DataModels;
 
 namespace ConAuction3.ViewModels {
     public class ProductListVM {
-
-
+        
 		public List<Product> _productList;
 
         public ICollectionView ProductView { get; }
 
-        public List<Product> ProductList => _productList;
-
         #region Settings
 
-        private int CostAuction = int.Parse(ConfigurationManager.AppSettings["Cost"]);
-        private int CostJumble= int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+        private readonly int CostAuction = int.Parse(ConfigurationManager.AppSettings["Cost"]);
+        private readonly int CostJumble= int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
 
         #endregion
 
 
         #region Calculations
 
-        public int TotalCount => _productList.Count;
-
         public  int CountAuction => _productList.Count(p => !p.IsJumble);
-
-        public bool IsAnyUnsoldAuction => _productList.Any(p => !p.IsJumble && !p.IsSold);
 
         public int CountJumble => _productList.Count(p => p.IsJumble);
 
@@ -103,14 +96,6 @@ namespace ConAuction3.ViewModels {
             ProductView.Filter = o => o is Product p && !p.IsJumble;
         }
         
-
-        //public  int GetLastProductIdForCustomer(this DataTable table, int customerId) {
-        //	var foundRows = table.Select("CustomerId = " + customerId);
-
-        //	return foundRows.Select(row => (int) row["id"]).Concat(new[] {0}).Max();
-        //}
-
-
         //public  string ExportCustomerReceipt(this DataTable table, int customerId, string customerName) {
         //	var foundRows = table.Select("CustomerId = " + customerId + " and ISNULL(Price, 0) > 0");
 
@@ -170,20 +155,12 @@ namespace ConAuction3.ViewModels {
             return _productList.FindAll(p => p.CustomerId == customerId);
         }
 
-        public  int TotalCostForCustomer(int customerId) {
-        	  return GetProductsForCustomer(customerId).Sum(p => p.IsJumble ? CostJumble : CostAuction);
-        }
-
         public int NetAmountForCustomer(int customerId) {
             return GetProductsForCustomer(customerId).Sum(p => p.Price - (p.IsJumble ? CostJumble : CostAuction));
         }
 
         public int TotalAmountForCustomer(int customerId) {
             return GetProductsForCustomer(customerId).Sum(p => p.Price);
-        }
-        
-        public  int NoOfSoldForCustomer(int customerId) {
-        	return GetProductsForCustomer(customerId).Count(p => p.IsSold);
         }
         
         public  int NoOfUnsoldForCustomer(int customerId) {

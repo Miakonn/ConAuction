@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ConAuction3.Views"
         mc:Ignorable="d"
         Name="Kalle" Title="ProductDisplayDlg" WindowStyle="None" WindowState="Maximized">
 
@@ -35,17 +34,14 @@
         <DockPanel Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
             <Image DockPanel.Dock="Top" Source="{StaticResource LinconLogoSmall}" Width="120" Margin="10,10,10,10" />
         </DockPanel>
-
         
         <DockPanel Grid.Column="1" Grid.Row="0" >
             <DockPanel DockPanel.Dock="Top">
                 <Label DockPanel.Dock="Left" Content="{Binding ProductLabel}" FontSize="50" FontWeight="Bold" Margin="50" Padding="10,10,50,10"></Label>
                 <Label Content="{Binding ProductType}" FontSize="50" FontWeight="Bold" Margin="50" ></Label>
             </DockPanel>
-            <Label DockPanel.Dock="Top" HorizontalAlignment="Center" Content="{Binding ProductName}" FontSize="50" FontWeight="Bold" Padding="10" ></Label>
-            <Label DockPanel.Dock="Top" HorizontalAlignment="Center" Content="{Binding ProductDescription}" FontSize="40" Padding="10"></Label>
-
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Left" Content="{Binding ProductName}" FontSize="50" FontWeight="Bold" Margin="50" ></Label>
+            <Label DockPanel.Dock="Top" HorizontalAlignment="Left" Content="{Binding ProductDescription}" FontSize="40" Margin="50"></Label>
         </DockPanel>
-
     </Grid>
 </Window>
