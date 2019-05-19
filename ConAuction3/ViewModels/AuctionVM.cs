@@ -127,8 +127,11 @@ namespace ConAuction3.ViewModels {
                 if (_selectedProduct != null) {
                     _selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
                     OnPropertyChanged("SelectedCustomer");
+                    OnPropertyChanged("SelectedProduct");
                 }
-                OnPropertyChanged("SelectedProduct");
+                else {
+                    OnPropertyChanged("SelectedProduct");
+                }
             }
         }
 
@@ -475,11 +478,10 @@ namespace ConAuction3.ViewModels {
             var inputDialog = new ProductDlg(SelectedProduct, customer, null);
             if (inputDialog.ShowDialog() == true) {
                 var product = inputDialog.Result;
-
                 DbAccess.Instance.SaveProductToDb(product);
             }
+            SelectedProduct = null;
             UpdateAll();
-            OnPropertyChanged("StatusTotalCount");
         }
 
         public bool DeleteProduct_CanExecute() {

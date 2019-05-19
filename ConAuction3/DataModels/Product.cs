@@ -3,12 +3,28 @@ using System.Globalization;
 
 namespace ConAuction3.DataModels {
     public class Product : IComparable {
+        private string _description;
+        private string _name;
+        private string _note;
         public long Id { get; set; }
         public int Label { get; set; }
         public string Type { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Note { get; set; }
+
+        public string Name {
+            get => _name;
+            set => _name = value.Length > 45 ? value.Substring(0, 45) : value;
+        }
+
+        public string Description {
+            get => _description;
+            set => _description = value.Length > 250 ? value.Substring(0, 250) : value;
+        }
+
+        public string Note {
+            get => _note;
+            set => _note = value.Length > 15 ? value.Substring(0, 15) : value;
+        }
+
         public int Price { get; set; }
         public int? FixedPrice { get; set; }
 		public int CustomerId { get; set; }
