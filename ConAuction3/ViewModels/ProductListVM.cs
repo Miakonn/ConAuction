@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace ConAuction3.ViewModels {
             return _productList.Find(p => p.Id == id);
         }
 
-        public Product GetProductFromLabel(string label) {
+        public Product GetProductFromLabel(int label) {
             return _productList.Find(p => p.Label == label);
         }
 
@@ -189,7 +190,7 @@ namespace ConAuction3.ViewModels {
                 strB.AppendLine(delimiter);
                 delimiter = ",";
                 var str = string.Format("{{{0}, {1}, {2}, {3}}}",
-                    WriteJsonObj("Label", product.Label),
+                    WriteJsonObj("Label", product.LabelStr),
                     WriteJsonObj("Name", product.Name),
                     WriteJsonObj("Type", product.Type),
                     WriteJsonObj("Description", product.Description));
@@ -215,9 +216,9 @@ namespace ConAuction3.ViewModels {
             return strB.ToString();
         }
 
-        public string GetNextFreeLabel(bool page1, bool page2, bool page3) {
+        public int GetNextFreeLabel(bool page1, bool page2, bool page3) {
             if (!page1 && !page2 && !page3) {
-                return "";
+                return 0;
             }
 
 
@@ -225,7 +226,7 @@ namespace ConAuction3.ViewModels {
                 var page = label % 3;
                 if ((page == 1 && page1) || (page == 2 && page2) || (page == 0 && page3)) {
                     if (IsLabelFree(label)) {
-                        return label.ToString();
+                        return label;
                     }
                 }
             }
@@ -233,7 +234,7 @@ namespace ConAuction3.ViewModels {
 
         private bool IsLabelFree(int label) {
             foreach (var product in _productList) {
-                if (product.Label == label.ToString()) {
+                if (product.Label == label) {
                     return false;
                 }
             }

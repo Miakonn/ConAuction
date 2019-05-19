@@ -444,7 +444,7 @@ namespace ConAuction3.ViewModels {
             }
 
             var freeLabel = ProductsVm.GetNextFreeLabel(LabelPage1, LabelPage2, LabelPage3);
-            if (string.IsNullOrEmpty(freeLabel)) {
+            if (freeLabel == 0) {
                 MessageBox.Show("Ingen nummersida är vald!");
                 return;
             }
@@ -535,8 +535,8 @@ namespace ConAuction3.ViewModels {
         }
 
         public void GotoProduct() {
-            string label = PromptDialog.Prompt("Produktnummer", "Gå till");
-            if (!string.IsNullOrWhiteSpace(label)) {
+            var labelStr = PromptDialog.Prompt("Produktnummer", "Gå till");
+            if (int.TryParse(labelStr, out var label)) {
                SelectedProduct = ProductsVm.GetProductFromLabel(label);
             }
         }

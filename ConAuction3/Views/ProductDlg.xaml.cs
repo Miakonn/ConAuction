@@ -14,6 +14,7 @@ namespace ConAuction3.Views {
 	/// </summary>
 	public partial class ProductDlg {
 		private readonly long _id;
+        private readonly int _label;
         private readonly Customer _customer;
         private readonly ProductListVM _productListVm;
         private readonly List<string> _dictionary;
@@ -27,9 +28,10 @@ namespace ConAuction3.Views {
             DataContext = this;
             
 			_id = product.Id;
+            _label = product.Label;
             _customer = customer;
             _productListVm = productListVm;
-            Label.Text = product.Label;
+            Label.Text = product.LabelStr;
 
             Customer.Text = customer.NumberAndName;
             Type.ItemsSource = ProductTypeList;
@@ -71,7 +73,7 @@ namespace ConAuction3.Views {
 			get {
 				var product = new Product {
 					Id = _id, 
-					Label = Label.Text,
+					Label = _label,
 					Name = ProductName.Text,
 					CustomerId = _customer.Id,
 					Type = Type.Text,

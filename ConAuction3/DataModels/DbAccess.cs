@@ -79,7 +79,7 @@ namespace ConAuction3.DataModels {
                     while (reader.Read()) {
                         var product = new Product {
                             Id = reader.GetInt64("Id"),
-                            Label = reader.GetStringOrDefault("Label"),
+                            Label = reader.GetIntOrDefault("Label"),
                             Name = reader.GetStringOrDefault("Name"),
                             Type = reader.GetStringOrDefault("Type"),
                             Description = reader.GetStringOrDefault("Description"),

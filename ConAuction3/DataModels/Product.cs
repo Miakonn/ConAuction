@@ -4,7 +4,7 @@ using System.Globalization;
 namespace ConAuction3.DataModels {
     public class Product : IComparable {
         public long Id { get; set; }
-        public string Label { get; set; }
+        public int Label { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -19,9 +19,11 @@ namespace ConAuction3.DataModels {
         
         public Product() {}
 
-        public Product(string label) {
+        public Product(int label) {
             Label = label;
         }
+
+        public string LabelStr => Label.ToString("000");
 
         // ReSharper disable once UnusedMember.Global
         public string SoldForStr {
@@ -56,7 +58,7 @@ namespace ConAuction3.DataModels {
         }
 
         public int CompareTo(object obj) {
-            return obj is Product comparePart ? string.Compare(this.Label, comparePart.Label, StringComparison.Ordinal) : 1;
+            return obj is Product comparePart ? Label.CompareTo(comparePart.Label) : 1;
         }
     }
 }

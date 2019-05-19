@@ -157,7 +157,7 @@
                                     <GridViewColumnHeader Content="Id" Command="{Binding SortCustomerCommand}" CommandParameter="Id" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}" >
-                                    <GridViewColumnHeader Content="Name" Command="{Binding SortCustomerCommand}" CommandParameter="Name" />
+                                    <GridViewColumnHeader Content="Namn" Command="{Binding SortCustomerCommand}" CommandParameter="Name" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding PhoneFormatted}" >
                                     <GridViewColumnHeader Content="Mobilnr" Command="{Binding SortCustomerCommand}" CommandParameter="Phone" />
@@ -233,11 +233,11 @@
 
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding Label}">
-                                    <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="Label" />
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding LabelStr}">
+                                    <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="LabelStr" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
-                                    <GridViewColumnHeader Content="Name" Command="{Binding SortProductCommand}" CommandParameter="Name"/>
+                                    <GridViewColumnHeader Content="Namn" Command="{Binding SortProductCommand}" CommandParameter="Name"/>
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
                                     <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />

@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using ConAuction3.Annotations;
 using ConAuction3.DataModels;
@@ -14,12 +11,10 @@ using ConAuction3.Utilities;
 namespace ConAuction3.ViewModels {
     public class ProductDisplayVM : INotifyPropertyChanged {
         private ProductListVM _productListVm;
-        private List<Product> _productsAuction;
+        private readonly List<Product> _productsAuction;
 
         private Product CurrentProduct;
         private int CurrentIndex;
-        private int CurrentLabel;
-        private int MaxLabel;
 
         public string ProductLabel { get; set; }
         public string ProductType { get; set; }
@@ -46,7 +41,6 @@ namespace ConAuction3.ViewModels {
 
             CurrentProduct = null;
             CurrentIndex = -1;
-            MaxLabel = 1000;
             UpdateFields();
         }
 
@@ -100,7 +94,7 @@ namespace ConAuction3.ViewModels {
                 ProductName = string.Empty;
             }
             else {
-                ProductLabel = CurrentProduct.Label;
+                ProductLabel = CurrentProduct.LabelStr;
                 ProductType = CurrentProduct.Type;
                 ProductName = CurrentProduct.Name;
                 ProductDescription = CurrentProduct.Description;
