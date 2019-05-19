@@ -456,7 +456,7 @@ namespace ConAuction3.ViewModels {
                 var idCreated = DbAccess.Instance.InsertNewProductToDb(product);
                 UpdateAll();
 
-                SelectedProduct = ProductsVm.GetProductFromId(idCreated);
+                // SelectedProduct = ProductsVm.GetProductFromId(idCreated);
             }
 
             OnPropertyChanged("StatusTotalCount");
@@ -494,6 +494,7 @@ namespace ConAuction3.ViewModels {
             var result = MessageBox.Show("Vill du radera objektet?", "Objekt");
             if (result == DialogResult.OK) {
                 DbAccess.Instance.DeleteProductToDb(SelectedProduct.Id);
+                SelectedProduct = null;
             }
             UpdateAll();
         }
