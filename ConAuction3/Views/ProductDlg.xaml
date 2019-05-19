@@ -59,7 +59,8 @@
                 </StackPanel>
                 <StackPanel Name="FixedPricePanel" Margin="10,5,10,5">
                     <Label Content="Loppispris" />
-                    <TextBox Name="FixedPrice" PreviewTextInput="FixedPrice_OnPreviewTextInput" MinWidth="100" TabIndex="4" IsTabStop="True" />
+                    <TextBox Name="FixedPrice" PreviewTextInput="FixedPrice_OnPreviewTextInput" 
+                             TextChanged="OnTextChanged" MinWidth="100" TabIndex="4" IsTabStop="True" />
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Notering" />

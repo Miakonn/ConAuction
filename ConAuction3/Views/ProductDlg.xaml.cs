@@ -40,13 +40,8 @@ namespace ConAuction3.Views {
             SetFields(product);
             VerifyAllFieldsFilledIn();
 
-            CheckBoxJumble.IsChecked = product.IsJumble;
-
-            FixedPricePanel.Visibility = product.IsJumble ? Visibility.Visible : Visibility.Hidden;
             CopyPrevious.IsEnabled = _productListVm != null && _productListVm.CountForCustomer(customer.Id) > 0;
-
-
-
+            
             _dictionary = new List<string>();
             try {
                 using (var reader = new StreamReader("ConAuctionDictionary.txt")) {
@@ -65,8 +60,12 @@ namespace ConAuction3.Views {
             Description.Text = product.Description;
             FixedPrice.Text = product.FixedPriceString;
             Note.Text = product.Note;
+            CheckBoxJumble.IsChecked = product.IsJumble;
+
+            FixedPricePanel.Visibility = product.IsJumble ? Visibility.Visible : Visibility.Hidden;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public IEnumerable<string> TitleDictionary => _dictionary;
         
         public Product Result {
@@ -122,7 +121,8 @@ namespace ConAuction3.Views {
         }
 
         private void VerifyAllFieldsFilledIn() {
-            var ok = !string.IsNullOrWhiteSpace(Type.Text) && !string.IsNullOrWhiteSpace(ProductName.Text) && !string.IsNullOrWhiteSpace(Description.Text);
+            var ok = !string.IsNullOrWhiteSpace(Type.Text) && !string.IsNullOrWhiteSpace(ProductName.Text) && 
+                     (!string.IsNullOrWhiteSpace(Description.Text) || !string.IsNullOrWhiteSpace(FixedPrice.Text));
             btnDialogOk.IsEnabled = ok;
         }
 
