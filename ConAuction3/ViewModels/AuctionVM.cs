@@ -70,9 +70,14 @@ namespace ConAuction3.ViewModels {
             set {
                 _currentMode = value;
                 if (_currentMode == OpMode.Overhead) {
-                    var dlg = new ProductDisplayDlg(ProductsVm);
-                    dlg.Show();
-                    _currentMode = OpMode.Initializing;
+                    try {
+                        var dlg = new ProductDisplayDlg(ProductsVm);
+                        dlg.Show();
+                        _currentMode = OpMode.Initializing;
+                    }
+                    catch (Exception ex) {
+                        MessageBox.Show(ex.Message);
+                    }
                     return;
                 }
                 
@@ -558,14 +563,15 @@ namespace ConAuction3.ViewModels {
         }
 
         public bool ExportProducts_CanExecute() {
-            return CurrentMode == OpMode.Showing;
+            return CurrentMode == OpMode.Showing || CurrentMode == OpMode.Paying;
         }
 
         public void ExportProducts() {
             if (CurrentMode == OpMode.Showing) {
                 using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                     openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                    openFileDialog.FileName = "ConAuction.json";
+                    openFileDialog.CheckFileExists = false;
+                    openFileDialog.FileName = "ConAuction.txt";
                     openFileDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
                     openFileDialog.FilterIndex = 2;
                     openFileDialog.RestoreDirectory = true;
@@ -573,21 +579,30 @@ namespace ConAuction3.ViewModels {
                     if (openFileDialog.ShowDialog() == DialogResult.OK) {
                         //Get the path of specified file
                         var filePath = openFileDialog.FileName;
-                        var text = ProductsVm.ExportProductsToJson();
+                        var text = filePath.EndsWith("json")
+                            ? ProductsVm.ExportProductsToJson()
+                            : ProductsVm.ExportCommaSeparated();
                         File.WriteAllText(filePath, text);
                     }
                 }
-
-
             }
-            else {
-                var text = ProductsVm.ExportCommaSeparated();
+            else if (CurrentMode == OpMode.Paying) {
+                using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                    openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    openFileDialog.CheckFileExists = false;
+                    openFileDialog.FileName = "ConAuction-kunder.txt";
+                    openFileDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
+                    openFileDialog.FilterIndex = 2;
+                    openFileDialog.RestoreDirectory = true;
 
-                string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                path = Path.Combine(path, "ConAuctionSold.txt");
-                File.WriteAllText(path, text);
+                    if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                        //Get the path of specified file
+                        var filePath = openFileDialog.FileName;
+                        var text = CustomersVm.ExportCommaSeparated();
+                        File.WriteAllText(filePath, text);
+                    }
+                }
             }
-            ProductsVm.ExportProductsToJson();
         }
 
 

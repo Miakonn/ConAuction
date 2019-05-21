@@ -126,6 +126,9 @@
                                 <ToolTip></ToolTip>
                             </Button.ToolTip>
                         </Button>
+
+                        <Button DockPanel.Dock="Left" Content="Exportera" Command="{Binding ExportProductsCommand}"  TabIndex="18" Margin="10,5,10,5" 
+                                Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </DockPanel>
                     <Grid DockPanel.Dock="Bottom" Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="10">
                         <Grid.ColumnDefinitions>

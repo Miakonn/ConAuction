@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Windows.Data;
 using ConAuction3.DataModels;
 
@@ -56,6 +57,21 @@ namespace ConAuction3.ViewModels
         public int LeftToPay() {
             var customersLeftToGetPaid = CustomersLeftToGetPaid();
             return customersLeftToGetPaid.Sum(c => _auction.ProductsVm.NetAmountForCustomer(c.Id));
+        }
+        
+        public string ExportCommaSeparated() {
+            var strB = new StringBuilder();
+            var enumerator = CustomerView.GetEnumerator();
+            while (enumerator.MoveNext()) {
+                if (!(enumerator.Current is Customer customer)) {
+                    continue;
+                }
+                var str = $"{customer.Id}; {customer.Name};";
+
+                str = str.Replace("\r\n", "\\n");
+                strB.AppendLine(str);
+            }
+            return strB.ToString();
         }
 
     }

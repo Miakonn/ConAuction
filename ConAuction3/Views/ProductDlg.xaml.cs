@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -44,7 +45,7 @@ namespace ConAuction3.Views {
             
             _dictionary = new List<string>();
             try {
-                using (var reader = new StreamReader("ConAuctionDictionary.txt")) {
+                using (var reader = new StreamReader("TextFiles\\ConAuctionDictionary.txt")) {
                     while (!reader.EndOfStream) {
                         var line = reader.ReadLine();
                         _dictionary.Add(line);

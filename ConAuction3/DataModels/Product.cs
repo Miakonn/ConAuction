@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 
 namespace ConAuction3.DataModels {
     public class Product : IComparable {
@@ -45,13 +44,8 @@ namespace ConAuction3.DataModels {
         public string SoldForStr {
             get => IsSold ? Price.ToString() : "";
             set {
-                if (!string.IsNullOrWhiteSpace(value) && int.TryParse(value, out var price)) {
-                    Price = price;
-                    DbAccess.Instance.SaveProductPriceToDB(Id, price, Note);
-                }
-                else {
-                    Price = 0;
-                }
+                Price = !string.IsNullOrWhiteSpace(value) && int.TryParse(value, out var price) ? price : 0;
+                DbAccess.Instance.SaveProductPriceToDB(Id, Price, Note);
             }
         }
 
