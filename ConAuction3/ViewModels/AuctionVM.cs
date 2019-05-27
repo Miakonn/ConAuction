@@ -130,9 +130,9 @@ namespace ConAuction3.ViewModels {
                 _selectedProduct = value;
 
                 if (_selectedProduct != null) {
+                    OnPropertyChanged("SelectedProduct");
                     _selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
                     OnPropertyChanged("SelectedCustomer");
-                    OnPropertyChanged("SelectedProduct");
                 }
                 else {
                     OnPropertyChanged("SelectedProduct");
@@ -319,6 +319,10 @@ namespace ConAuction3.ViewModels {
             OnPropertyChanged(nameof(Customers));
             OnPropertyChanged(nameof(Products));
 
+            if (selectedLastProductId.HasValue && selectedLastCustomerId.HasValue) {
+                SelectedProduct = ProductsVm.GetProductFromId(selectedLastProductId.Value);
+                SelectedCustomer = CustomersVm.GetCustomerFromId(selectedLastCustomerId.Value);
+            }
             if (selectedLastProductId.HasValue) {
                 SelectedProduct = ProductsVm.GetProductFromId(selectedLastProductId.Value);
             }
@@ -464,7 +468,7 @@ namespace ConAuction3.ViewModels {
                 var idCreated = DbAccess.Instance.InsertNewProductToDb(product);
                 UpdateAll();
 
-                // SelectedProduct = ProductsVm.GetProductFromId(idCreated);
+                SelectedProduct = ProductsVm.GetProductFromId(idCreated);
             }
 
             OnPropertyChanged("StatusTotalCount");
@@ -485,7 +489,6 @@ namespace ConAuction3.ViewModels {
                 var product = inputDialog.Result;
                 DbAccess.Instance.SaveProductToDb(product);
             }
-            SelectedProduct = null;
             UpdateAll();
         }
 

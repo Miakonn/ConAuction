@@ -128,6 +128,7 @@ namespace ConAuction3.Views {
         }
 
         private void FieldsChanged(object sender, SelectionChangedEventArgs e) {
+            Type.Text = Type.SelectedItem.ToString();
             VerifyAllFieldsFilledIn();
         }
 
