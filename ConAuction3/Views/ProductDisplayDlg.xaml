@@ -26,7 +26,7 @@
        <KeyBinding Key="Escape" Command="{Binding CloseCommand}" CommandParameter="{Binding ElementName=Kalle}" />
     </Window.InputBindings>
 
-    <Grid  Background="#FBD800">
+    <Grid Background="#FBD800">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130" />
             <ColumnDefinition />
@@ -41,7 +41,7 @@
                 <Label Content="{Binding ProductType}" FontSize="50" FontWeight="Bold" Margin="50" ></Label>
             </DockPanel>
             <Label DockPanel.Dock="Top" HorizontalAlignment="Left" Content="{Binding ProductName}" FontSize="50" FontWeight="Bold" Margin="50" ></Label>
-            <Label DockPanel.Dock="Top" HorizontalAlignment="Left" Content="{Binding ProductDescription}" FontSize="40" Margin="50"></Label>
+            <TextBox DockPanel.Dock="Top" HorizontalAlignment="Left" BorderThickness="0" Text="{Binding ProductDescription}" TextWrapping="Wrap" Background="#FBD800"  FontSize="40" Margin="50"></TextBox>
         </DockPanel>
     </Grid>
 </Window>

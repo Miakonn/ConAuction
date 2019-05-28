@@ -99,7 +99,7 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        public void InsertNewCustomerToDb(Customer customer) {
+        public int InsertNewCustomerToDb(Customer customer) {
             var sqlTran = DbConnection.BeginTransaction();
 
             var command = DbConnection.CreateCommand();
@@ -116,9 +116,14 @@ namespace ConAuction3.DataModels {
 
                 command.UpdatedRowSource = UpdateRowSource.None;
                 command.ExecuteNonQuery();
+                // If has last inserted id, add a parameter to hold it.
+                if (command.LastInsertedId != 0L) {
+                    command.Parameters.Add(new MySqlParameter("newId", command.LastInsertedId));
+                }
 
                 // Commit the transaction.
                 sqlTran.Commit();
+                return Convert.ToInt32(command.Parameters["@newId"].Value);
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
@@ -129,6 +134,8 @@ namespace ConAuction3.DataModels {
                 catch (Exception exRollback) {
                     MessageBox.Show(exRollback.Message);
                 }
+
+                return 0;
             }
         }
 

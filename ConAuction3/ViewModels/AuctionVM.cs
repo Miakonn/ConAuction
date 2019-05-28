@@ -387,12 +387,17 @@ namespace ConAuction3.ViewModels {
 
         public void NewCustomer() {
             var inputDialog = new CustomerDlg(new Customer());
+
+            int customerId = 0;
             if (inputDialog.ShowDialog() == true) {
                 var customer = inputDialog.Result;
 
-                DbAccess.Instance.InsertNewCustomerToDb(customer);
+                customerId = DbAccess.Instance.InsertNewCustomerToDb(customer);
             }
             UpdateAll();
+            if (customerId > 0) {
+                SelectedCustomer = CustomersVm.GetCustomerFromId(customerId);
+            }
         }
 
         public bool ShowCustomer_CanExecute() {

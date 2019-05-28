@@ -11,7 +11,7 @@ namespace ConAuction3.Views {
 		public CustomerDlg(Customer customer) {
 			InitializeComponent();
 			_customerId = customer.Id;
-			Id.Text = customer.Id.ToString();
+			Id.Content = customer.Id.ToString();
 			CustomerName.Text = customer.Name;
 			Phone.Text = customer.Phone;
 			Note.Text = customer.Note;

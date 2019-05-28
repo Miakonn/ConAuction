@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -10,7 +9,6 @@ using ConAuction3.Utilities;
 
 namespace ConAuction3.ViewModels {
     public class ProductDisplayVM : INotifyPropertyChanged {
-        private ProductListVM _productListVm;
         private readonly List<Product> _productsAuction;
 
         private Product CurrentProduct;
@@ -29,7 +27,6 @@ namespace ConAuction3.ViewModels {
         public ObjectCommand CloseCommand { get; }
 
         public ProductDisplayVM(ProductListVM productListVm) {
-            _productListVm = productListVm;
             _productsAuction = productListVm.ProductsToSellAtAuction;
 
             Previous10ProductCommand = new MyCommand(GotoPrevious10Product);
@@ -70,7 +67,7 @@ namespace ConAuction3.ViewModels {
             UpdateFields();
         }
 
-        public void CloseWindow(Object parameter) {
+        public void CloseWindow(object parameter) {
             var window = parameter as Window;
             window?.Close();
         }
@@ -105,9 +102,7 @@ namespace ConAuction3.ViewModels {
             OnPropertyChanged(nameof(ProductName));
             OnPropertyChanged(nameof(ProductDescription));
         }
-
-
-
+        
         private string ReadStartFile() {
             return File.ReadAllText("TextFiles\\ConAuctionRules.txt");
         }
