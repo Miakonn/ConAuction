@@ -70,6 +70,7 @@
                 <DockPanel Grid.Column="1" HorizontalAlignment="Stretch" LastChildFill="False"  Background="#FBD800">
                     <Label FontSize="18" Content="{Binding StatusLeftToPay}"/>
                     <Label FontSize="18" Content="{Binding StatusProfit}"/>
+                    <Label FontSize="18" Content="{Binding StatusObjectCount}"/>
                 </DockPanel>
                 <DockPanel Grid.Column="2" HorizontalAlignment="Stretch" LastChildFill="False"  Background="#FBD800">
                     <Label FontSize="18" FontWeight="Bold">Loppis</Label>

@@ -67,6 +67,15 @@ namespace ConAuction3.ViewModels {
             return _productList.Count(p => p.CustomerId == customerId);
         }
 
+        public string CustomerStatus(int customerId) {
+            var countAuction = _productList.Count(p => p.CustomerId == customerId && !p.IsJumble);
+            var countJumble = _productList.Count(p => p.CustomerId == customerId && p.IsJumble);
+            if (countAuction == 0 && countJumble == 0) {
+                return string.Empty;
+            }
+            return $"För kund: {countAuction} + {countJumble}";
+        }
+
         public List<Product> ProductsForCustomer(int customerId) {
             return _productList.FindAll(p => p.CustomerId == customerId);
         }

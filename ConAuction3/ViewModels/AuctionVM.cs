@@ -118,6 +118,7 @@ namespace ConAuction3.ViewModels {
                 OnPropertyChanged(nameof(SelectedAmount));
                 OnPropertyChanged(nameof(SelectedNetAmount));
                 OnPropertyChanged(nameof(SelectedName));
+                OnPropertyChanged(nameof(StatusObjectCount));
                 OnPropertyChanged(nameof(PayCustomerCanExecute));
                 OnPropertyChanged(nameof(UndoPayCustomerCanExecute));
             }
@@ -162,7 +163,10 @@ namespace ConAuction3.ViewModels {
         public string StatusLeftToPay => CustomersVm.LeftToPay() > 0 ? $"Utbetala: {CustomersVm.LeftToPay()}:-" : "";
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusProfit => ProductsVm.Profit > 0 ? $"Vinst: {ProductsVm.Profit}:-" : "";
+        public string StatusProfit => ModeIsPaying && ProductsVm.Profit > 0 ? $"Intäkt: {ProductsVm.Profit}:-" : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string StatusObjectCount => ModeIsReceiving && SelectedCustomer != null ? ProductsVm.CustomerStatus(SelectedCustomer.Id) : "";
 
         // ReSharper disable once UnusedMember.Global
         public bool ModeIsReceivingOrShowing => CurrentMode == OpMode.Receiving || CurrentMode == OpMode.Showing;
