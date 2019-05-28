@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ConAuction3.Views.CustomerDlg"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Kund" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" >
+        Title="Kund" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" Background="#FBD800">
 	<Grid Margin="15">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="30" />
@@ -12,6 +12,7 @@
 			<RowDefinition Height="30" />
 			<RowDefinition Height="30" />
 			<RowDefinition Height="30" />
+            <RowDefinition Height="30" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		<Label Grid.Row="0" Content="Id" />
@@ -20,9 +21,10 @@
 		<TextBox Grid.Row="3" Name="CustomerName"  MinWidth="250" />
 		<Label Grid.Row="4" Content="Mobilnummer" />
 		<TextBox Grid.Row="5" Name="Phone" MinWidth="250" />
-		<Label Grid.Row="6" Content="Kommentar" />
-		<TextBox Grid.Row="7" Name="Note" MinWidth="250" />
-		<WrapPanel Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,15,0,0">
+        <CheckBox Grid.Row="6" Name="Swish" MinWidth="250" HorizontalAlignment="Left" VerticalAlignment="Center" >Swish</CheckBox>
+        <Label Grid.Row="7" Content="Not" />
+        <TextBox Grid.Row="8" Name="Note" MinWidth="250" />
+		<WrapPanel Grid.Row="9" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,15,0,0">
 			<Button IsDefault="True" Name="btnDialogOk" Click="OnClick" MinWidth="60" Margin="0,0,10,0">_Ok</Button>
 			<Button IsCancel="True" MinWidth="60">_Cancel</Button>
 		</WrapPanel>

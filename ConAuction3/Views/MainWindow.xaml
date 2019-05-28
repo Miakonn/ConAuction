@@ -14,7 +14,7 @@
             <converters:BoolToVisibilityConverter x:Key="BooleanToInvertedVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible" />
             <converters:BoolToVisibilityConverter x:Key="BooleanToVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed" />
             <converters:BoolToIntConverter x:Key="BooleanToInt80Converter" TrueValue="80" FalseValue="0" />
-            <converters:BoolToIntConverter x:Key="BooleanToInt50Converter" TrueValue="50" FalseValue="0" />
+            <converters:BoolToIntConverter x:Key="BooleanToInt50Converter" TrueValue="55" FalseValue="0" />
             <converters:BoolToIntConverter x:Key="BooleanToInt50Inverter" TrueValue="0" FalseValue="50" />
             <converters:BoolToBoolConverter x:Key="BooleanInverter" TrueValue="False" FalseValue="True" />
         </ResourceDictionary>
@@ -164,7 +164,10 @@
                                     <GridViewColumnHeader Content="Namn" Command="{Binding SortCustomerCommand}" CommandParameter="Name" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding PhoneFormatted}" >
-                                    <GridViewColumnHeader Content="Mobilnr" Command="{Binding SortCustomerCommand}" CommandParameter="Phone" />
+                                    <GridViewColumnHeader Content="Mobilnr" Command="{Binding SortCustomerCommand}" CommandParameter="PhoneFormatted" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding SwishFormatted}" >
+                                    <GridViewColumnHeader Content="Swish" Command="{Binding SortCustomerCommand}" CommandParameter="SwishFormatted" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="Note" />

@@ -12,7 +12,7 @@ namespace ConAuction3.DataModels {
 
         private MySqlConnection DbConnection;
 
-        private string Year;
+        private readonly string Year = ConfigurationManager.AppSettings["Year"];
 
         private static DbAccess _instance;
 
@@ -28,8 +28,6 @@ namespace ConAuction3.DataModels {
                     MessageBox.Show("Cannot connect to server.");
                     return false;
                 }
-
-                Year = ConfigurationManager.AppSettings["Year"];
             }
             catch (MySqlException ex) {
                 MessageBox.Show(ex.Message);
@@ -44,7 +42,7 @@ namespace ConAuction3.DataModels {
 
         public List<Customer> ReadAllCustomers() {
             var customers = new List<Customer>(900);
-            var query = "select id,name,phone,comment,finished,timestamp from Customer;";
+            var query = "select id,name,phone,comment,finished,swish,timestamp from Customer;";
             MySqlCommand cmdDatabase = new MySqlCommand(query, DbConnection);
 
             try {
@@ -55,6 +53,7 @@ namespace ConAuction3.DataModels {
                             Name = reader.GetStringOrDefault("name"),
                             Phone = reader.GetStringOrDefault("phone"),
                             Note = reader.GetStringOrDefault("comment"),
+                            Swish = reader.GetBooleanOrDefault("swish"),
                             Finished = reader.GetBooleanOrDefault("finished")
                         };
                         customers.Add(customer);
@@ -109,10 +108,11 @@ namespace ConAuction3.DataModels {
             try {
                 // Set the INSERT command and parameter.
                 command.CommandText =
-                    "INSERT INTO customer (Name, Phone, Comment, Date, TimeStamp) VALUES (@Name,@Phone,@Comment,Now(),Now());";
+                    "INSERT INTO customer (Name, Phone, Comment, Swish, Date, TimeStamp) VALUES (@Name,@Phone,@Comment,@Swish, Now(),Now());";
                 command.Parameters.AddWithValue("@Name", customer.Name);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
                 command.Parameters.AddWithValue("@Comment", customer.Note);
+                command.Parameters.AddWithValue("@Swish", customer.Swish);
 
                 command.UpdatedRowSource = UpdateRowSource.None;
                 command.ExecuteNonQuery();
@@ -140,11 +140,12 @@ namespace ConAuction3.DataModels {
             command.Transaction = sqlTran;
             command.Connection = DbConnection;
             try {
-                command.CommandText = "UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=NOW(), Finished=@Finished, Timestamp=Now() WHERE id=@id;";
+                command.CommandText = "UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=Now(), Finished=@Finished, Swish=@Swish, Timestamp=Now() WHERE id=@id;";
                 command.Parameters.AddWithValue("@Name", customer.Name);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
                 command.Parameters.AddWithValue("@Comment", customer.Note);
                 command.Parameters.AddWithValue("@Finished", customer.Finished);
+                command.Parameters.AddWithValue("@Swish", customer.Swish);
                 command.Parameters.AddWithValue("@id", customer.Id);
                 command.UpdatedRowSource = UpdateRowSource.None;
                 command.ExecuteNonQuery();

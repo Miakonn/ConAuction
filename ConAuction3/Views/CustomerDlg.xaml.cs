@@ -15,9 +15,14 @@ namespace ConAuction3.Views {
 			CustomerName.Text = customer.Name;
 			Phone.Text = customer.Phone;
 			Note.Text = customer.Note;
-		}
+            Swish.IsChecked = customer.Swish.HasValue && customer.Swish.Value;
+        }
 
-		public Customer Result => new Customer(_customerId, CustomerName.Text, Phone.Text, Note.Text, false);
+		public Customer Result {
+            get {
+                return new Customer(_customerId, CustomerName.Text, Phone.Text, Note.Text, false, Swish.IsChecked);
+            }
+        }
 
         private void OnClick(object sender, RoutedEventArgs e) {
 			DialogResult = true;

@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <DockPanel Background="#FFF5F5F5">
+    <DockPanel Background="#FBD800">
         <DockPanel DockPanel.Dock="Bottom" Margin="10,15,15,10" LastChildFill="False">
             <Button DockPanel.Dock="Left"  Name="CopyPrevious" Click="CopyPrevious_OnClick" MinWidth="60" Margin="10,0,10,0">Kopiera föregående</Button>
             <Button DockPanel.Dock="Right" IsDefault="True" Name="btnDialogOk" Click="OnClick" MinWidth="60" Margin="10,0,10,0">_Ok</Button>
