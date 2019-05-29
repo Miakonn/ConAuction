@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using ConAuction3.DataModels;
 using ConAuction3.Utilities;
@@ -196,6 +197,9 @@ namespace ConAuction3.ViewModels {
         public string SelectedName => SelectedCustomer != null ? SelectedCustomer.NumberAndName : "";
 
         // ReSharper disable once UnusedMember.Global
+        public string VersionStr => "V" + Assembly.GetEntryAssembly()?.GetName().Version.ToString();
+
+        // ReSharper disable once UnusedMember.Global
         public bool FilterJumbleOnly {
             get => _filterJumbleOnly;
             set {
@@ -322,6 +326,8 @@ namespace ConAuction3.ViewModels {
             OnPropertyChanged(nameof(StatusProfit));
             OnPropertyChanged(nameof(Customers));
             OnPropertyChanged(nameof(Products));
+            OnPropertyChanged(nameof(VersionStr));
+
 
             if (selectedLastProductId.HasValue && selectedLastCustomerId.HasValue) {
                 SelectedProduct = ProductsVm.GetProductFromId(selectedLastProductId.Value);
