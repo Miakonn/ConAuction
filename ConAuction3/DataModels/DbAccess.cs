@@ -272,10 +272,9 @@ namespace ConAuction3.DataModels {
             command.Connection = DbConnection;
             try {
                 command.CommandText =
-                    "UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, Price=@Price, FixedPrice=@FixedPrice, Timestamp=Now() WHERE id=@id;";
+                    "UPDATE Product SET Name=@Name, Description=@Description, Type=@Type, Note=@Note, FixedPrice=@FixedPrice, Timestamp=Now() WHERE id=@id;";
                 command.Parameters.AddWithValue("@Name", prod.Name);
                 command.Parameters.AddWithValue("@Description", prod.Description);
-                command.Parameters.AddWithValue("@Price", prod.Price);
                 command.Parameters.AddWithValue("@FixedPrice", prod.FixedPrice);
                 command.Parameters.AddWithValue("@Type", prod.Type);
                 command.Parameters.AddWithValue("@Note", prod.Note);
