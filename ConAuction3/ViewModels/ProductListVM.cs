@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
@@ -159,8 +158,7 @@ namespace ConAuction3.ViewModels {
 
         //	return strB.ToString();
         //}
-
-
+        
         private List<Product> GetProductsForCustomer(int customerId) {
             return _productList.FindAll(p => p.CustomerId == customerId);
         }
@@ -196,6 +194,7 @@ namespace ConAuction3.ViewModels {
                 if (!(enumerator.Current is Product product)) {
                     continue;
                 }
+
                 strB.AppendLine(delimiter);
                 delimiter = ",";
                 var str = string.Format("{{{0}, {1}, {2}, {3}}}",
@@ -214,10 +213,10 @@ namespace ConAuction3.ViewModels {
             var strB = new StringBuilder();
             var enumerator = ProductView.GetEnumerator();
             while (enumerator.MoveNext()) {
-                if (!(enumerator.Current is Product product)) {
+                if (!(enumerator.Current is Product product) || product.IsJumble) {
                     continue;
                 }
-                var str = $"{product.Label}; {product.Name}; {product.Type}; {product.Description}; {product.Price}";
+                var str = $"{product.Label}; {product.Name}; {product.Type}; {product.Note}; {product.FixedPrice}";
 
                 str = str.Replace("\r\n", "\\n");
                 strB.AppendLine(str);

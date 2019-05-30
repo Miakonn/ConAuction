@@ -161,7 +161,7 @@ namespace ConAuction3.ViewModels {
         public string StatusAmountSoldJumble => ProductsVm.AmountSoldJumble > 0 ? $"Summa: {ProductsVm.AmountSoldJumble}:-" : "";
 
         // ReSharper disable once UnusedMember.Global
-        public string StatusLeftToPay => CustomersVm.LeftToPay() > 0 ? $"Utbetala: {CustomersVm.LeftToPay()}:-" : "";
+        public string StatusLeftToPay => ModeIsPaying ? $"Utbetala: {CustomersVm.LeftToPay()}:-" : "";
 
         // ReSharper disable once UnusedMember.Global
         public string StatusProfit => ModeIsPaying && ProductsVm.Profit > 0 ? $"Intäkt: {ProductsVm.Profit}:-" : "";
@@ -197,7 +197,7 @@ namespace ConAuction3.ViewModels {
         public string SelectedName => SelectedCustomer != null ? SelectedCustomer.NumberAndName : "";
 
         // ReSharper disable once UnusedMember.Global
-        public string VersionStr => "V" + Assembly.GetEntryAssembly()?.GetName().Version.ToString();
+        public string VersionStr => "V" + Assembly.GetEntryAssembly()?.GetName().Version;
 
         // ReSharper disable once UnusedMember.Global
         public bool FilterJumbleOnly {

@@ -43,7 +43,7 @@ namespace ConAuction3.ViewModels
         }
         
         public IEnumerable<Customer> CustomersLeftToGetPaid () {
-            return _customers.FindAll(c => c.Finished.HasValue && !c.Finished.Value);
+            return _customers.FindAll(c => IsCustomerActive(c) && (!c.Finished.HasValue || !c.Finished.Value));
         }
 
         public IEnumerable<Product> Products(Customer customer) {
