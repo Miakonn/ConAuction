@@ -51,7 +51,7 @@ namespace ConAuction3.DataModels {
 
         public bool IsJumble => FixedPrice.HasValue && FixedPrice.Value > 0;
 
-        public bool SoldForFixedPrice() {
+        public bool SellForFixedPrice() {
             if (FixedPrice.HasValue && !IsSold) {
                 Price = FixedPrice.Value;
                 return true;
