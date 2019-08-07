@@ -1,0 +1,16 @@
+* Auktion: Uppdatera saldo/sum 
+
+* Projektor: Read-only i fälten
+
+* Antal återlämnade spel
+
+* VIP-kunder automatik
+
+* Pris-sorteing sortera fel
+
+* Plocka nummer från samma blankett för en kund
+
+* Etikettskrivare!
+
+
+
