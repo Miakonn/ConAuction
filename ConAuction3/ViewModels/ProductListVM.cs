@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
@@ -213,7 +214,7 @@ namespace ConAuction3.ViewModels {
             var strB = new StringBuilder();
             var enumerator = ProductView.GetEnumerator();
             while (enumerator.MoveNext()) {
-                if (!(enumerator.Current is Product product) || product.IsJumble) {
+                if (!(enumerator.Current is Product product)) {
                     continue;
                 }
                 var str = $"{product.Label}; {product.Name}; {product.Type}; {product.Note}; {product.FixedPrice}";
@@ -223,6 +224,21 @@ namespace ConAuction3.ViewModels {
             }
             return strB.ToString();
         }
+
+        public string Statistics() {
+            int totalCount = CountAuction + CountJumble;
+            var  types = _productList.GroupBy(p => p.Type);
+            var result = new StringBuilder();
+
+            foreach (var type in types) {
+                var count = type.Count();
+                var t = type.FirstOrDefault()?.Type;
+                result.AppendLine($"{t}  {count}");
+            }
+
+            return result.ToString();
+        }
+
 
         public int GetNextFreeLabel(bool page1, bool page2, bool page3) {
             if (!page1 && !page2 && !page3) {

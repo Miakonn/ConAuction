@@ -585,6 +585,7 @@ namespace ConAuction3.ViewModels {
         }
 
         public void ExportProducts() {
+            ProductsVm.Statistics();
             if (CurrentMode == OpMode.Showing) {
                 using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                     openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
