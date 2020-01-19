@@ -6,11 +6,20 @@
 
 * VIP-kunder automatik
 
-* Pris-sorteing sortera fel
+* Pris-sortering sorterar fel
 
 * Plocka nummer från samma blankett för en kund
 
+
+
+
 * Etikettskrivare!
+	+	Knapp för utskrift
+	+	Lägg till fält för antal del-objekt, skriv ut rätt antal etiketter
+	+	Funktion för försäljning av loppis-objekt mha streck-kod
+	+	Ta bort uppdelningen av tre nummer-listor, utan at äventyra risken för duplikat.
+	
+	
 
 
 

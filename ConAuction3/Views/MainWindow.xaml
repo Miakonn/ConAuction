@@ -35,7 +35,7 @@
     <DockPanel Background="#FBD800">
         <DockPanel DockPanel.Dock="Top" Background="#FBD800">
             <Image DockPanel.Dock="Left" Source="{StaticResource LinconLogoSmall}" MaxHeight="80"  Margin="30,0,30,0" />
-            <Label DockPanel.Dock="Left" FontSize="28" FontWeight="Bold" Padding="30" >ConAuction V3.0</Label>
+            <Label DockPanel.Dock="Left" FontSize="28" FontWeight="Bold" Padding="30" >ConAuction V3.1</Label>
             <Label DockPanel.Dock="Right" Content="{Binding VersionStr}" Width="70" />
             
             <WrapPanel DockPanel.Dock="Right" Orientation="Vertical"

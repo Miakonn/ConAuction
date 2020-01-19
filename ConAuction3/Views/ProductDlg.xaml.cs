@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -19,7 +20,9 @@ namespace ConAuction3.Views {
         private readonly ProductListVM _productListVm;
         private readonly List<string> _dictionary;
 
-		public ProductDlg(Product product, Customer customer, ProductListVM productListVm) {
+        private readonly string _year = ConfigurationManager.AppSettings["Year"];
+        
+        public ProductDlg(Product product, Customer customer, ProductListVM productListVm) {
 			InitializeComponent();
             if (customer == null) {
                 return;
@@ -119,6 +122,20 @@ namespace ConAuction3.Views {
             var maxId = previousProducts.Max(p => p.Id);
             var previous = previousProducts.Find(p => p.Id == maxId);
             SetFields(previous);
+        }
+
+        private void PrintLabel_OnClick(object sender, RoutedEventArgs e) {
+            var printer = new LabelWriter();
+            if (CheckBoxJumble.IsChecked.HasValue && CheckBoxJumble.IsChecked.Value) {
+                LabelWriter.Instance.PrintLabelFixedPriceObject(ProductName.Text, BarcodeNumber(), _year, FixedPrice.Text + ":-");
+            }
+            else {
+                LabelWriter.Instance.PrintLabelAuctionObject(ProductName.Text, BarcodeNumber(), _year);
+            }
+        }
+
+        private string BarcodeNumber() {
+            return _label.ToString("0000");
         }
 
         private void VerifyAllFieldsFilledIn() {

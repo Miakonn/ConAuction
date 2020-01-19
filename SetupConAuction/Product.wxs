@@ -40,6 +40,7 @@
 				</File>
 				<File Id='ConAuctionConfig' Name='ConAuction.exe.config' Source='..\ConAuction\bin\Release\ConAuction.exe.config'/>
 				<File Id='MySqlLib' Name='MySql.Data.dll' Source='..\Libs\MySql.Data.dll'/>
+        <File Id='Interop.Dymo' Name='Interop.Dymo.dll' Source='..\Libs\Interop.Dymo.dll'/>
 			</Component>
 		</ComponentGroup>
 	</Fragment>
