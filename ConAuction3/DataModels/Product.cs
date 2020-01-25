@@ -25,8 +25,16 @@ namespace ConAuction3.DataModels {
         }
 
         public int Price { get; set; }
+
+        // Used for sorting
+        public string PriceSorting => Price.ToString("0000");
+
         public int? FixedPrice { get; set; }
-		public int CustomerId { get; set; }
+
+        // Used for sorting
+        public string FixedPriceSorting => FixedPrice.HasValue ? FixedPrice?.ToString("0000") : "";
+
+        public int CustomerId { get; set; }
 
         public string FixedPriceString => FixedPrice.HasValue && FixedPrice.Value > 0 ? FixedPrice.Value.ToString() : "";
 

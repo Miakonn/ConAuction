@@ -249,13 +249,13 @@
                                     <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
-                                    <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPrice" />
+                                    <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPriceSorting" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToInt80Converter}}" >
-                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="SoldForStr" />
+                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSorting" />
                                         <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBox Text="{Binding SoldForStr, Mode=TwoWay}" PreviewKeyUp="PriceTb_OnPreviewKeyUp"
@@ -266,7 +266,7 @@
                                 </GridViewColumn>
                                 <GridViewColumn Width="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToInt50Inverter}}" 
                                                 DisplayMemberBinding="{Binding SoldForStr}" >
-                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="SoldForStr" />
+                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSorting" />
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
