@@ -40,6 +40,7 @@ namespace ConAuction3.Views {
             Type.ItemsSource = ProductTypeList;
 
             btnDialogOk.IsEnabled = false;
+            PrintLabel.IsEnabled = false;
             SetFields(product);
             VerifyAllFieldsFilledIn();
 
@@ -124,9 +125,11 @@ namespace ConAuction3.Views {
             SetFields(previous);
         }
 
+
+        private bool IsJumble => (CheckBoxJumble.IsChecked.HasValue && CheckBoxJumble.IsChecked.Value);
+
         private void PrintLabel_OnClick(object sender, RoutedEventArgs e) {
-            var printer = new LabelWriter();
-            if (CheckBoxJumble.IsChecked.HasValue && CheckBoxJumble.IsChecked.Value) {
+            if (IsJumble) {
                 LabelWriter.Instance.PrintLabelFixedPriceObject(ProductName.Text, BarcodeNumber(), _year, FixedPrice.Text + ":-");
             }
             else {
@@ -139,9 +142,16 @@ namespace ConAuction3.Views {
         }
 
         private void VerifyAllFieldsFilledIn() {
-            var ok = !string.IsNullOrWhiteSpace(Type.Text) && !string.IsNullOrWhiteSpace(ProductName.Text) && 
-                     (!string.IsNullOrWhiteSpace(Description.Text) || !string.IsNullOrWhiteSpace(FixedPrice.Text));
+            var ok =  !string.IsNullOrWhiteSpace(Type.Text) && !string.IsNullOrWhiteSpace(ProductName.Text);
+            if (IsJumble) {
+                ok &= !string.IsNullOrWhiteSpace(FixedPrice.Text);
+            }
+            else {
+                ok &= !string.IsNullOrWhiteSpace(Description.Text);
+            }
+
             btnDialogOk.IsEnabled = ok;
+            PrintLabel.IsEnabled = ok;
         }
 
         private void FieldsChanged(object sender, SelectionChangedEventArgs e) {
@@ -155,10 +165,12 @@ namespace ConAuction3.Views {
 
         private void CheckJumble_OnChecked(object sender, RoutedEventArgs e) {
             FixedPricePanel.Visibility = Visibility.Visible;
+            VerifyAllFieldsFilledIn();
         }
 
         private void CheckJumble_OnUnchecked(object sender, RoutedEventArgs e) {
             FixedPricePanel.Visibility = Visibility.Hidden;
+            VerifyAllFieldsFilledIn();
         }
     }
 }
