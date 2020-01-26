@@ -4,6 +4,7 @@ using Dymo;
 
 namespace ConAuction3 {
     public class LabelWriter {
+        private const int DescriptionMaxLength = 20;
         private readonly DymoAddInClass _dymoAddIn;
         private readonly string _labelFolderAuction;
         private readonly string _labelFolderFixedPrice;
@@ -18,31 +19,46 @@ namespace ConAuction3 {
 
         public static LabelWriter Instance { get; } = new LabelWriter();
         
-        public void PrintLabelAuctionObject(string text, string number, string year) {
+        public void PrintLabelAuctionObject(string text, string number, string year, int partsNo) {
             var myLabel = new DymoLabels();
+
             if (_dymoAddIn.Open(_labelFolderAuction)) {
-                myLabel.SetField("Description", text);
-                myLabel.SetField("IdNumber", number);
-                myLabel.SetField("Year", year);
-                _dymoAddIn.StartPrintJob();
-                _dymoAddIn.Print(1, false);
-                _dymoAddIn.EndPrintJob();
+                for (int i = 1; i <= partsNo; i++) {
+                    myLabel.SetField("Description", Description(text, i, partsNo));
+                    myLabel.SetField("IdNumber", number);
+                    myLabel.SetField("Year", year);
+                    _dymoAddIn.StartPrintJob();
+                    _dymoAddIn.Print(1, false);
+                    _dymoAddIn.EndPrintJob();
+                }
             }
         }
 
-        public void PrintLabelFixedPriceObject(string text, string number, string year, string price) {
+        public void PrintLabelFixedPriceObject(string text, string number, string year, int partsNo , string price) {
             var myLabel = new DymoLabels();
             if (_dymoAddIn.Open(_labelFolderFixedPrice)) {
-                myLabel.SetField("Description", text);
-                myLabel.SetField("BarCode", number);
-                myLabel.SetField("Price", price);
-                myLabel.SetField("Year", year);
-                _dymoAddIn.StartPrintJob();
-                _dymoAddIn.Print(1, false);
-                _dymoAddIn.EndPrintJob();
+                for (int i = 1; i <= partsNo; i++) {
+                    myLabel.SetField("Description", Description(text, i, partsNo));
+                    myLabel.SetField("BarCode", number);
+                    myLabel.SetField("Price", price);
+                    myLabel.SetField("Year", year);
+                    _dymoAddIn.StartPrintJob();
+                    _dymoAddIn.Print(1, false);
+                    _dymoAddIn.EndPrintJob();
+                }
             }
         }
 
+        private string PartNumberText(int index, int partNo) {
+            return (partNo > 1) ? index + "/" + partNo + " " : String.Empty;
+        }
 
+        private string TrimString(string str, int maxLen) {
+            return str?.Substring(0, Math.Min(str.Length, maxLen));
+        }
+
+        private string Description(string text, int index, int partsNo) {
+            return TrimString(PartNumberText(index, partsNo) + text, DescriptionMaxLength);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -37,7 +38,8 @@ namespace ConAuction3.Views {
             Label.Text = product.LabelStr;
 
             Customer.Text = customer.NumberAndName;
-            Type.ItemsSource = ProductTypeList;
+            TypeCombo.ItemsSource = ProductTypeList;
+            PartsNoCombo.ItemsSource = PartsNoList;
 
             btnDialogOk.IsEnabled = false;
             PrintLabel.IsEnabled = false;
@@ -60,12 +62,13 @@ namespace ConAuction3.Views {
         }
         
         private void SetFields(Product product) {
-            Type.Text = product.Type;
+            TypeCombo.Text = product.Type;
             ProductName.Text = product.Name;
             Description.Text = product.Description;
             FixedPrice.Text = product.FixedPriceString;
             Note.Text = product.Note;
             CheckBoxJumble.IsChecked = product.IsJumble;
+            PartsNoCombo.SelectedIndex = product.PartsNo - 1;
 
             FixedPricePanel.Visibility = product.IsJumble ? Visibility.Visible : Visibility.Hidden;
         }
@@ -80,9 +83,10 @@ namespace ConAuction3.Views {
 					Label = _label,
 					Name = ProductName.Text,
 					CustomerId = _customer.Id,
-					Type = Type.Text,
+					Type = TypeCombo.Text,
 					Description = Description.Text,
-					Note = Note.Text
+					Note = Note.Text,
+                    PartsNo = PartsNo
 				};
                 if (CheckBoxJumble.IsChecked.HasValue && CheckBoxJumble.IsChecked.Value) {
                     product.FixedPrice = int.Parse(FixedPrice.Text);
@@ -102,6 +106,13 @@ namespace ConAuction3.Views {
             "Figurspel",
             "Krigsspel",
             "Övrigt"
+        };
+
+        public List<string> PartsNoList { get; } = new List<string> {
+            "1",
+            "2",
+            "3",
+            "4"
         };
 
         public void OnClick(object sender, RoutedEventArgs e) {
@@ -128,12 +139,14 @@ namespace ConAuction3.Views {
 
         private bool IsJumble => (CheckBoxJumble.IsChecked.HasValue && CheckBoxJumble.IsChecked.Value);
 
+        private int PartsNo => int.Parse(PartsNoCombo.Text);
+
         private void PrintLabel_OnClick(object sender, RoutedEventArgs e) {
             if (IsJumble) {
-                LabelWriter.Instance.PrintLabelFixedPriceObject(ProductName.Text, BarcodeNumber(), _year, FixedPrice.Text + ":-");
+                LabelWriter.Instance.PrintLabelFixedPriceObject(ProductName.Text, BarcodeNumber(), _year,  PartsNo, FixedPrice.Text + ":-");
             }
             else {
-                LabelWriter.Instance.PrintLabelAuctionObject(ProductName.Text, BarcodeNumber(), _year);
+                LabelWriter.Instance.PrintLabelAuctionObject(ProductName.Text, BarcodeNumber(), _year, PartsNo);
             }
         }
 
@@ -142,7 +155,7 @@ namespace ConAuction3.Views {
         }
 
         private void VerifyAllFieldsFilledIn() {
-            var ok =  !string.IsNullOrWhiteSpace(Type.Text) && !string.IsNullOrWhiteSpace(ProductName.Text);
+            var ok =  !string.IsNullOrWhiteSpace(TypeCombo.Text) && !string.IsNullOrWhiteSpace(ProductName.Text);
             if (IsJumble) {
                 ok &= !string.IsNullOrWhiteSpace(FixedPrice.Text);
             }
@@ -155,7 +168,7 @@ namespace ConAuction3.Views {
         }
 
         private void FieldsChanged(object sender, SelectionChangedEventArgs e) {
-            Type.Text = Type.SelectedItem.ToString();
+            TypeCombo.Text = TypeCombo.SelectedItem.ToString();
             VerifyAllFieldsFilledIn();
         }
 

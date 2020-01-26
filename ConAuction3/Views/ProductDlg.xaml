@@ -46,7 +46,11 @@
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
                     <Label Content="Typ" />
-                    <ComboBox Name="Type" Text="Välj typ" MinWidth="100" IsEditable="False" SelectionChanged="FieldsChanged" TabIndex="1" IsTabStop="True" />
+                    <ComboBox Name="TypeCombo" Text="Välj typ" MinWidth="100" IsEditable="False" SelectionChanged="FieldsChanged" TabIndex="1" IsTabStop="True" Width="250" />
+                </StackPanel>
+                <StackPanel Margin="10,5,10,5">
+                    <Label Content="Antal delar"  />
+                    <ComboBox Name="PartsNoCombo" Text="1" MinWidth="50" IsEditable="False" TabIndex="1" IsTabStop="True" />
                 </StackPanel>
 
             </DockPanel>
