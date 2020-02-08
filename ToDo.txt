@@ -1,21 +1,15 @@
 * Auktion: Uppdatera saldo/sum 
 
-* Projektor: Read-only i fälten
-
 * Antal återlämnade spel
 
 * VIP-kunder automatik
 
-* Pris-sortering sorterar fel
-
-* Plocka nummer från samma blankett för en kund
-
-
+* Lägg till import funktion från excel-arket
 
 
 * Etikettskrivare!
-	+	Knapp för utskrift
-	+	Lägg till fält för antal del-objekt, skriv ut rätt antal etiketter
+	+	Lägg till fält för utskriven etikett, ska visas någonstans
+	+	Lägg till knapp för skriva ut etiketter för alla objekt för en användare?
 	+	Funktion för försäljning av loppis-objekt mha streck-kod
 	+	Ta bort uppdelningen av tre nummer-listor, utan at äventyra risken för duplikat.
 	
