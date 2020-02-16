@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,11 +17,11 @@ namespace ConAuction3.Views {
 	public partial class ProductDlg {
 		private readonly long _id;
         private readonly int _label;
+        private readonly bool _labelPrinted;
+
         private readonly Customer _customer;
         private readonly ProductListVM _productListVm;
         private readonly List<string> _dictionary;
-
-        private readonly string _year = ConfigurationManager.AppSettings["Year"];
         
         public ProductDlg(Product product, Customer customer, ProductListVM productListVm) {
 			InitializeComponent();
@@ -34,6 +33,7 @@ namespace ConAuction3.Views {
 
 			_id = product.Id;
             _label = product.Label;
+            _labelPrinted = product.LabelPrinted;
             _customer = customer;
             _productListVm = productListVm;
             Label.Text = product.LabelStr;
@@ -72,7 +72,6 @@ namespace ConAuction3.Views {
             Note.Text = product.Note;
             CheckBoxJumble.IsChecked = product.IsJumble;
             PartsNoCombo.SelectedIndex = product.PartsNo - 1;
-
             FixedPricePanel.Visibility = product.IsJumble ? Visibility.Visible : Visibility.Hidden;
         }
 
@@ -89,7 +88,8 @@ namespace ConAuction3.Views {
 					Type = TypeCombo.Text,
 					Description = Description.Text,
 					Note = Note.Text,
-                    PartsNo = PartsNo
+                    PartsNo = PartsNo,
+                    LabelPrinted = _labelPrinted
 				};
                 if (CheckBoxJumble.IsChecked.HasValue && CheckBoxJumble.IsChecked.Value) {
                     product.FixedPrice = int.Parse(FixedPrice.Text);
