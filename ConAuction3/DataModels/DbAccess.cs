@@ -304,7 +304,7 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        public void SaveProductPriceToDB(long id, int price, string note) {
+        public void SaveProductPriceToDb(long id, int price, string note) {
             var command = DbConnection.CreateCommand();
             command.Connection = DbConnection;
             try {

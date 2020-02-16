@@ -53,7 +53,7 @@ namespace ConAuction3.DataModels {
             get => IsSold ? Price.ToString() : "";
             set {
                 Price = !string.IsNullOrWhiteSpace(value) && int.TryParse(value, out var price) ? price : 0;
-                DbAccess.Instance.SaveProductPriceToDB(Id, Price, Note);
+                DbAccess.Instance.SaveProductPriceToDb(Id, Price, Note);
             }
         }
 

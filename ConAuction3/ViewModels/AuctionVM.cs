@@ -534,7 +534,7 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.SellForFixedPrice()) {
-                DbAccess.Instance.SaveProductPriceToDB(SelectedProduct.Id, SelectedProduct.Price, SelectedProduct.Note);
+                DbAccess.Instance.SaveProductPriceToDb(SelectedProduct.Id, SelectedProduct.Price, SelectedProduct.Note);
             }
 
             UpdateAll();
@@ -550,7 +550,7 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.UndoSoldFor()) {
-                DbAccess.Instance.SaveProductPriceToDB(SelectedProduct.Id, SelectedProduct.Price, SelectedProduct.Note);
+                DbAccess.Instance.SaveProductPriceToDb(SelectedProduct.Id, SelectedProduct.Price, SelectedProduct.Note);
             }
 
             UpdateAll();
