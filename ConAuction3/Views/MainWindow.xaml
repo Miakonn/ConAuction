@@ -226,7 +226,7 @@
                         </Button>
                         <Button DockPanel.Dock="Left" Content="Exportera" Command="{Binding ExportProductsCommand}"  TabIndex="18" Margin="10,5,10,5" 
                                 Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                        <Button DockPanel.Dock="Right" Content="Exit" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
+                        <Button DockPanel.Dock="Right" Content="Avsluta" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
                     </DockPanel>
                     <ListView Name="ListViewProducts" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
                               MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
@@ -250,6 +250,9 @@
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
                                     <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPriceSorting" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="60" DisplayMemberBinding="{Binding LabelPrinted}" >
+                                    <GridViewColumnHeader Content="Utskriven" Command="{Binding SortProductCommand}" CommandParameter="LabelPrinted" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />

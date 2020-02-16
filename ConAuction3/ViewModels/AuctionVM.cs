@@ -478,8 +478,12 @@ namespace ConAuction3.ViewModels {
 
             var inputDialog = new ProductDlg(new Product(freeLabel), SelectedCustomer, ProductsVm);
             if (inputDialog.ShowDialog() == true) {
-                var product = inputDialog.Result;
 
+                var product = inputDialog.Result;
+                if (inputDialog.PrintLabel) {
+                    PrintLabel(product);
+                }
+                
                 var idCreated = DbAccess.Instance.InsertNewProductToDb(product);
                 UpdateAll();
 
@@ -488,6 +492,24 @@ namespace ConAuction3.ViewModels {
 
             OnPropertyChanged("StatusTotalCount");
         }
+
+        private readonly string Year = ConfigurationManager.AppSettings["Year"];
+
+        private void PrintLabel(Product product) {
+            try {
+                if (product.IsJumble) {
+                    LabelWriter.Instance.PrintLabelFixedPriceObject(product.Name, product.BarcodeNumber, Year, product.PartsNo, product.FixedPrice + ":-");
+                }
+                else {
+                    LabelWriter.Instance.PrintLabelAuctionObject(product.Name, product.BarcodeNumber, Year, product.PartsNo);
+                }
+                product.LabelPrinted = true;
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
 
         public bool ShowProduct_CanExecute() {
             return (CurrentMode == OpMode.Receiving || CurrentMode == OpMode.Showing) && SelectedProduct != null;
@@ -502,6 +524,10 @@ namespace ConAuction3.ViewModels {
             var inputDialog = new ProductDlg(SelectedProduct, customer, null);
             if (inputDialog.ShowDialog() == true) {
                 var product = inputDialog.Result;
+                if (inputDialog.PrintLabel) {
+                    PrintLabel(product);
+                }
+
                 DbAccess.Instance.SaveProductToDb(product);
             }
             UpdateAll();

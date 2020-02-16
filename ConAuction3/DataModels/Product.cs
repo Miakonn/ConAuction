@@ -1,4 +1,5 @@
 ﻿using System;
+using ConAuction3.Annotations;
 
 namespace ConAuction3.DataModels {
     public class Product : IComparable {
@@ -8,6 +9,9 @@ namespace ConAuction3.DataModels {
         public long Id { get; set; }
         public int Label { get; set; }
         public string Type { get; set; }
+        public bool LabelPrinted { get; set; }
+        public int PartsNo { get; set; }
+
 
         public string Name {
             get => _name;
@@ -27,11 +31,13 @@ namespace ConAuction3.DataModels {
         public int Price { get; set; }
 
         // Used for sorting
+        [UsedImplicitly]
         public string PriceSorting => Price.ToString("0000");
 
         public int? FixedPrice { get; set; }
 
         // Used for sorting
+        [UsedImplicitly]
         public string FixedPriceSorting => FixedPrice.HasValue ? FixedPrice?.ToString("0000") : "";
 
         public int CustomerId { get; set; }
@@ -39,11 +45,16 @@ namespace ConAuction3.DataModels {
         public string FixedPriceString => FixedPrice.HasValue && FixedPrice.Value > 0 ? FixedPrice.Value.ToString() : "";
 
         public bool IsSold => Price > 0;
-        
-        public Product() {}
+
+        public string BarcodeNumber => Label.ToString("0000");
+
+        public Product() {
+            PartsNo = 1;
+        }
 
         public Product(int label) {
             Label = label;
+            PartsNo = 1;
         }
 
         public string LabelStr => Label.ToString("000");
@@ -58,10 +69,6 @@ namespace ConAuction3.DataModels {
         }
 
         public bool IsJumble => FixedPrice.HasValue && FixedPrice.Value > 0;
-
-        public bool LabelPrinted { get; set; }
-
-        public int PartsNo { get; set; }
 
         public bool SellForFixedPrice() {
             if (FixedPrice.HasValue && !IsSold) {

@@ -17,10 +17,10 @@
 
     <DockPanel Background="#FBD800">
         <DockPanel DockPanel.Dock="Bottom" Margin="10,15,15,10" LastChildFill="False">
-            <Button DockPanel.Dock="Left"  Name="CopyPrevious" Click="CopyPrevious_OnClick" MinWidth="60" Margin="10,0,10,0">Kopiera föregående</Button>
-            <Button DockPanel.Dock="Left"  Name="PrintLabel" Click="PrintLabel_OnClick" MinWidth="60" Margin="10,0,10,0">Skriv etikett</Button>
-            <Button DockPanel.Dock="Right" IsDefault="True" Name="btnDialogOk" Click="OnClick" MinWidth="60" Margin="10,0,10,0">_Ok</Button>
-            <Button DockPanel.Dock="Right" IsCancel="True" MinWidth="60">_Cancel</Button>
+            <Button DockPanel.Dock="Left"  Name="BtnCopyPrevious" Click="CopyPrevious_OnClick" MinWidth="60" Margin="10,0,10,0">Kopiera föregående</Button>
+            <Button DockPanel.Dock="Right"  Name="BtnDialogOk" IsDefault="True" Click="Save_OnClick" MinWidth="60" Margin="10,0,0,0">_Spara</Button>
+            <Button DockPanel.Dock="Right"  Name="BtnPrintLabelAndSave" Click="PrintLabelAndSave_OnClick" MinWidth="60" Margin="10,0,10,0">Spara &amp; skriv etikett</Button>
+            <Button DockPanel.Dock="Right" IsCancel="True" MinWidth="60" Margin="10,0,10,0">_Avbryt</Button>
         </DockPanel>
 
         <Grid>

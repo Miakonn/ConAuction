@@ -174,7 +174,7 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        public void DeleteCustomerToDB(int id) {
+        public void DeleteCustomerFromDb(int id) {
             var command = DbConnection.CreateCommand();
             command.Connection = DbConnection;
             try {
@@ -190,7 +190,7 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        //public void UpdateProductFromDB()
+        //public void UpdateProductFromDb()
         //{
         //	try {
         //		//prepare adapter to run query

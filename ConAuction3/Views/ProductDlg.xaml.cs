@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -30,7 +31,7 @@ namespace ConAuction3.Views {
             }
 
             DataContext = this;
-            
+
 			_id = product.Id;
             _label = product.Label;
             _customer = customer;
@@ -41,12 +42,12 @@ namespace ConAuction3.Views {
             TypeCombo.ItemsSource = ProductTypeList;
             PartsNoCombo.ItemsSource = PartsNoList;
 
-            btnDialogOk.IsEnabled = false;
-            PrintLabel.IsEnabled = false;
+            BtnDialogOk.IsEnabled = false;
+            BtnPrintLabelAndSave.IsEnabled = false;
             SetFields(product);
             VerifyAllFieldsFilledIn();
 
-            CopyPrevious.IsEnabled = _productListVm != null && _productListVm.CountForCustomer(customer.Id) > 0;
+            BtnCopyPrevious.IsEnabled = _productListVm != null && _productListVm.CountForCustomer(customer.Id) > 0;
             
             _dictionary = new List<string>();
             try {
@@ -58,7 +59,9 @@ namespace ConAuction3.Views {
                 }
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch { }
+            catch (Exception ex) {
+                Debug.Assert(ex == null);
+            }
         }
         
         private void SetFields(Product product) {
@@ -115,9 +118,19 @@ namespace ConAuction3.Views {
             "4"
         };
 
-        public void OnClick(object sender, RoutedEventArgs e) {
+        public void Save_OnClick(object sender, RoutedEventArgs e) {
+            PrintLabel = false;
 			DialogResult = true;
+            Close();
 		}
+
+        public bool PrintLabel { get; private set; }
+
+        private void PrintLabelAndSave_OnClick(object sender, RoutedEventArgs e) {
+            PrintLabel = true;
+            DialogResult = true;
+            Close();
+        }
 
         private static readonly Regex _regex = new Regex("[^0-9]+"); //regex that matches disallowed text
         private static bool IsTextAllowed(string text)
@@ -141,19 +154,6 @@ namespace ConAuction3.Views {
 
         private int PartsNo => int.Parse(PartsNoCombo.Text);
 
-        private void PrintLabel_OnClick(object sender, RoutedEventArgs e) {
-            if (IsJumble) {
-                LabelWriter.Instance.PrintLabelFixedPriceObject(ProductName.Text, BarcodeNumber(), _year,  PartsNo, FixedPrice.Text + ":-");
-            }
-            else {
-                LabelWriter.Instance.PrintLabelAuctionObject(ProductName.Text, BarcodeNumber(), _year, PartsNo);
-            }
-        }
-
-        private string BarcodeNumber() {
-            return _label.ToString("0000");
-        }
-
         private void VerifyAllFieldsFilledIn() {
             var ok =  !string.IsNullOrWhiteSpace(TypeCombo.Text) && !string.IsNullOrWhiteSpace(ProductName.Text);
             if (IsJumble) {
@@ -163,8 +163,8 @@ namespace ConAuction3.Views {
                 ok &= !string.IsNullOrWhiteSpace(Description.Text);
             }
 
-            btnDialogOk.IsEnabled = ok;
-            PrintLabel.IsEnabled = ok;
+            BtnDialogOk.IsEnabled = ok;
+            BtnPrintLabelAndSave.IsEnabled = ok;
         }
 
         private void FieldsChanged(object sender, SelectionChangedEventArgs e) {
