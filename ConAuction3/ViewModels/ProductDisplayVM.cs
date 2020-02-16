@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using ConAuction3.Annotations;
@@ -11,13 +12,15 @@ namespace ConAuction3.ViewModels {
     public class ProductDisplayVM : INotifyPropertyChanged {
         private readonly List<Product> _productsAuction;
 
-        private Product CurrentProduct;
-        private int CurrentIndex;
+        private readonly int _numberOfItemsToSell;
+        private Product _currentProduct;
+        private int _currentIndex;
 
         public string ProductLabel { get; set; }
         public string ProductType { get; set; }
         public string ProductName { get; set; }
         public string ProductDescription { get; set; }
+        public string Statistics { get; set; }
 
         public MyCommand NextProductCommand { get; }
         public MyCommand FirstProductCommand { get; }
@@ -36,34 +39,36 @@ namespace ConAuction3.ViewModels {
             FirstProductCommand = new MyCommand(FirstProduct);
             CloseCommand = new ObjectCommand(CloseWindow);
 
-            CurrentProduct = null;
-            CurrentIndex = -1;
+            _currentProduct = null;
+            _currentIndex = -1;
+            _numberOfItemsToSell = _productsAuction.Count;
+
             UpdateFields();
         }
 
         public void GotoNextProduct() {
-            CurrentIndex++;
+            _currentIndex++;
             UpdateFields();
         }
 
         public void GotoPreviousProduct() {
-            CurrentIndex--;
+            _currentIndex--;
             UpdateFields();
         }
 
         public void GotoNext10Product() {
-            CurrentIndex+= 10;
+            _currentIndex+= 10;
             UpdateFields();
         }
 
         public void GotoPrevious10Product() {
-            CurrentIndex-= 10;
+            _currentIndex-= 10;
             UpdateFields();
         }
 
         public void FirstProduct() {
-            CurrentIndex = 0;
-            CurrentProduct = _productsAuction[CurrentIndex];
+            _currentIndex = 0;
+            _currentProduct = _productsAuction[_currentIndex];
             UpdateFields();
         }
 
@@ -73,42 +78,59 @@ namespace ConAuction3.ViewModels {
         }
 
         private void UpdateFields() {
-            if (CurrentIndex < 0) {
-                CurrentIndex = -1;
-                CurrentProduct = null;
-            }
-            else if (CurrentIndex >= _productsAuction.Count) {
-                CurrentIndex = _productsAuction.Count;
-                CurrentProduct = null;
-            }
-            else {
-                CurrentProduct = _productsAuction[CurrentIndex];
-            }
-            if (CurrentProduct == null) {
-                ProductDescription = CurrentIndex < 0 ? ReadStartFile() : ReadEndFile();
+            if (_currentIndex < 0) {
+                _currentIndex = -1;
+                _currentProduct = null;
+
+                ProductDescription = ReadStartFile();
                 ProductLabel = string.Empty;
                 ProductType = string.Empty;
-                ProductName = string.Empty;
+                ProductName = $"{_numberOfItemsToSell} objekt ska ropas ut idag.";
+                Statistics = string.Empty;
+            }
+            else if (_currentIndex >= _numberOfItemsToSell) {
+                _currentIndex = _numberOfItemsToSell;
+                _currentProduct = null;
+
+                ProductDescription = ReadEndFile();
+                ProductLabel = string.Empty;
+                ProductType = string.Empty;
+                ProductName = $"{_numberOfItemsToSell} objekt ropades ut idag. Snittpris blev {AveragePrice()}:-";
+                Statistics = "100%";
             }
             else {
-                ProductLabel = CurrentProduct.LabelStr;
-                ProductType = CurrentProduct.Type;
-                ProductName = CurrentProduct.Name;
-                ProductDescription = CurrentProduct.Description;
+                _currentProduct = _productsAuction[_currentIndex];
+
+                ProductLabel = _currentProduct.LabelStr;
+                ProductType = _currentProduct.Type;
+                ProductName = _currentProduct.Name;
+                ProductDescription = _currentProduct.Description;
+                Statistics = AuctionedOffPercentage() + "%";
             }
-            
+
             OnPropertyChanged(nameof(ProductLabel));
             OnPropertyChanged(nameof(ProductType));
             OnPropertyChanged(nameof(ProductName));
             OnPropertyChanged(nameof(ProductDescription));
+            OnPropertyChanged(nameof(Statistics));
         }
         
-        private string ReadStartFile() {
+        private static string ReadStartFile() {
             return File.ReadAllText("TextFiles\\ConAuctionRules.txt");
         }
 
-        private string ReadEndFile() {
+        private static string ReadEndFile() {
             return File.ReadAllText("TextFiles\\ConAuctionFinish.txt");
+        }
+
+        private string AveragePrice() {
+            var soldNo = _productsAuction.Count(p => p.IsSold);
+            var sum = _productsAuction.Sum(p => p.Price);
+            return (sum / soldNo).ToString();
+        }
+
+        private int AuctionedOffPercentage() {
+            return _currentIndex * 100 / _numberOfItemsToSell;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

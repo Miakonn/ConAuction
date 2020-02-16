@@ -16,7 +16,6 @@
     </Window.Resources>
 
     <Window.InputBindings>
-        <KeyBinding Key=" " Command="" />
         <KeyBinding Key="Home" Command="{Binding FirstProductCommand}" />
         <KeyBinding Key="Space" Command="{Binding NextProductCommand}" />
         <KeyBinding Key="Up" Command="{Binding PreviousProductCommand}" />
@@ -38,6 +37,7 @@
         <DockPanel Grid.Column="1" Grid.Row="0" >
             <DockPanel DockPanel.Dock="Top">
                 <Label DockPanel.Dock="Left" Content="{Binding ProductLabel}" FontSize="50" FontWeight="Bold" Margin="50" Padding="10,10,50,10"></Label>
+                <Label DockPanel.Dock="Right" Content="{Binding Statistics}" FontSize="50"  Margin="50" ></Label>
                 <Label Content="{Binding ProductType}" FontSize="50" FontWeight="Bold" Margin="50" ></Label>
             </DockPanel>
             <Label DockPanel.Dock="Top" HorizontalAlignment="Left" Content="{Binding ProductName}" FontSize="50" FontWeight="Bold" Margin="50" ></Label>

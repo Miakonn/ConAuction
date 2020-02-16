@@ -8,11 +8,9 @@
 
 
 * Etikettskrivare!
-	+	Lägg till fält för utskriven etikett, ska visas någonstans
 	+	Lägg till knapp för skriva ut etiketter för alla objekt för en användare?
 	+	Funktion för försäljning av loppis-objekt mha streck-kod
 	+	Ta bort uppdelningen av tre nummer-listor, utan at äventyra risken för duplikat.
-	
 	
 
 
