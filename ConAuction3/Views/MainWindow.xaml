@@ -53,7 +53,7 @@
             </WrapPanel>
 
             <ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="40" MaxWidth="150" ItemsSource="{Binding OpEnumList}"  IsEditable="False"
-					  FontSize="20" FontWeight="Bold" SelectedValue="{Binding CurrentMode}" Margin="5" Padding="4" TabIndex="1"
+					  FontSize="20" FontWeight="Bold" SelectedValue="{Binding CurrentMode, Mode=TwoWay}" Margin="5" Padding="4" TabIndex="1"
 					  DisplayMemberPath="ValueString" SelectedValuePath="ValueMode" SelectedIndex="0" RenderTransformOrigin="0.498,0.603" />
         </DockPanel>
         <DockPanel>

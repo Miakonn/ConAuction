@@ -1,4 +1,4 @@
-* Auktion: Uppdatera saldo/sum 
+* Auktion: Uppdatera saldo/sum vid inmatning. Svårt, finns F5 uppdatera.
 
 * Antal återlämnade spel
 
@@ -9,8 +9,8 @@
 
 * Etikettskrivare!
 	+	Lägg till knapp för skriva ut etiketter för alla objekt för en användare?
-	+	Funktion för försäljning av loppis-objekt mha streck-kod
 	+	Ta bort uppdelningen av tre nummer-listor, utan at äventyra risken för duplikat.
+	+	Splitta nummerserien mellan loppsi och auktion.
 	
 
 

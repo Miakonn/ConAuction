@@ -72,22 +72,25 @@ namespace ConAuction3.ViewModels {
                 _currentMode = value;
                 if (_currentMode == OpMode.Overhead) {
                     try {
+                        _currentMode = OpMode.Initializing;
+                        OnPropertyChanged(nameof(CurrentMode));
                         var dlg = new ProductDisplayDlg(ProductsVm);
                         dlg.Show();
-                        _currentMode = OpMode.Initializing;
                     }
                     catch (Exception ex) {
                         MessageBox.Show(ex.Message);
                     }
+
                     return;
                 }
                 
-                UpdateAll();
                 OnPropertyChanged(nameof(ModeIsShowing));
                 OnPropertyChanged(nameof(ModeIsAuctioning));
                 OnPropertyChanged(nameof(ModeIsPaying));
                 OnPropertyChanged(nameof(ModeIsReceiving));
                 OnPropertyChanged(nameof(ModeIsReceivingOrShowing));
+                OnPropertyChanged(nameof(CurrentMode));
+                UpdateAll();
             }
         }
 
