@@ -536,6 +536,7 @@ namespace ConAuction3.ViewModels {
 
                 if (!ProductsVm.HasCorrectLabel(product)) {
                     product.Label = ProductsVm.GetNextFreeLabel(product.IsJumble, LabelPage1, LabelPage2, LabelPage3);
+                    product.LabelPrinted = false;
                     DbAccess.Instance.SaveProductWithNewLabelToDb(product);
                 }
                 else {

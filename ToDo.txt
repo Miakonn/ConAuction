@@ -9,8 +9,7 @@
 
 * Etikettskrivare!
 	+	Lägg till knapp för skriva ut etiketter för alla objekt för en användare?
-	+	Ta bort uppdelningen av tre nummer-listor, utan at äventyra risken för duplikat.
-	+	Splitta nummerserien mellan loppsi och auktion.
+	+	Ta bort uppdelningen av tre nummer-listor, utan att äventyra risken för duplikat.
 	
 
 
