@@ -472,22 +472,22 @@ namespace ConAuction3.ViewModels {
             if (SelectedCustomer == null) {
                 return;
             }
-
-            var freeLabel = ProductsVm.GetNextFreeLabel(LabelPage1, LabelPage2, LabelPage3);
-            if (freeLabel == 0) {
+            if (!LabelPage1 && !LabelPage2 && !LabelPage3) {
                 MessageBox.Show("Ingen nummersida är vald!");
                 return;
             }
 
-            var inputDialog = new ProductDlg(new Product(freeLabel), SelectedCustomer, ProductsVm);
+            var inputDialog = new ProductDlg(new Product(), SelectedCustomer, ProductsVm);
             if (inputDialog.ShowDialog() == true) {
-
                 var product = inputDialog.Result;
+                product.Label = ProductsVm.GetNextFreeLabel(product.IsJumble, LabelPage1, LabelPage2, LabelPage3);
+
+                var idCreated = DbAccess.Instance.InsertNewProductToDb(product);
+
                 if (inputDialog.PrintLabel) {
                     PrintLabel(product);
                 }
-                
-                var idCreated = DbAccess.Instance.InsertNewProductToDb(product);
+
                 UpdateAll();
 
                 SelectedProduct = ProductsVm.GetProductFromId(idCreated);
@@ -500,6 +500,11 @@ namespace ConAuction3.ViewModels {
 
         private void PrintLabel(Product product) {
             try {
+                if (!LabelWriter.Instance.IsPrinterOnline()) {
+                    MessageBox.Show("Skrivaren är inte tillgänglig!");
+                    return;
+                }
+                
                 if (product.IsJumble) {
                     LabelWriter.Instance.PrintLabelFixedPriceObject(product.Name, product.BarcodeNumber, Year, product.PartsNo, product.FixedPrice + ":-");
                 }
@@ -507,6 +512,7 @@ namespace ConAuction3.ViewModels {
                     LabelWriter.Instance.PrintLabelAuctionObject(product.Name, product.BarcodeNumber, Year, product.PartsNo);
                 }
                 product.LabelPrinted = true;
+                DbAccess.Instance.SaveProductPrintedToDb(product);
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
@@ -527,11 +533,18 @@ namespace ConAuction3.ViewModels {
             var inputDialog = new ProductDlg(SelectedProduct, customer, null);
             if (inputDialog.ShowDialog() == true) {
                 var product = inputDialog.Result;
+
+                if (!ProductsVm.HasCorrectLabel(product)) {
+                    product.Label = ProductsVm.GetNextFreeLabel(product.IsJumble, LabelPage1, LabelPage2, LabelPage3);
+                    DbAccess.Instance.SaveProductWithNewLabelToDb(product);
+                }
+                else {
+                    DbAccess.Instance.SaveProductToDb(product);
+                }
+
                 if (inputDialog.PrintLabel) {
                     PrintLabel(product);
                 }
-
-                DbAccess.Instance.SaveProductToDb(product);
             }
             UpdateAll();
         }
@@ -547,7 +560,7 @@ namespace ConAuction3.ViewModels {
 
             var result = MessageBox.Show("Vill du radera objektet?", "Objekt");
             if (result == DialogResult.OK) {
-                DbAccess.Instance.DeleteProductToDb(SelectedProduct.Id);
+                DbAccess.Instance.DeleteProductFromDb(SelectedProduct.Id);
                 SelectedProduct = null;
             }
             UpdateAll();

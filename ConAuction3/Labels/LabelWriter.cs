@@ -18,6 +18,11 @@ namespace ConAuction3 {
         }
 
         public static LabelWriter Instance { get; } = new LabelWriter();
+
+        public bool IsPrinterOnline() {
+            var printers = _dymoAddIn.GetDymoPrinters();
+            return !string.IsNullOrWhiteSpace(printers) && _dymoAddIn.IsPrinterOnline(printers);
+        }
         
         public void PrintLabelAuctionObject(string text, string number, string year, int partsNo) {
             var myLabel = new DymoLabels();

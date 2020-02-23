@@ -164,7 +164,7 @@ namespace ConAuction3.Views {
             }
 
             BtnDialogOk.IsEnabled = ok;
-            BtnPrintLabelAndSave.IsEnabled = ok;
+            BtnPrintLabelAndSave.IsEnabled = ok && LabelWriter.Instance.IsPrinterOnline();
         }
 
         private void FieldsChanged(object sender, SelectionChangedEventArgs e) {

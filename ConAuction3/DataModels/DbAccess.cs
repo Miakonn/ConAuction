@@ -190,27 +190,6 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        //public void UpdateProductFromDb()
-        //{
-        //	try {
-        //		//prepare adapter to run query
-        //		var query =
-        //			"select id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice from Product where year=" +
-        //			ConfigurationManager.AppSettings["Year"];
-
-        //		DbAdapterProduct = new MySqlDataAdapter(query, DbConnection);
-        //		var DBDataSetProduct = new DataSet();
-        //		//get query results in dataSet
-        //		DbAdapterProduct.Fill(DBDataSetProduct);
-
-        //		DataTableProduct = DBDataSetProduct.Tables[0];
-        //		DataTableProduct.TableName = "Product";
-        //	}
-        //	catch (MySqlException ex) {
-        //		MessageBox.Show(ex.Message);
-        //	}
-        //}
-
         /// <summary>
         /// 
         /// </summary>
@@ -308,7 +287,7 @@ namespace ConAuction3.DataModels {
             var command = DbConnection.CreateCommand();
             command.Connection = DbConnection;
             try {
-                command.CommandText = "UPDATE Product SET Price=@Price, Timestamp=Now(), Note=@Note WHERE id=@id;";
+                command.CommandText = "UPDATE Product SET Price=@Price, Note=@Note, Timestamp=Now() WHERE id=@id;";
                 command.Parameters.AddWithValue("@Price", price);
                 command.Parameters.AddWithValue("@Note", note);
                 command.Parameters.AddWithValue("@id", id);
@@ -322,7 +301,70 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        public void DeleteProductToDb(long id) {
+        public void SaveProductPrintedToDb(Product product) {
+            var command = DbConnection.CreateCommand();
+            command.Connection = DbConnection;
+            try {
+                command.CommandText = "UPDATE Product SET LabelPrinted=@LabelPrinted, Timestamp=Now() WHERE id=@id;";
+                command.Parameters.AddWithValue("@LabelPrinted", product.LabelPrinted);
+                command.Parameters.AddWithValue("@id", product.Id);
+                command.UpdatedRowSource = UpdateRowSource.None;
+                command.ExecuteNonQuery();
+
+                Trace.WriteLine("Update LabelPrinted : SUCCESS!");
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void SaveProductWithNewLabelToDb(Product product) {
+            var sqlTran = DbConnection.BeginTransaction();
+
+            var command = DbConnection.CreateCommand();
+            command.Transaction = sqlTran;
+            command.Connection = DbConnection;
+            try {
+                command.CommandText = $"select count(*) from Product where Label={product.Label} and Year={Year}";
+                var result = (long)command.ExecuteScalar();
+                if (result > 0L) {
+                    throw new Exception("Objektnumret redan använt!");
+                }
+                command.CommandText =
+                    "UPDATE Product SET Name=@Name, Label=@Label, Description=@Description, Type=@Type, Note=@Note, FixedPrice=@FixedPrice, LabelPrinted=@LabelPrinted, PartsNo=@PartsNo, Timestamp=Now() WHERE id=@id;";
+                command.Parameters.AddWithValue("@Name", product.Name);
+                command.Parameters.AddWithValue("@Label", product.Label);
+                command.Parameters.AddWithValue("@Description", product.Description);
+                command.Parameters.AddWithValue("@FixedPrice", product.FixedPrice);
+                command.Parameters.AddWithValue("@Type", product.Type);
+                command.Parameters.AddWithValue("@Note", product.Note);
+                command.Parameters.AddWithValue("@LabelPrinted", product.LabelPrinted);
+                command.Parameters.AddWithValue("@PartsNo", product.PartsNo);
+                command.Parameters.AddWithValue("@id", product.Id);
+
+                command.UpdatedRowSource = UpdateRowSource.None;
+                command.ExecuteNonQuery();
+
+                // Commit the transaction.
+                sqlTran.Commit();
+                
+                Trace.WriteLine("Updated with new label! : SUCCESS!");
+            }
+
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+
+                try {
+                    sqlTran.Rollback();
+
+                }
+                catch (Exception exRollback) {
+                    MessageBox.Show(exRollback.Message);
+                }
+            }
+        }
+
+        public void DeleteProductFromDb(long id) {
             var command = DbConnection.CreateCommand();
             command.Connection = DbConnection;
             try {

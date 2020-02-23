@@ -19,6 +19,7 @@ namespace ConAuction3.ViewModels {
 
         private readonly int CostAuction = int.Parse(ConfigurationManager.AppSettings["Cost"]);
         private readonly int CostJumble= int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+        private readonly int JumbleLabelStart = int.Parse(ConfigurationManager.AppSettings["JumbleLabelStart"]);
 
         #endregion
 
@@ -226,7 +227,7 @@ namespace ConAuction3.ViewModels {
         }
 
         public string Statistics() {
-            int totalCount = CountAuction + CountJumble;
+            //int totalCount = CountAuction + CountJumble;
             var  types = _productList.GroupBy(p => p.Type);
             var result = new StringBuilder();
 
@@ -239,14 +240,14 @@ namespace ConAuction3.ViewModels {
             return result.ToString();
         }
 
-
-        public int GetNextFreeLabel(bool page1, bool page2, bool page3) {
+        public int GetNextFreeLabel(bool isJumble, bool page1, bool page2, bool page3) {
             if (!page1 && !page2 && !page3) {
                 return 0;
             }
 
-
-            for (int label = 1;; label++) {
+            var labelStart = isJumble ? JumbleLabelStart : 1;
+            
+            for (int label = labelStart; ; label++) {
                 var page = label % 3;
                 if ((page == 1 && page1) || (page == 2 && page2) || (page == 0 && page3)) {
                     if (IsLabelFree(label)) {
@@ -263,6 +264,10 @@ namespace ConAuction3.ViewModels {
                 }
             }
             return true;
+        }
+
+        public bool HasCorrectLabel(Product product) {
+            return (product.IsJumble == (product.Label >= JumbleLabelStart));
         }
 
     }
