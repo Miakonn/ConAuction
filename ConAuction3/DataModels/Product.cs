@@ -5,17 +5,22 @@ namespace ConAuction3.DataModels {
     public class Product : IComparable {
         private string _description;
         private string _name;
+        private string _buyer;
         private string _note;
         public long Id { get; set; }
         public int Label { get; set; }
         public string Type { get; set; }
         public bool LabelPrinted { get; set; }
         public int PartsNo { get; set; }
-
-
+        
         public string Name {
             get => _name;
             set => _name = value.Length > 45 ? value.Substring(0, 45) : value;
+        }
+
+        public string Buyer {
+            get => _buyer;
+            set => _buyer = value.Length > 15 ? value.Substring(0, 15) : value;
         }
 
         public string Description {
@@ -64,7 +69,15 @@ namespace ConAuction3.DataModels {
             get => IsSold ? Price.ToString() : "";
             set {
                 Price = !string.IsNullOrWhiteSpace(value) && int.TryParse(value, out var price) ? price : 0;
-                DbAccess.Instance.SaveProductPriceToDb(Id, Price, Note);
+                DbAccess.Instance.SaveProductPriceToDb(Id, Price);
+            }
+        }
+
+        public string BuyerStr {
+            get => Buyer;
+            set {
+                Buyer = value.Length > 15 ? value.Substring(0,14) : value; 
+                DbAccess.Instance.SaveProductBuyerToDb(Id, Buyer);
             }
         }
 
@@ -81,6 +94,7 @@ namespace ConAuction3.DataModels {
         public bool UndoSoldFor() {
             if (FixedPrice.HasValue && IsSold) {
                 Price = 0;
+                Buyer = null;
                 return true;
             }
             return false;

@@ -153,6 +153,23 @@
                         <Label Grid.Column="1" Grid.Row="2" Content="Netto" />
                         <TextBox Grid.Column="2" Grid.Row="2" Text="{Binding SelectedNetAmount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
                     </Grid>
+                    <Grid DockPanel.Dock="Bottom" Visibility="{Binding ModeIsBuyer, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding SelectedName, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
+                        <Label Grid.Column="1" Grid.Row="0" Content="Antal köpta" />
+                        <TextBox Grid.Column="2" Grid.Row="0" Text="{Binding SelectedBoughtCount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
+                        <Label Grid.Column="1" Grid.Row="1" Content="Brutto köpt" />
+                        <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding SelectedBoughtAmount, Mode=OneWay}" IsReadOnly="true" MinWidth="75" />
+                    </Grid>
                     <ListView Name="ListViewCustomers" SelectionMode="Extended" ItemsSource="{Binding Customers}" IsSynchronizedWithCurrentItem="True" 
                                SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}" MouseDoubleClick="Control_OnMouseDoubleClickCustomer" 
                                SelectionChanged="ListView_OnSelectionChanged"
@@ -231,16 +248,18 @@
                                 Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <Button DockPanel.Dock="Right" Content="Avsluta" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
                     </DockPanel>
+
+                    <!-- List view for all except auction -->
                     <ListView Name="ListViewProducts" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
+                              Visibility="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToInvertedVisibilityConverter}}"
                               MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
                               SelectionChanged="ListView_OnSelectionChanged">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
                                 <Setter Property="Background" Value="{Binding LabelPrinted, Converter={StaticResource BoolToColorBrushConverter}, ConverterParameter=White;Red;0.2, Mode=OneWay}" />
-                           </Style>
+                            </Style>
                         </ListView.ItemContainerStyle>
-
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Width="40" DisplayMemberBinding="{Binding LabelStr}">
@@ -261,19 +280,57 @@
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
                                 </GridViewColumn>
-                                <GridViewColumn Width="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToInt80Converter}}" >
+                                <GridViewColumn Width="50" DisplayMemberBinding="{Binding SoldForStr}" >
                                     <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSorting" />
-                                        <GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <!-- List view for auction -->
+                    <ListView Name="ListViewProductsAuction" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
+                              Visibility="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
+                              SelectionChanged="ListView_OnSelectionChanged">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                                <Setter Property="Background" Value="{Binding LabelPrinted, Converter={StaticResource BoolToColorBrushConverter}, ConverterParameter=White;Red;0.2, Mode=OneWay}" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding LabelStr}">
+                                    <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="LabelStr" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
+                                    <GridViewColumnHeader Content="Namn" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
+                                    <GridViewColumnHeader Content="Typ" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
+                                    <GridViewColumnHeader Content="Not" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="120" >
+                                    <GridViewColumnHeader Content="Köpare" />
+                                    <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding SoldForStr, Mode=TwoWay}" PreviewKeyUp="PriceTb_OnPreviewKeyUp"
-                                                     Width="50"
-                                                     IsReadOnly="{Binding ModeIsAuctioning, Converter={StaticResource BooleanInverter}}" />
+                                            <TextBox Text="{Binding BuyerStr, Mode=TwoWay}" PreviewKeyUp="PriceTb_OnPreviewKeyUp"
+                                                     Width="100"
+                                                     IsReadOnly="false" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToInt50Inverter}}" 
-                                                DisplayMemberBinding="{Binding SoldForStr}" >
-                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSorting" />
+                                <GridViewColumn Width="80"  >
+                                    <GridViewColumnHeader Content="Sålt för" />
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding SoldForStr, Mode=TwoWay}" PreviewKeyUp="PriceTb_OnPreviewKeyUp"
+                                                     Width="50"
+                                                     IsReadOnly="false" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>

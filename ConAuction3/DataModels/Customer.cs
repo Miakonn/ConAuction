@@ -2,9 +2,10 @@
     public class Customer {
         public Customer() {}
 
-        public Customer(int id, string name, string phone, string note, bool? finished, bool? swish) {
+        public Customer(int id, string name, string shortName, string phone, string note, bool? finished, bool? swish) {
             Id = id;
             Name = name;
+            ShortName = shortName;
             Phone = phone;
             Note = note;
 	        Finished = finished;
@@ -17,6 +18,7 @@
         public string Note { get; set; }
 		public bool? Finished { get; set; }
         public bool? Swish { get; set; }
+        public string ShortName { get; set; }
 
         public string NumberAndName => Id + " : " + Name;
 

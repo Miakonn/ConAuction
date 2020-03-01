@@ -37,7 +37,11 @@ namespace ConAuction3.ViewModels
         public void Filter(bool activeOnly, bool finishedOnly) {
             CustomerView.Filter = o => o is Customer c && (IsCustomerActive(c) || !activeOnly) && (!c.IsFinished || !finishedOnly);
         }
-        
+
+        public void FilterOnlyBuyers() {
+            CustomerView.Filter = o => o is Customer c && HasCustomerBoughtAnything(c);
+        }
+
         public void NoFilter() {
             CustomerView.Filter = null;
         }
@@ -52,6 +56,20 @@ namespace ConAuction3.ViewModels
 
         public bool IsCustomerActive(Customer customer) {
             return Products(customer).Any();
+        }
+
+        public IEnumerable<Product> ProductsBoughtBy(Customer customer) {
+            if (string.IsNullOrEmpty(customer.ShortName)) {
+                return new List<Product>();
+            }
+            return _auction.ProductsVm.ProductsBoughtByCustomer(customer.ShortName);
+        }
+
+        public bool HasCustomerBoughtAnything(Customer customer) {
+            if (string.IsNullOrEmpty(customer.ShortName)) {
+                return false;
+            }
+            return ProductsBoughtBy(customer).Any();
         }
 
         public int LeftToPay() {

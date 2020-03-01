@@ -77,10 +77,6 @@ namespace ConAuction3.ViewModels {
             return $"För kund: {countAuction} + {countJumble}";
         }
 
-        public List<Product> ProductsForCustomer(int customerId) {
-            return _productList.FindAll(p => p.CustomerId == customerId);
-        }
-
         public void SortBy(string propertyName) {
             var direction = ListSortDirection.Ascending;
             var sortCurrent = ProductView.SortDescriptions.FirstOrDefault();
@@ -95,6 +91,10 @@ namespace ConAuction3.ViewModels {
             ProductView.Filter = o => o is Product p && p.CustomerId == customerId;
         }
 
+        public void FilterByBuyer(string customerShortName) {
+            ProductView.Filter = o => o is Product p && string.Equals(p.Buyer, customerShortName, StringComparison.CurrentCultureIgnoreCase) ;
+        }
+
         public void NoFilter() {
             ProductView.Filter = null;
         }
@@ -106,7 +106,7 @@ namespace ConAuction3.ViewModels {
         public void FilterOnlyAuction() {
             ProductView.Filter = o => o is Product p && !p.IsJumble;
         }
-        
+
         //public  string ExportCustomerReceipt(this DataTable table, int customerId, string customerName) {
         //	var foundRows = table.Select("CustomerId = " + customerId + " and ISNULL(Price, 0) > 0");
 
@@ -160,23 +160,36 @@ namespace ConAuction3.ViewModels {
 
         //	return strB.ToString();
         //}
-        
-        private List<Product> GetProductsForCustomer(int customerId) {
+
+
+        public List<Product> ProductsForCustomer(int customerId) {
             return _productList.FindAll(p => p.CustomerId == customerId);
         }
 
+        public List<Product> ProductsBoughtByCustomer(string customerShortName) {
+            return _productList.FindAll(p => string.Equals(p.Buyer, customerShortName, StringComparison.CurrentCultureIgnoreCase));
+        }
+
         public int NetAmountForCustomer(int customerId) {
-            return GetProductsForCustomer(customerId).Sum(p => p.Price - (p.IsJumble ? CostJumble : CostAuction));
+            return ProductsForCustomer(customerId).Sum(p => p.Price - (p.IsJumble ? CostJumble : CostAuction));
         }
 
         public int TotalAmountForCustomer(int customerId) {
-            return GetProductsForCustomer(customerId).Sum(p => p.Price);
+            return ProductsForCustomer(customerId).Sum(p => p.Price);
         }
         
         public  int NoOfUnsoldForCustomer(int customerId) {
-        	return GetProductsForCustomer(customerId).Count(p => !p.IsSold);
+        	return ProductsForCustomer(customerId).Count(p => !p.IsSold);
         }
-        
+
+        public int NoOfBoughtForCustomer(string customerShortName) {
+            return ProductsBoughtByCustomer(customerShortName).Count;
+        }
+
+        public int TotalAmountBoughtForCustomer(string customerShortName) {
+            return ProductsBoughtByCustomer(customerShortName).Sum(p => p.Price);
+        }
+
         private string WriteJsonObj(string label, string value) {
             label = label.Replace('"', '\'');
             value = value.Replace('"', '\'');

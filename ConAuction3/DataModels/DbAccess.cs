@@ -18,7 +18,7 @@ namespace ConAuction3.DataModels {
 
         public static DbAccess Instance => _instance ?? (_instance = new DbAccess());
 
-        public bool InitDB() {
+        public bool InitDb() {
             try {
                 // Initialize mysql connection
                 DbConnection = new MySqlConnection(ConnectionString);
@@ -41,8 +41,8 @@ namespace ConAuction3.DataModels {
         }
 
         public List<Customer> ReadAllCustomers() {
-            var customers = new List<Customer>(900);
-            var query = "select id,name,phone,comment,finished,swish,timestamp from Customer;";
+            var customers = new List<Customer>(500);
+            var query = "select id,name,phone,comment,finished,swish,shortname,timestamp from Customer;";
             MySqlCommand cmdDatabase = new MySqlCommand(query, DbConnection);
 
             try {
@@ -51,6 +51,7 @@ namespace ConAuction3.DataModels {
                         var customer = new Customer {
                             Id = reader.GetInt32("id"),
                             Name = reader.GetStringOrDefault("name"),
+                            ShortName = reader.GetStringOrDefault("shortname"),
                             Phone = reader.GetStringOrDefault("phone"),
                             Note = reader.GetStringOrDefault("comment"),
                             Swish = reader.GetBooleanOrDefault("swish"),
@@ -70,7 +71,7 @@ namespace ConAuction3.DataModels {
         public List<Product> ReadAllProducts() {
             var products = new List<Product>(900);
             var query =
-                "select Id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice, LabelPrinted, PartsNo from Product where year=" +
+                "select Id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice, LabelPrinted, PartsNo, Buyer from Product where year=" +
                 Year;
             var cmdDatabase = new MySqlCommand(query, DbConnection);
             try {
@@ -87,7 +88,8 @@ namespace ConAuction3.DataModels {
                             FixedPrice = reader.GetIntOrDefault("FixedPrice"),
                             CustomerId = reader.GetInt32("CustomerId"),
                             LabelPrinted = reader.GetBoolean("LabelPrinted"),
-                            PartsNo = reader.GetInt32("PartsNo")
+                            PartsNo = reader.GetInt32("PartsNo"),
+                            Buyer = reader.GetStringOrDefault("Buyer"),
                         };
                         products.Add(product);
                     }
@@ -110,8 +112,9 @@ namespace ConAuction3.DataModels {
             try {
                 // Set the INSERT command and parameter.
                 command.CommandText =
-                    "INSERT INTO customer (Name, Phone, Comment, Swish, Date, TimeStamp) VALUES (@Name,@Phone,@Comment,@Swish, Now(),Now());";
+                    "INSERT INTO customer (Name, Phone, Comment, Swish, Date, TimeStamp) VALUES (@Name,@ShortName,@Phone,@Comment,@Swish,Now(),Now());";
                 command.Parameters.AddWithValue("@Name", customer.Name);
+                command.Parameters.AddWithValue("@ShortName", customer.ShortName);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
                 command.Parameters.AddWithValue("@Comment", customer.Note);
                 command.Parameters.AddWithValue("@Swish", customer.Swish);
@@ -149,8 +152,9 @@ namespace ConAuction3.DataModels {
             command.Transaction = sqlTran;
             command.Connection = DbConnection;
             try {
-                command.CommandText = "UPDATE customer SET Name=@Name, Phone=@Phone, Comment=@Comment, Date=Now(), Finished=@Finished, Swish=@Swish, Timestamp=Now() WHERE id=@id;";
+                command.CommandText = "UPDATE customer SET Name=@Name, ShortName=@ShortName, Phone=@Phone, Comment=@Comment, Date=Now(), Finished=@Finished, Swish=@Swish, Timestamp=Now() WHERE id=@id;";
                 command.Parameters.AddWithValue("@Name", customer.Name);
+                command.Parameters.AddWithValue("@ShortName", customer.ShortName);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
                 command.Parameters.AddWithValue("@Comment", customer.Note);
                 command.Parameters.AddWithValue("@Finished", customer.Finished);
@@ -209,9 +213,8 @@ namespace ConAuction3.DataModels {
                 }
                 
                 command.CommandText =
-                    "INSERT INTO Product (Label, Name, Description,Type,  Note, Price, FixedPrice, CustomerId, LabelPrinted, PartsNo, Year, timestamp)" +
-                    "VALUES (@Label, @Name, @Description, @Type, @Note,@price, @Fixedprice, @CustomerId , @LabelPrinted, @PartsNo, " +
-                    Year + ", Now());";
+                    "INSERT INTO Product (Label, Name, Description,Type,  Note, Price, FixedPrice, CustomerId, LabelPrinted, PartsNo, Buyer, Year, timestamp)" +
+                    "VALUES (@Label, @Name, @Description, @Type, @Note,@price, @Fixedprice, @CustomerId , @LabelPrinted, @PartsNo, @Year, Now());";
                 command.Parameters.AddWithValue("@Label", prod.Label);
                 command.Parameters.AddWithValue("@Name", prod.Name);
                 command.Parameters.AddWithValue("@Description", prod.Description);
@@ -222,6 +225,7 @@ namespace ConAuction3.DataModels {
                 command.Parameters.AddWithValue("@CustomerId", prod.CustomerId);
                 command.Parameters.AddWithValue("@LabelPrinted", prod.LabelPrinted);
                 command.Parameters.AddWithValue("@PartsNo", prod.PartsNo);
+                command.Parameters.AddWithValue("@Year", Year);
 
                 command.UpdatedRowSource = UpdateRowSource.None;
                 command.ExecuteNonQuery();
@@ -283,18 +287,34 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        public void SaveProductPriceToDb(long id, int price, string note) {
+        public void SaveProductPriceToDb(long id, int price) {
             var command = DbConnection.CreateCommand();
             command.Connection = DbConnection;
             try {
-                command.CommandText = "UPDATE Product SET Price=@Price, Note=@Note, Timestamp=Now() WHERE id=@id;";
+                command.CommandText = "UPDATE Product SET Price=@Price, Timestamp=Now() WHERE id=@id;";
                 command.Parameters.AddWithValue("@Price", price);
-                command.Parameters.AddWithValue("@Note", note);
                 command.Parameters.AddWithValue("@id", id);
                 command.UpdatedRowSource = UpdateRowSource.None;
                 command.ExecuteNonQuery();
 
                 Trace.WriteLine("Update Price : SUCCESS!");
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void SaveProductBuyerToDb(long id, string buyer) {
+            var command = DbConnection.CreateCommand();
+            command.Connection = DbConnection;
+            try {
+                command.CommandText = "UPDATE Product SET Buyer=@Buyer, Timestamp=Now() WHERE id=@id;";
+                command.Parameters.AddWithValue("@Buyer", buyer);
+                command.Parameters.AddWithValue("@id", id);
+                command.UpdatedRowSource = UpdateRowSource.None;
+                command.ExecuteNonQuery();
+
+                Trace.WriteLine("Update Buyer : SUCCESS!");
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);

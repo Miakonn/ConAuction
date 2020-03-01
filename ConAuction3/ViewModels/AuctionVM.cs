@@ -12,7 +12,7 @@ using Application = System.Windows.Forms.Application;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace ConAuction3.ViewModels {
-    class AuctionVM : INotifyPropertyChanged {
+    internal class AuctionVM : INotifyPropertyChanged {
         #region Attributes
 
         public CustomerListVM CustomersVm { get; private set; }
@@ -63,6 +63,7 @@ namespace ConAuction3.ViewModels {
                 new ComboBoxItemOpMode {ValueMode = OpMode.Showing, ValueString = "Visning"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Auctioning, ValueString = "Auktion"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Paying, ValueString = "Utbetalning"},
+                new ComboBoxItemOpMode {ValueMode = OpMode.Buyer, ValueString = "Köpare"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Overhead, ValueString = "Projektor"},
             };
 
@@ -89,6 +90,7 @@ namespace ConAuction3.ViewModels {
                 OnPropertyChanged(nameof(ModeIsPaying));
                 OnPropertyChanged(nameof(ModeIsReceiving));
                 OnPropertyChanged(nameof(ModeIsReceivingOrShowing));
+                OnPropertyChanged(nameof(ModeIsBuyer));
                 OnPropertyChanged(nameof(CurrentMode));
                 UpdateAll();
             }
@@ -114,6 +116,17 @@ namespace ConAuction3.ViewModels {
                             ProductsVm.NoFilter();
                         }
                     }
+                    else {
+                        if (CurrentMode == OpMode.Buyer) {
+                            if (_selectedCustomer != null) {
+                                ProductsVm.FilterByBuyer(_selectedCustomer.ShortName);
+                            }
+                            else {
+                                ProductsVm.NoFilter();
+                            }
+                        }
+                    }
+
                     _selectedProduct = null;
                     OnPropertyChanged(nameof(SelectedProduct));
                 }
@@ -125,6 +138,8 @@ namespace ConAuction3.ViewModels {
                 OnPropertyChanged(nameof(StatusObjectCount));
                 OnPropertyChanged(nameof(PayCustomerCanExecute));
                 OnPropertyChanged(nameof(UndoPayCustomerCanExecute));
+                OnPropertyChanged(nameof(SelectedBoughtAmount));
+                OnPropertyChanged(nameof(SelectedBoughtCount));
             }
         }
 
@@ -184,12 +199,21 @@ namespace ConAuction3.ViewModels {
         // ReSharper disable once UnusedMember.Global
         public bool ModeIsReceiving => CurrentMode == OpMode.Receiving;
 
+        // ReSharper disable once UnusedMember.Global   
+        public bool ModeIsBuyer => CurrentMode == OpMode.Buyer;
+
         // ReSharper disable once UnusedMember.Global
         public bool ModeIsAuctioning => CurrentMode == OpMode.Auctioning;
         
         // ReSharper disable once UnusedMember.Global
         public string SelectedUnsoldCount => SelectedCustomer != null ? ProductsVm.NoOfUnsoldForCustomer(SelectedCustomer.Id).ToString() : "";
-        
+
+        // ReSharper disable once UnusedMember.Global
+        public string SelectedBoughtCount => SelectedCustomer != null ? ProductsVm.NoOfBoughtForCustomer(SelectedCustomer.ShortName).ToString() : "";
+
+        // ReSharper disable once UnusedMember.Global
+        public string SelectedBoughtAmount => SelectedCustomer != null ? ProductsVm.TotalAmountBoughtForCustomer(SelectedCustomer.ShortName).ToString() : "";
+
         // ReSharper disable once UnusedMember.Global
         public string SelectedAmount => SelectedCustomer != null ? ProductsVm.TotalAmountForCustomer(SelectedCustomer.Id).ToString() : "";
 
@@ -345,15 +369,21 @@ namespace ConAuction3.ViewModels {
         }
 
         private void ResetFilter() {
-            if (CurrentMode == OpMode.Showing) {
-                ProductsVm.Filter(_filterJumbleOnly, _filterUnsoldOnly);
+            switch (CurrentMode) {
+                case OpMode.Showing:
+                    ProductsVm.Filter(_filterJumbleOnly, _filterUnsoldOnly);
+                    break;
+                case OpMode.Paying:
+                    CustomersVm.Filter(true, _filterCustomerFinishedOnly);
+                    break;
+                case OpMode.Auctioning:
+                    ProductsVm.FilterOnlyAuction();
+                    break;
+                case OpMode.Buyer:
+                    CustomersVm.FilterOnlyBuyers();
+                    break;
             }
-            else if (CurrentMode == OpMode.Paying) {
-                CustomersVm.Filter(true, _filterCustomerFinishedOnly);
-            }
-            else if (CurrentMode == OpMode.Auctioning) {
-                ProductsVm.FilterOnlyAuction();
-            }
+
             CustomersVm.SortBy("Name");
             ProductsVm.SortBy("Label");
         }
@@ -362,7 +392,7 @@ namespace ConAuction3.ViewModels {
         private void TryConnectDataBase() {
             bool fStarted;
             do {
-                fStarted = DbAccess.Instance.InitDB();
+                fStarted = DbAccess.Instance.InitDb();
                 if (!fStarted) {
                     var res = MessageBox.Show("Vill du försöka kontakta databasen igen?", null, MessageBoxButtons.RetryCancel);
                     if (res != DialogResult.Retry) {
@@ -577,7 +607,7 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.SellForFixedPrice()) {
-                DbAccess.Instance.SaveProductPriceToDb(SelectedProduct.Id, SelectedProduct.Price, SelectedProduct.Note);
+                DbAccess.Instance.SaveProductPriceToDb(SelectedProduct.Id, SelectedProduct.Price);
             }
 
             UpdateAll();
@@ -593,7 +623,7 @@ namespace ConAuction3.ViewModels {
             }
 
             if (SelectedProduct.UndoSoldFor()) {
-                DbAccess.Instance.SaveProductPriceToDb(SelectedProduct.Id, SelectedProduct.Price, SelectedProduct.Note);
+                DbAccess.Instance.SaveProductPriceToDb(SelectedProduct.Id, SelectedProduct.Price);
             }
 
             UpdateAll();

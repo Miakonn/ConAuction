@@ -5,7 +5,8 @@
         Showing = 2,
         Auctioning = 3,
         Paying = 4,
-        Overhead = 5
+        Buyer = 5,
+        Overhead = 6
     }
 
 
