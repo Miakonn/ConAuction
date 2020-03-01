@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Dymo;
 
 namespace ConAuction3 {
@@ -8,6 +9,7 @@ namespace ConAuction3 {
         private readonly DymoAddInClass _dymoAddIn;
         private readonly string _labelFolderAuction;
         private readonly string _labelFolderFixedPrice;
+        private readonly string _currentPrinterName;
 
         public LabelWriter () {
             _dymoAddIn = new DymoAddInClass();
@@ -15,15 +17,23 @@ namespace ConAuction3 {
             var labelFolder = AppDomain.CurrentDomain.BaseDirectory;
             _labelFolderAuction = Path.Combine(labelFolder, @"Labels/AuctionObject.label");
             _labelFolderFixedPrice = Path.Combine(labelFolder, @"Labels/FixedPriceObject.label");
+
+            _currentPrinterName = GetFirstPrinterOnline();
+            _dymoAddIn.SelectPrinter(_currentPrinterName);
         }
 
         public static LabelWriter Instance { get; } = new LabelWriter();
 
+
         public bool IsPrinterOnline() {
-            var printers = _dymoAddIn.GetDymoPrinters();
-            return !string.IsNullOrWhiteSpace(printers) && _dymoAddIn.IsPrinterOnline(printers);
+            return _dymoAddIn.IsPrinterOnline(_currentPrinterName);
         }
-        
+
+        public string GetFirstPrinterOnline() {
+            var printers = _dymoAddIn.GetDymoPrinters().Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            return printers.FirstOrDefault(p => _dymoAddIn.IsPrinterOnline(p));
+        }
+
         public void PrintLabelAuctionObject(string text, string number, string year, int partsNo) {
             var myLabel = new DymoLabels();
 
