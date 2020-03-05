@@ -20,6 +20,8 @@
         public bool? Swish { get; set; }
         public string ShortName { get; set; }
 
+        public string ShortNameOrDefault => string.IsNullOrWhiteSpace(ShortName) ? "B" + Id : ShortName;
+
         public string NumberAndName => Id + " : " + Name;
 
         public bool IsFinished {

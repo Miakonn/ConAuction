@@ -2,10 +2,11 @@
 
 * Antal återlämnade spel
 
-* VIP-kunder automatik
-
 * Lägg till import funktion från excel-arket
 
+* Fixa export av VIP-kunders kvitto
+
+* Fixa budgivares kortnamn.
 
 * Etikettskrivare!
 	+	Lägg till knapp för skriva ut etiketter för alla objekt för en användare?

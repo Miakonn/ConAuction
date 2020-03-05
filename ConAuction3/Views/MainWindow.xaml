@@ -258,9 +258,9 @@
                         <Button DockPanel.Dock="Right" Content="Avsluta" Command="{Binding CancelCommand}"  TabIndex="20" Margin="10,5,10,5" />
                     </DockPanel>
 
-                    <!-- List view for all except auction -->
-                    <ListView Name="ListViewProducts" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
-                              Visibility="{Binding ModeIsReceivingOrShowingOrPaying, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    <!-- List view for Receiving -->
+                    <ListView Name="ListViewProductsReceiving" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
+                              Visibility="{Binding ModeIsReceiving, Converter={StaticResource BooleanToVisibilityConverter}}"
                               MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
                               SelectionChanged="ListView_OnSelectionChanged">
                         <ListView.ItemContainerStyle>
@@ -281,7 +281,42 @@
                                     <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
-                                    <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPriceSorting" />
+                                    <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPriceSortableStr" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="60" DisplayMemberBinding="{Binding LabelPrinted}" >
+                                    <GridViewColumnHeader Content="Utskriven" Command="{Binding SortProductCommand}" CommandParameter="LabelPrinted" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    
+                    <!-- List view for Showing -->
+                    <ListView Name="ListViewProductsShowing" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
+                              Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
+                              SelectionChanged="ListView_OnSelectionChanged">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                                <Setter Property="Background" Value="{Binding LabelPrinted, Converter={StaticResource BoolToColorBrushConverter}, ConverterParameter=White;Red;0.2, Mode=OneWay}" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding LabelStr}">
+                                    <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="LabelStr" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
+                                    <GridViewColumnHeader Content="Namn" Command="{Binding SortProductCommand}" CommandParameter="Name"/>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
+                                    <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
+                                    <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPriceSortableStr" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="60" DisplayMemberBinding="{Binding LabelPrinted}" >
                                     <GridViewColumnHeader Content="Utskriven" Command="{Binding SortProductCommand}" CommandParameter="LabelPrinted" />
@@ -290,13 +325,76 @@
                                     <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="50" DisplayMemberBinding="{Binding SoldForStr}" >
-                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSorting" />
+                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSortableStr" />
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>
 
-                    <!-- List view for auction -->
+                    <!-- List view for credit -->
+                    <ListView Name="ListViewProductBuyers" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
+                              Visibility="{Binding ModeIsBuyer, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
+                              SelectionChanged="ListView_OnSelectionChanged">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding LabelStr}" >
+                                    <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="LabelStr" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
+                                    <GridViewColumnHeader Content="Namn" Command="{Binding SortProductCommand}" CommandParameter="Name"/>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
+                                    <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="50" DisplayMemberBinding="{Binding SoldForStr}" >
+                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSortableStr" />
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <!-- List view for payouts -->
+                    <ListView Name="ListViewProductsPayouts" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
+                              Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
+                              SelectionChanged="ListView_OnSelectionChanged">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                                <Setter Property="Background" Value="{Binding IsSold, Converter={StaticResource BoolToColorBrushConverter}, ConverterParameter=Green;Red;0.2, Mode=OneWay}" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding LabelStr}">
+                                    <GridViewColumnHeader Content="Id" Command="{Binding SortProductCommand}" CommandParameter="LabelStr" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding Name}">
+                                    <GridViewColumnHeader Content="Namn" Command="{Binding SortProductCommand}" CommandParameter="Name"/>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
+                                    <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding FixedPriceString}" >
+                                    <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPriceSortableStr" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="50" DisplayMemberBinding="{Binding SoldForStr}" >
+                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSortableStr" />
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <!-- List view for auctioning -->
                     <ListView Name="ListViewProductsAuction" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
                               Visibility="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToVisibilityConverter}}"
                               MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
@@ -304,7 +402,6 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
-                                <Setter Property="Background" Value="{Binding LabelPrinted, Converter={StaticResource BoolToColorBrushConverter}, ConverterParameter=White;Red;0.2, Mode=OneWay}" />
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.View>
@@ -356,7 +453,7 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
-                                <Setter Property="Background" Value="{Binding LabelPrinted, Converter={StaticResource BoolToColorBrushConverter}, ConverterParameter=White;Red;0.2, Mode=OneWay}" />
+                                <Setter Property="Background" Value="{Binding BidSuccessFul, Converter={StaticResource BoolToColorBrushConverter}, ConverterParameter=White;Red;0.2, Mode=OneWay}" />
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.View>

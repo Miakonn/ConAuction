@@ -40,21 +40,21 @@ namespace ConAuction3.DataModels {
 
         // Used for sorting
         [UsedImplicitly]
-        public string PriceSorting => Price.ToString("0000");
+        public string PriceSortableStr => Price.ToString("0000");
+
+        public string BarcodeNumber => Label.ToString("0000");
 
         public int? FixedPrice { get; set; }
 
         // Used for sorting
         [UsedImplicitly]
-        public string FixedPriceSorting => FixedPrice.HasValue ? FixedPrice?.ToString("0000") : "";
+        public string FixedPriceSortableStr => FixedPrice.HasValue ? FixedPrice?.ToString("0000") : "";
 
         public int CustomerId { get; set; }
 
         public string FixedPriceString => FixedPrice.HasValue && FixedPrice.Value > 0 ? FixedPrice.Value.ToString() : "";
 
         public bool IsSold => Price > 0;
-
-        public string BarcodeNumber => Label.ToString("0000");
 
         public Product() {
             PartsNo = 1;

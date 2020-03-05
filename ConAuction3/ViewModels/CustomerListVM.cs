@@ -63,16 +63,10 @@ namespace ConAuction3.ViewModels
         }
 
         public IEnumerable<Product> ProductsBoughtBy(Customer customer) {
-            if (string.IsNullOrEmpty(customer.ShortName)) {
-                return new List<Product>();
-            }
-            return _auction.ProductsVm.ProductsBoughtByCustomer(customer.ShortName);
+            return _auction.ProductsVm.ProductsBoughtByCustomer(customer.ShortNameOrDefault);
         }
 
         public bool HasCustomerBoughtAnything(Customer customer) {
-            if (string.IsNullOrEmpty(customer.ShortName)) {
-                return false;
-            }
             return ProductsBoughtBy(customer).Any();
         }
 

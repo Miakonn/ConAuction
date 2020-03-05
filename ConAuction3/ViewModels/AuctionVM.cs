@@ -53,7 +53,7 @@ namespace ConAuction3.ViewModels {
         private bool _filterUnsoldOnly;
         private bool _filterCustomerActiveOnly;
         private bool _filterCustomerFinishedOnly;
-        private bool _filterCustomerOnlyBidders;
+        private bool _filterCustomerOnlyBidders = true;
         private bool _isProductSold;
 
         private string _LastSmsMessage =
@@ -73,7 +73,7 @@ namespace ConAuction3.ViewModels {
                 new ComboBoxItemOpMode {ValueMode = OpMode.Bidding, ValueString = "Budgivning"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Auctioning, ValueString = "Auktion"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Paying, ValueString = "Utbetalning"},
-                new ComboBoxItemOpMode {ValueMode = OpMode.Buyer, ValueString = "Köpare"},
+                new ComboBoxItemOpMode {ValueMode = OpMode.Buyer, ValueString = "Kredit-köpare"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Overhead, ValueString = "Projektor"},
             };
 
@@ -100,10 +100,13 @@ namespace ConAuction3.ViewModels {
                 OnPropertyChanged(nameof(ModeIsPaying));
                 OnPropertyChanged(nameof(ModeIsReceiving));
                 OnPropertyChanged(nameof(ModeIsReceivingOrShowing));
-                OnPropertyChanged(nameof(ModeIsReceivingOrShowingOrPaying));
                 OnPropertyChanged(nameof(ModeIsBuyer));
                 OnPropertyChanged(nameof(ModeIsBidding));
                 OnPropertyChanged(nameof(CurrentMode));
+                SelectedCustomer = null;
+                SelectedProduct = null;
+                SelectedBid = null;
+
                 UpdateAll();
             }
         }
@@ -132,7 +135,7 @@ namespace ConAuction3.ViewModels {
                     }
                     else if (CurrentMode == OpMode.Buyer) {
                             if (_selectedCustomer != null) {
-                                ProductsVm.FilterByBuyer(_selectedCustomer.ShortName);
+                                ProductsVm.FilterByBuyer(_selectedCustomer.ShortNameOrDefault);
                             }
                             else {
                                 ProductsVm.NoFilter();
@@ -244,9 +247,6 @@ namespace ConAuction3.ViewModels {
 
         // ReSharper disable once UnusedMember.Global
         public bool ModeIsAuctioning => CurrentMode == OpMode.Auctioning;
-
-        // ReSharper disable once UnusedMember.Global
-        public bool ModeIsReceivingOrShowingOrPaying => CurrentMode == OpMode.Receiving || CurrentMode == OpMode.Showing || CurrentMode == OpMode.Paying || CurrentMode == OpMode.Buyer;
 
         // ReSharper disable once UnusedMember.Global
         public string SelectedUnsoldCount => SelectedCustomer != null ? ProductsVm.NoOfUnsoldForCustomer(SelectedCustomer.Id).ToString() : "";
@@ -399,10 +399,13 @@ namespace ConAuction3.ViewModels {
             if (CurrentMode == OpMode.Auctioning) {
                 selectedLastCustomerId = null;
             }
-            
+            if (CurrentMode == OpMode.Buyer) {
+                selectedLastProductId = null;
+            }
+
             CustomersVm = new CustomerListVM(DbAccess.Instance.ReadAllCustomers(), this);
             ProductsVm = new ProductListVM(DbAccess.Instance.ReadAllProducts());
-            BidsVm = new BidListVM(DbAccess.Instance.ReadAllBids(), ProductsVm);
+            BidsVm = new BidListVM(DbAccess.Instance.ReadAllBids(), ProductsVm, CustomersVm);
 
             ResetFilter();
 

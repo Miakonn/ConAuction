@@ -12,12 +12,13 @@ namespace ConAuction3.ViewModels
 
         public ICollectionView BidView { get; }
         
-        public BidListVM(List<Bid> bids, ProductListVM productsVm) {
+        public BidListVM(List<Bid> bids, ProductListVM productsVm, CustomerListVM customersVm) {
             _bidList = bids;
 
             foreach (var bid in bids) {
                 bid.BidProduct = productsVm.GetProductFromLabel(bid.ProductId);
                 bid.BidProduct?.Bids.Add(bid);
+                bid.Bidder = customersVm.GetCustomerFromId(bid.CustomerId);
             }
 
             BidView = CollectionViewSource.GetDefaultView(bids);

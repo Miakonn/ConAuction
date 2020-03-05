@@ -118,7 +118,7 @@ namespace ConAuction3.DataModels {
             command.Transaction = sqlTran;
             command.Connection = DbConnection;
             try {
-                command.CommandText = "UPDATE bid SET Name=@Name, ShortName=@ShortName, Phone=@Phone, Comment=@Comment, Date=Now(), Finished=@Finished, Swish=@Swish, Timestamp=Now() WHERE id=@id;";
+                command.CommandText = "UPDATE Customer SET Name=@Name, ShortName=@ShortName, Phone=@Phone, Comment=@Comment, Date=Now(), Finished=@Finished, Swish=@Swish, Timestamp=Now() WHERE id=@id;";
                 command.Parameters.AddWithValue("@Name", customer.Name);
                 command.Parameters.AddWithValue("@ShortName", customer.ShortName);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
@@ -165,7 +165,7 @@ namespace ConAuction3.DataModels {
         public List<Product> ReadAllProducts() {
             var products = new List<Product>(900);
             var query =
-                "select Id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice, LabelPrinted, PartsNo, Buyer from Product where year=" +
+                "SELECT Id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice, LabelPrinted, PartsNo, Buyer FROM Product WHERE year=" +
                 Year;
             var cmdDatabase = new MySqlCommand(query, DbConnection);
             try {
