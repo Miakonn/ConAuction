@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ConAuction3.Annotations;
 using ConAuction3.ViewModels;
 
 using ConAuction3.DataModels;
@@ -75,7 +76,7 @@ namespace ConAuction3.Views {
             FixedPricePanel.Visibility = product.IsJumble ? Visibility.Visible : Visibility.Hidden;
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public IEnumerable<string> TitleDictionary => _dictionary;
         
         public Product Result {

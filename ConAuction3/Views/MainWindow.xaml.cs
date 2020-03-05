@@ -1,13 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ConAuction3.Annotations;
 using ConAuction3.ViewModels;
 
 namespace ConAuction3.Views {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    // ReSharper disable once UnusedMember.Global
+    [UsedImplicitly]
     public partial class MainWindow {
         private AuctionVM _viewModel;
 

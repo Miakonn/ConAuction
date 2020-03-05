@@ -1,4 +1,6 @@
-﻿namespace ConAuction3.DataModels {
+﻿using ConAuction3.Annotations;
+
+namespace ConAuction3.DataModels {
     public class Customer {
         public Customer() {}
 
@@ -29,10 +31,10 @@
             set => Finished = value;
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string IsFinishedStr => IsFinished ? "Klar" : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string PhoneFormatted {
             get {
                 if (Phone.Length > 10) {
@@ -45,7 +47,7 @@
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string SwishFormatted => Swish.HasValue && Swish.Value ? "✓" : string.Empty;
     }
 }

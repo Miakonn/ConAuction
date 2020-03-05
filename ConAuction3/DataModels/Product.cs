@@ -71,7 +71,7 @@ namespace ConAuction3.DataModels {
 
         public string BidsStr => string.Join(",", Bids);
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string SoldForStr {
             get => IsSold ? Price.ToString() : "";
             set {

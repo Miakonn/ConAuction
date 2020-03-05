@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using ConAuction3.Annotations;
 using ConAuction3.DataModels;
 using ConAuction3.Utilities;
 using ConAuction3.Views;
@@ -64,7 +65,7 @@ namespace ConAuction3.ViewModels {
         private bool _labelPage3;
 
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public List<ComboBoxItemOpMode> OpEnumList =>
             new List<ComboBoxItemOpMode> {
                 new ComboBoxItemOpMode {ValueMode = OpMode.Initializing, ValueString = "Välj mod"},
@@ -111,10 +112,10 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public ICollectionView Customers => CustomersVm.CustomerView;
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public ICollectionView Products => ProductsVm.ProductView;
 
         public ICollectionView Bids => BidsVm.BidView;
@@ -200,76 +201,76 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusCountAuction => $"Inlämnade: {ProductsVm.CountAuction}";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusCountJumble => $"Inlämnade: {ProductsVm.CountJumble}";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusCountSoldAuction => ProductsVm.CountSoldAuction > 0 ? $"Sålda: {ProductsVm.CountSoldAuction}" : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusCountSoldJumble => ProductsVm.CountSoldJumble > 0 ? $"Sålda: {ProductsVm.CountSoldJumble}" : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusAmountSoldAuction => ProductsVm.AmountSoldAuction > 0 ? $"Summa: {ProductsVm.AmountSoldAuction}:-" : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusAmountSoldJumble => ProductsVm.AmountSoldJumble > 0 ? $"Summa: {ProductsVm.AmountSoldJumble}:-" : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusLeftToPay => ModeIsPaying ? $"Utbetala: {CustomersVm.LeftToPay()}:-" : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusProfit => ModeIsPaying && ProductsVm.Profit > 0 ? $"Intäkt: {ProductsVm.Profit}:-" : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string StatusObjectCount => ModeIsReceiving && SelectedCustomer != null ? ProductsVm.CustomerStatus(SelectedCustomer.Id) : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool ModeIsReceivingOrShowing => CurrentMode == OpMode.Receiving || CurrentMode == OpMode.Showing;
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool ModeIsShowing => CurrentMode == OpMode.Showing;
         
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool ModeIsPaying => CurrentMode == OpMode.Paying;
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool ModeIsReceiving => CurrentMode == OpMode.Receiving;
 
-        // ReSharper disable once UnusedMember.Global   
+        [UsedImplicitly]   
         public bool ModeIsBuyer => CurrentMode == OpMode.Buyer;
 
-        // ReSharper disable once UnusedMember.Global   
+        [UsedImplicitly]   
         public bool ModeIsBidding => CurrentMode == OpMode.Bidding;
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool ModeIsAuctioning => CurrentMode == OpMode.Auctioning;
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string SelectedUnsoldCount => SelectedCustomer != null ? ProductsVm.NoOfUnsoldForCustomer(SelectedCustomer.Id).ToString() : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string SelectedBoughtCount => SelectedCustomer != null ? ProductsVm.NoOfBoughtForCustomer(SelectedCustomer.ShortName).ToString() : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string SelectedBoughtAmount => SelectedCustomer != null ? ProductsVm.TotalAmountBoughtForCustomer(SelectedCustomer.ShortName).ToString() : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string SelectedAmount => SelectedCustomer != null ? ProductsVm.TotalAmountForCustomer(SelectedCustomer.Id).ToString() : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string SelectedNetAmount => SelectedCustomer != null ? ProductsVm.NetAmountForCustomer(SelectedCustomer.Id).ToString() : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string SelectedName => SelectedCustomer != null ? SelectedCustomer.NumberAndName : "";
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public string VersionStr => "V" + Assembly.GetEntryAssembly()?.GetName().Version;
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool FilterJumbleOnly {
             get => _filterJumbleOnly;
             set {
@@ -278,7 +279,7 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool FilterUnsoldOnly {
             get => _filterUnsoldOnly;
             set {
@@ -287,7 +288,7 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool FilterCustomerActiveOnly {
             get => _filterCustomerActiveOnly;
             set {
@@ -296,7 +297,7 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool FilterCustomerFinishedOnly {
             get => _filterCustomerFinishedOnly;
             set {
@@ -305,7 +306,7 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool FilterCustomerOnlyBidders {
             get => _filterCustomerOnlyBidders;
             set {
@@ -320,7 +321,7 @@ namespace ConAuction3.ViewModels {
         }
 
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool LabelPage1 {
             get => _labelPage1;
             set {
@@ -329,7 +330,7 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool LabelPage2 {
             get => _labelPage2;
             set {
@@ -338,7 +339,7 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool LabelPage3 {
             get => _labelPage3;
             set {
@@ -347,7 +348,7 @@ namespace ConAuction3.ViewModels {
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
+        [UsedImplicitly]
         public bool IsProductSold {
             get => _isProductSold;
             set {
