@@ -87,14 +87,19 @@
     <Compile Include="Converters\BoolToValueConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\StringNullOrEmptyToVisibilityConverter.cs" />
+    <Compile Include="DataModels\Bid.cs" />
     <Compile Include="Labels\LabelWriter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Utilities\SendMail.cs" />
     <Compile Include="Utilities\SendSMS.cs" />
+    <Compile Include="ViewModels\BidListVM.cs" />
     <Compile Include="ViewModels\CustomerListVM.cs" />
     <Compile Include="Utilities\MyCommand.cs" />
     <Compile Include="Utilities\OpMode.cs" />
     <Compile Include="ViewModels\ProductDisplayVM.cs" />
+    <Compile Include="Views\BidDlg.xaml.cs">
+      <DependentUpon>BidDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CustomerDlg.xaml.cs">
       <DependentUpon>CustomerDlg.xaml</DependentUpon>
     </Compile>
@@ -111,6 +116,10 @@
     <Compile Include="Views\PromptDialog.xaml.cs">
       <DependentUpon>PromptDialog.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\BidDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\CustomerDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

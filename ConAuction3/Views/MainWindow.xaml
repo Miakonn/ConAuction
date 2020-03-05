@@ -95,6 +95,10 @@
                                   Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" 
                                   IsChecked="{Binding Path=FilterCustomerFinishedOnly}">Bara oklara</CheckBox>
 
+                        <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
+                                  Visibility="{Binding ModeIsBidding, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                  IsChecked="{Binding Path=FilterCustomerOnlyBidders}">Bara budgivare</CheckBox>
+
                         <Button DockPanel.Dock="Left" Content="Ny kund" Command="{Binding NewCustomerCommand}"  TabIndex="10" Margin="10,5,10,5"
                                 Visibility="{Binding ModeIsReceiving, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Button.ToolTip>
@@ -206,6 +210,11 @@
                 <GridSplitter Grid.Column="1" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" />
                 <DockPanel Grid.Column="2">
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
+                        <Button DockPanel.Dock="Left" Content="Lägg bud..." Command="{Binding NewBidCommand}"  TabIndex="12" Margin="10,5,10,5" 
+                                Visibility="{Binding ModeIsBidding , Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <Button DockPanel.Dock="Left" Content="Radera bud" Command="{Binding DeleteBidCommand}"  TabIndex="17" Margin="10,5,10,5" 
+                                Visibility="{Binding ModeIsBidding, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
                         <Button DockPanel.Dock="Left" Content="Nytt objekt" Command="{Binding NewProductCommand}"  TabIndex="15" Margin="10,5,10,5"
                                 Visibility="{Binding ModeIsReceiving, Converter={StaticResource BooleanToVisibilityConverter}}" >
                             <Button.ToolTip>
@@ -251,7 +260,7 @@
 
                     <!-- List view for all except auction -->
                     <ListView Name="ListViewProducts" SelectionMode="Extended" ItemsSource="{Binding Products}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedProduct}"
-                              Visibility="{Binding ModeIsAuctioning, Converter={StaticResource BooleanToInvertedVisibilityConverter}}"
+                              Visibility="{Binding ModeIsReceivingOrShowingOrPaying, Converter={StaticResource BooleanToVisibilityConverter}}"
                               MouseDoubleClick="Control_OnMouseDoubleClickProduct" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
                               SelectionChanged="ListView_OnSelectionChanged">
                         <ListView.ItemContainerStyle>
@@ -312,6 +321,9 @@
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" />
                                 </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding BidsStr}" >
+                                    <GridViewColumnHeader Content="Bud" />
+                                </GridViewColumn>
                                 <GridViewColumn Width="120" >
                                     <GridViewColumnHeader Content="Köpare" />
                                     <GridViewColumn.CellTemplate>
@@ -335,6 +347,36 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+
+                    <!-- List view for bidding -->
+                    <ListView Name="ListViewProductsBids" SelectionMode="Extended" ItemsSource="{Binding Bids}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding SelectedBid}"
+                              Visibility="{Binding ModeIsBidding, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              MouseDoubleClick="Control_OnMouseDoubleClickBid" KeyboardNavigation.TabNavigation="Contained" IsTabStop="False"
+                              SelectionChanged="ListView_OnSelectionChanged">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                                <Setter Property="Background" Value="{Binding LabelPrinted, Converter={StaticResource BoolToColorBrushConverter}, ConverterParameter=White;Red;0.2, Mode=OneWay}" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="40" DisplayMemberBinding="{Binding ProductId}">
+                                    <GridViewColumnHeader Content="ProductId" Command="{Binding SortBidCommand}" CommandParameter="LabelSortableStr" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="180" DisplayMemberBinding="{Binding ProductName}">
+                                    <GridViewColumnHeader Content="Objekt" Command="{Binding SortBidCommand}" CommandParameter="ProductName" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding MaxBid}" >
+                                    <GridViewColumnHeader Content="Max bud" Command="{Binding SortBidCommand}" CommandParameter="MaxBidSortableStr" />
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding SoldFor}" >
+                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortBidCommand}" CommandParameter="SoldForSortableStr" />
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
                 </DockPanel>
             </Grid>
         </DockPanel>

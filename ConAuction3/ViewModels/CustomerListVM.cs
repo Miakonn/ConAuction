@@ -42,6 +42,10 @@ namespace ConAuction3.ViewModels
             CustomerView.Filter = o => o is Customer c && HasCustomerBoughtAnything(c);
         }
 
+        public void FilterOnlyBidders() {
+            CustomerView.Filter = o => o is Customer c && HasCustomerBidAnything(c);
+        }
+
         public void NoFilter() {
             CustomerView.Filter = null;
         }
@@ -71,6 +75,15 @@ namespace ConAuction3.ViewModels
             }
             return ProductsBoughtBy(customer).Any();
         }
+
+        public IEnumerable<Bid> BidsBy(Customer customer) {
+            return _auction.BidsVm.BidsByCustomer(customer.Id);
+        }
+
+        public bool HasCustomerBidAnything(Customer customer) {
+            return BidsBy(customer).Any();
+        }
+
 
         public int LeftToPay() {
             var customersLeftToGetPaid = CustomersLeftToGetPaid();

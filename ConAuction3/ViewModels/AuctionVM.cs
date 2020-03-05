@@ -18,13 +18,16 @@ namespace ConAuction3.ViewModels {
         public CustomerListVM CustomersVm { get; private set; }
 
         public ProductListVM ProductsVm { get; private set; }
-        
+
+        public BidListVM BidsVm { get; private set; }
+
         public MyCommand NewCustomerCommand { get; }
         public MyCommand ShowCustomerCommand { get; }
         public MyCommand PayCustomerCommand { get; }
         public MyCommand UndoPayCustomerCommand { get; }
         public MyCommand NewProductCommand { get; }
         public MyCommand ShowProductCommand { get; }
+        public MyCommand ShowBidCommand { get; }
         public MyCommand DeleteProductCommand { get; }
         public MyCommand SellProductCommand { get; }
         public MyCommand UndoSoldProductCommand { get; }
@@ -33,18 +36,24 @@ namespace ConAuction3.ViewModels {
         public MyCommand UpdateCommand { get; }
         public MyCommand GotoProductCommand { get; }
         public MyCommand SendSmsCommand { get; }
+        public MyCommand NewBidCommand { get; }
+        public MyCommand DeleteBidCommand { get; }
 
         // Sort commands
         public ParameterCommand SortCustomerCommand { get; }
         public ParameterCommand SortProductCommand { get; }
+        public ParameterCommand SortBidCommand { get; }
 
         private Customer _selectedCustomer;
         private Product _selectedProduct;
+        private Bid _selectedBid;
+        
         private OpMode _currentMode;
         private bool _filterJumbleOnly;
         private bool _filterUnsoldOnly;
         private bool _filterCustomerActiveOnly;
         private bool _filterCustomerFinishedOnly;
+        private bool _filterCustomerOnlyBidders;
         private bool _isProductSold;
 
         private string _LastSmsMessage =
@@ -61,6 +70,7 @@ namespace ConAuction3.ViewModels {
                 new ComboBoxItemOpMode {ValueMode = OpMode.Initializing, ValueString = "Välj mod"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Receiving, ValueString = "Inlämning"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Showing, ValueString = "Visning"},
+                new ComboBoxItemOpMode {ValueMode = OpMode.Bidding, ValueString = "Budgivning"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Auctioning, ValueString = "Auktion"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Paying, ValueString = "Utbetalning"},
                 new ComboBoxItemOpMode {ValueMode = OpMode.Buyer, ValueString = "Köpare"},
@@ -90,7 +100,9 @@ namespace ConAuction3.ViewModels {
                 OnPropertyChanged(nameof(ModeIsPaying));
                 OnPropertyChanged(nameof(ModeIsReceiving));
                 OnPropertyChanged(nameof(ModeIsReceivingOrShowing));
+                OnPropertyChanged(nameof(ModeIsReceivingOrShowingOrPaying));
                 OnPropertyChanged(nameof(ModeIsBuyer));
+                OnPropertyChanged(nameof(ModeIsBidding));
                 OnPropertyChanged(nameof(CurrentMode));
                 UpdateAll();
             }
@@ -101,6 +113,8 @@ namespace ConAuction3.ViewModels {
 
         // ReSharper disable once UnusedMember.Global
         public ICollectionView Products => ProductsVm.ProductView;
+
+        public ICollectionView Bids => BidsVm.BidView;
 
         public Customer SelectedCustomer {
             get => _selectedCustomer;
@@ -116,14 +130,20 @@ namespace ConAuction3.ViewModels {
                             ProductsVm.NoFilter();
                         }
                     }
-                    else {
-                        if (CurrentMode == OpMode.Buyer) {
+                    else if (CurrentMode == OpMode.Buyer) {
                             if (_selectedCustomer != null) {
                                 ProductsVm.FilterByBuyer(_selectedCustomer.ShortName);
                             }
                             else {
                                 ProductsVm.NoFilter();
                             }
+                        }
+                    else if (CurrentMode == OpMode.Bidding) {
+                        if (_selectedCustomer != null) {
+                            BidsVm.FilterByCustomerId(_selectedCustomer.Id);
+                        }
+                        else {
+                            BidsVm.NoFilter();
                         }
                     }
 
@@ -150,12 +170,29 @@ namespace ConAuction3.ViewModels {
                 _selectedProduct = value;
 
                 if (_selectedProduct != null) {
-                    OnPropertyChanged("SelectedProduct");
+                    OnPropertyChanged(nameof(SelectedProduct));
                     _selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
-                    OnPropertyChanged("SelectedCustomer");
+                    OnPropertyChanged(nameof(SelectedCustomer));
                 }
                 else {
-                    OnPropertyChanged("SelectedProduct");
+                    OnPropertyChanged(nameof(SelectedProduct));
+                }
+            }
+        }
+
+        public Bid SelectedBid {
+            get => _selectedBid;
+
+            set {
+                _selectedBid = value;
+
+                if (_selectedBid != null) {
+                    OnPropertyChanged(nameof(SelectedBid));
+                    //_selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
+                    //OnPropertyChanged("SelectedCustomer");
+                }
+                else {
+                    OnPropertyChanged(nameof(SelectedBid));
                 }
             }
         }
@@ -202,9 +239,15 @@ namespace ConAuction3.ViewModels {
         // ReSharper disable once UnusedMember.Global   
         public bool ModeIsBuyer => CurrentMode == OpMode.Buyer;
 
+        // ReSharper disable once UnusedMember.Global   
+        public bool ModeIsBidding => CurrentMode == OpMode.Bidding;
+
         // ReSharper disable once UnusedMember.Global
         public bool ModeIsAuctioning => CurrentMode == OpMode.Auctioning;
-        
+
+        // ReSharper disable once UnusedMember.Global
+        public bool ModeIsReceivingOrShowingOrPaying => CurrentMode == OpMode.Receiving || CurrentMode == OpMode.Showing || CurrentMode == OpMode.Paying || CurrentMode == OpMode.Buyer;
+
         // ReSharper disable once UnusedMember.Global
         public string SelectedUnsoldCount => SelectedCustomer != null ? ProductsVm.NoOfUnsoldForCustomer(SelectedCustomer.Id).ToString() : "";
 
@@ -263,6 +306,21 @@ namespace ConAuction3.ViewModels {
         }
 
         // ReSharper disable once UnusedMember.Global
+        public bool FilterCustomerOnlyBidders {
+            get => _filterCustomerOnlyBidders;
+            set {
+                _filterCustomerOnlyBidders = value;
+                if (value) {
+                    CustomersVm.FilterOnlyBidders();
+                }
+                else {
+                    CustomersVm.NoFilter();
+                }
+            }
+        }
+
+
+        // ReSharper disable once UnusedMember.Global
         public bool LabelPage1 {
             get => _labelPage1;
             set {
@@ -311,17 +369,21 @@ namespace ConAuction3.ViewModels {
             UndoPayCustomerCommand = new MyCommand(UndoPayCustomer, UndoPayCustomer_CanExecute);
             NewProductCommand = new MyCommand(NewProduct, NewProduct_CanExecute);
             ShowProductCommand = new MyCommand(ShowProduct, ShowProduct_CanExecute);
+            ShowBidCommand = new MyCommand(ShowBid, ShowBid_CanExecute);
             DeleteProductCommand = new MyCommand(DeleteProduct, DeleteProduct_CanExecute);
             GotoProductCommand = new MyCommand(GotoProduct, GotoProduct_CanExecute);
             SellProductCommand = new MyCommand(SellProduct, SellProduct_CanExecute);
             UndoSoldProductCommand = new MyCommand(UndoSoldProduct, UndoSoldProduct_CanExecute);
             ExportProductsCommand = new MyCommand(ExportProducts, ExportProducts_CanExecute);
             SendSmsCommand = new MyCommand(SendSms, SendSms_CanExecute);
+            NewBidCommand = new MyCommand(NewBid, NewBid_CanExecute);
+            DeleteBidCommand = new MyCommand(DeleteBid, DeleteBid_CanExecute);
             UpdateCommand = new MyCommand(UpdateAll);
             CancelCommand = new MyCommand(ExitProgram);
 
             SortCustomerCommand = new ParameterCommand(CustomersVmSortBy);
             SortProductCommand = new ParameterCommand(ProductsVmSortBy);
+            SortBidCommand = new ParameterCommand(BidsVmSortBy);
 
             CurrentMode = OpMode.Initializing;
 
@@ -340,7 +402,8 @@ namespace ConAuction3.ViewModels {
             
             CustomersVm = new CustomerListVM(DbAccess.Instance.ReadAllCustomers(), this);
             ProductsVm = new ProductListVM(DbAccess.Instance.ReadAllProducts());
-            
+            BidsVm = new BidListVM(DbAccess.Instance.ReadAllBids(), ProductsVm);
+
             ResetFilter();
 
             OnPropertyChanged(nameof(StatusCountAuction));
@@ -353,6 +416,7 @@ namespace ConAuction3.ViewModels {
             OnPropertyChanged(nameof(StatusProfit));
             OnPropertyChanged(nameof(Customers));
             OnPropertyChanged(nameof(Products));
+            OnPropertyChanged(nameof(Bids));
             OnPropertyChanged(nameof(VersionStr));
 
 
@@ -382,10 +446,19 @@ namespace ConAuction3.ViewModels {
                 case OpMode.Buyer:
                     CustomersVm.FilterOnlyBuyers();
                     break;
+                case OpMode.Bidding:
+                    if (FilterCustomerOnlyBidders) {
+                        CustomersVm.FilterOnlyBidders();
+                    }
+                    else {
+                        BidsVm.NoFilter();
+                    }
+                    break;
             }
 
             CustomersVm.SortBy("Name");
             ProductsVm.SortBy("Label");
+            BidsVm.SortBy("ProductId");
         }
 
 
@@ -417,6 +490,11 @@ namespace ConAuction3.ViewModels {
 
         private void ProductsVmSortBy(string propertyName) {
             ProductsVm.SortBy(propertyName);
+            OnPropertyChanged(nameof(Customers));
+        }
+
+        private void BidsVmSortBy(string propertyName) {
+            BidsVm.SortBy(propertyName);
             OnPropertyChanged(nameof(Customers));
         }
 
@@ -580,6 +658,24 @@ namespace ConAuction3.ViewModels {
             UpdateAll();
         }
 
+        public bool ShowBid_CanExecute() {
+            return (CurrentMode == OpMode.Bidding) && SelectedBid != null;
+        }
+
+        public void ShowBid() {
+            if (SelectedBid == null) {
+                return;
+            }
+
+            var inputDialog = new BidDlg(SelectedBid);
+            if (inputDialog.ShowDialog() == true) {
+                var product = inputDialog.Result;
+
+                DbAccess.Instance.SaveBidToDb(product);
+            }
+            UpdateAll();
+        }
+
         public bool DeleteProduct_CanExecute() {
             return CurrentMode == OpMode.Receiving && SelectedProduct != null;
         }
@@ -651,6 +747,45 @@ namespace ConAuction3.ViewModels {
             _LastSmsMessage = PromptDialog.Prompt("Meddelande till " + SelectedCustomer.Name, "Skicka SMS", _LastSmsMessage);
 
             SendSMS.Send(SelectedCustomer.Phone, _LastSmsMessage);
+        }
+
+        public bool NewBid_CanExecute() {
+            return SelectedCustomer != null;
+        }
+
+        public void NewBid() {
+            if (SelectedCustomer == null) {
+                return;
+            }
+            var inputDialog = new BidDlg(new Bid(SelectedCustomer.Id));
+
+            int customerId = 0;
+            if (inputDialog.ShowDialog() == true) {
+                var bid = inputDialog.Result;
+
+                DbAccess.Instance.InsertNewBidToDb(bid);
+            }
+            UpdateAll();
+            if (customerId > 0) {
+                SelectedCustomer = CustomersVm.GetCustomerFromId(customerId);
+            }
+        }
+
+        public bool DeleteBid_CanExecute() {
+            return SelectedBid != null;
+        }
+
+        public void DeleteBid() {
+            if (SelectedBid == null) {
+                return;
+            }
+
+            var result = MessageBox.Show("Vill du radera budet?", "Bud");
+            if (result == DialogResult.OK) {
+                DbAccess.Instance.DeleteBidFromDb(SelectedBid.Id);
+                SelectedBid = null;
+            }
+            UpdateAll();
         }
 
         public bool ExportProducts_CanExecute() {

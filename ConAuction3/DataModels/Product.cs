@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ConAuction3.Annotations;
 
 namespace ConAuction3.DataModels {
@@ -12,6 +13,8 @@ namespace ConAuction3.DataModels {
         public string Type { get; set; }
         public bool LabelPrinted { get; set; }
         public int PartsNo { get; set; }
+
+        public List<Bid> Bids { get; set; }
         
         public string Name {
             get => _name;
@@ -55,14 +58,18 @@ namespace ConAuction3.DataModels {
 
         public Product() {
             PartsNo = 1;
+            Bids = new List<Bid>();
         }
 
         public Product(int label) {
             Label = label;
             PartsNo = 1;
+            Bids = new List<Bid>();
         }
 
-        public string LabelStr => Label.ToString("000");
+        public string LabelStr => Label.ToString("0000");
+
+        public string BidsStr => string.Join(",", Bids);
 
         // ReSharper disable once UnusedMember.Global
         public string SoldForStr {

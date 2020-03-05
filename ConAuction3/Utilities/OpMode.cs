@@ -3,10 +3,11 @@
         Initializing = 0,
         Receiving = 1,
         Showing = 2,
-        Auctioning = 3,
-        Paying = 4,
-        Buyer = 5,
-        Overhead = 6
+        Bidding = 3,
+        Auctioning = 4,
+        Paying = 5,
+        Buyer = 6,
+        Overhead = 7
     }
 
 

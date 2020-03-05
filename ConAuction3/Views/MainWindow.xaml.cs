@@ -32,6 +32,12 @@ namespace ConAuction3.Views {
             }
         }
 
+        private void Control_OnMouseDoubleClickBid(object sender, MouseButtonEventArgs e) {
+            if (_viewModel.ShowBidCommand.CanExecute(null)) {
+                _viewModel.ShowBidCommand.Execute(null);
+            }
+        }
+
         private void ListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (sender is ListView listView  && e.AddedItems.Count > 0) {
                 listView.ScrollIntoView(e.AddedItems[0]);

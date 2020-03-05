@@ -40,6 +40,7 @@ namespace ConAuction3.DataModels {
             return true;
         }
 
+        #region Customer
         public List<Customer> ReadAllCustomers() {
             var customers = new List<Customer>(500);
             var query = "select id,name,phone,comment,finished,swish,shortname,timestamp from Customer;";
@@ -68,41 +69,6 @@ namespace ConAuction3.DataModels {
             }
         }
 
-        public List<Product> ReadAllProducts() {
-            var products = new List<Product>(900);
-            var query =
-                "select Id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice, LabelPrinted, PartsNo, Buyer from Product where year=" +
-                Year;
-            var cmdDatabase = new MySqlCommand(query, DbConnection);
-            try {
-                using (var reader = cmdDatabase.ExecuteReader()) {
-                    while (reader.Read()) {
-                        var product = new Product {
-                            Id = reader.GetInt64("Id"),
-                            Label = reader.GetIntOrDefault("Label"),
-                            Name = reader.GetStringOrDefault("Name"),
-                            Type = reader.GetStringOrDefault("Type"),
-                            Description = reader.GetStringOrDefault("Description"),
-                            Note = reader.GetStringOrDefault("Note"),
-                            Price = reader.GetIntOrDefault("Price"),
-                            FixedPrice = reader.GetIntOrDefault("FixedPrice"),
-                            CustomerId = reader.GetInt32("CustomerId"),
-                            LabelPrinted = reader.GetBoolean("LabelPrinted"),
-                            PartsNo = reader.GetInt32("PartsNo"),
-                            Buyer = reader.GetStringOrDefault("Buyer"),
-                        };
-                        products.Add(product);
-                    }
-                    return products;
-                }
-            }
-
-            catch (Exception ex) {
-                MessageBox.Show("Error: \r\n" + ex);
-                return new List<Product>();
-            }
-        }
-
         public int InsertNewCustomerToDb(Customer customer) {
             var sqlTran = DbConnection.BeginTransaction();
 
@@ -112,7 +78,7 @@ namespace ConAuction3.DataModels {
             try {
                 // Set the INSERT command and parameter.
                 command.CommandText =
-                    "INSERT INTO customer (Name, Phone, Comment, Swish, Date, TimeStamp) VALUES (@Name,@ShortName,@Phone,@Comment,@Swish,Now(),Now());";
+                    "INSERT INTO bid (Name, Phone, Comment, Swish, Date, TimeStamp) VALUES (@Name,@ShortName,@Phone,@Comment,@Swish,Now(),Now());";
                 command.Parameters.AddWithValue("@Name", customer.Name);
                 command.Parameters.AddWithValue("@ShortName", customer.ShortName);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
@@ -152,7 +118,7 @@ namespace ConAuction3.DataModels {
             command.Transaction = sqlTran;
             command.Connection = DbConnection;
             try {
-                command.CommandText = "UPDATE customer SET Name=@Name, ShortName=@ShortName, Phone=@Phone, Comment=@Comment, Date=Now(), Finished=@Finished, Swish=@Swish, Timestamp=Now() WHERE id=@id;";
+                command.CommandText = "UPDATE bid SET Name=@Name, ShortName=@ShortName, Phone=@Phone, Comment=@Comment, Date=Now(), Finished=@Finished, Swish=@Swish, Timestamp=Now() WHERE id=@id;";
                 command.Parameters.AddWithValue("@Name", customer.Name);
                 command.Parameters.AddWithValue("@ShortName", customer.ShortName);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
@@ -193,12 +159,44 @@ namespace ConAuction3.DataModels {
                 MessageBox.Show(ex.Message);
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prod"></param>
-        /// <returns>The db id</returns>
+        #region Product
+        public List<Product> ReadAllProducts() {
+            var products = new List<Product>(900);
+            var query =
+                "select Id, Label, Name, Type, Description, Note, Price, CustomerId, TimeStamp, FixedPrice, LabelPrinted, PartsNo, Buyer from Product where year=" +
+                Year;
+            var cmdDatabase = new MySqlCommand(query, DbConnection);
+            try {
+                using (var reader = cmdDatabase.ExecuteReader()) {
+                    while (reader.Read()) {
+                        var product = new Product {
+                            Id = reader.GetInt64("Id"),
+                            Label = reader.GetIntOrDefault("Label"),
+                            Name = reader.GetStringOrDefault("Name"),
+                            Type = reader.GetStringOrDefault("Type"),
+                            Description = reader.GetStringOrDefault("Description"),
+                            Note = reader.GetStringOrDefault("Note"),
+                            Price = reader.GetIntOrDefault("Price"),
+                            FixedPrice = reader.GetIntOrDefault("FixedPrice"),
+                            CustomerId = reader.GetInt32("CustomerId"),
+                            LabelPrinted = reader.GetBoolean("LabelPrinted"),
+                            PartsNo = reader.GetInt32("PartsNo"),
+                            Buyer = reader.GetStringOrDefault("Buyer"),
+                        };
+                        products.Add(product);
+                    }
+                    return products;
+                }
+            }
+
+            catch (Exception ex) {
+                MessageBox.Show("Error: \r\n" + ex);
+                return new List<Product>();
+            }
+        }
+        
         public long InsertNewProductToDb(Product prod) {
             var sqlTran = DbConnection.BeginTransaction();
 
@@ -399,8 +397,105 @@ namespace ConAuction3.DataModels {
                 MessageBox.Show(ex.Message);
             }
         }
+
+        #endregion
+
+        #region Bid
+        public void InsertNewBidToDb(Bid bid) {
+            var sqlTran = DbConnection.BeginTransaction();
+
+            try {
+                var command = DbConnection.CreateCommand();
+                command.Transaction = sqlTran;
+                command.Connection = DbConnection;
+
+                // Set the INSERT command and parameter.
+                command.CommandText =
+                    "INSERT INTO bid (CustomerId, MaxBid, ProductId, Year) VALUES (@CustomerId,@MaxBid,@ProductId,@Year);";
+                command.Parameters.AddWithValue("@CustomerId", bid.CustomerId);
+                command.Parameters.AddWithValue("@MaxBid", bid.MaxBid);
+                command.Parameters.AddWithValue("@ProductId", bid.ProductId);
+                command.Parameters.AddWithValue("@Year", Year);
+
+                command.UpdatedRowSource = UpdateRowSource.None;
+                command.ExecuteNonQuery();
+                sqlTran.Commit();
+
+                Trace.WriteLine("Insert Bid : SUCCESS!");
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+                try {
+                    sqlTran.Rollback();
+                }
+                catch (Exception exRollback) {
+                    MessageBox.Show(exRollback.Message);
+                }
+            }
+        }
+
+        public void SaveBidToDb(Bid bid) {
+            var command = DbConnection.CreateCommand();
+            command.Connection = DbConnection;
+            try {
+                command.CommandText = "UPDATE Bid SET MaxBid=@MaxBid, ProductId=@ProductId WHERE id=@id;";
+                command.Parameters.AddWithValue("@MaxBid", bid.MaxBid);
+                command.Parameters.AddWithValue("@ProductId", bid.ProductId);
+                command.Parameters.AddWithValue("@id", bid.Id);
+                command.UpdatedRowSource = UpdateRowSource.None;
+                command.ExecuteNonQuery();
+
+                Trace.WriteLine("Update Bid : SUCCESS!");
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void DeleteBidFromDb(int id) {
+            var command = DbConnection.CreateCommand();
+            command.Connection = DbConnection;
+            try {
+                command.CommandText = "Delete from Bid Where Id=@id;";
+                command.Parameters.AddWithValue("@id", id);
+                command.UpdatedRowSource = UpdateRowSource.None;
+                command.ExecuteNonQuery();
+
+                Trace.WriteLine("Delete Bid : SUCCESS!");
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public List<Bid> ReadAllBids() {
+            var bids = new List<Bid>(200);
+            var query =
+                "select Id, CustomerId, MaxBid, ProductId from Bid where year=" + Year;
+            var cmdDatabase = new MySqlCommand(query, DbConnection);
+            try {
+                using (var reader = cmdDatabase.ExecuteReader()) {
+                    while (reader.Read()) {
+                        var product = new Bid {
+                            Id = reader.GetInt32("Id"),
+                            CustomerId = reader.GetInt32("CustomerId"),
+                            ProductId = reader.GetInt32("ProductId"),
+                            MaxBid = reader.GetIntOrDefault("MaxBid"),
+                        };
+                        bids.Add(product);
+                    }
+                    return bids;
+                }
+            }
+
+            catch (Exception ex) {
+                MessageBox.Show("Error: \r\n" + ex);
+                return new List<Bid>();
+            }
+        }
+        #endregion
     }
-    
+
     public static class DbReaderExtensions {
         public static string GetStringOrDefault(this MySqlDataReader reader, string name) {
             var ordinal = reader.GetOrdinal(name);
