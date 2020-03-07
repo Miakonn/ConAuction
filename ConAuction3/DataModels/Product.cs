@@ -69,7 +69,7 @@ namespace ConAuction3.DataModels {
 
         public string LabelStr => Label.ToString("0000");
 
-        public string BidsStr => string.Join(",", Bids);
+        public string BidsStr => string.Join(", ", Bids);
 
         [UsedImplicitly]
         public string SoldForStr {

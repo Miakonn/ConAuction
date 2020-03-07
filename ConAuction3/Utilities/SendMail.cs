@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Text;
 using System.ComponentModel;
-using System.Net.Mail;
 using System.Configuration;
+using System.Net.Mail;
 using System.Net.Mime;
+using System.Text;
 using System.Windows.Forms;
+using ConAuction3.Views;
+using MessageBox = System.Windows.MessageBox;
 
-namespace ConAuction
+namespace ConAuction3.Utilities
 {
-    internal class SendMail
-    {
+    internal class SendMail {
+        private static string password;
 
         private static void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
         {
@@ -17,65 +19,77 @@ namespace ConAuction
             var token = (string)e.UserState;
 
             if (e.Cancelled) {
-                Console.WriteLine("[{0}] Send canceled.", token);
+                MessageBox.Show($"[{token}] Send canceled.");
             }
-
-            if (e.Error != null) {
-                Console.WriteLine("[{0}] {1}", token, e.Error);
+            else if (e.Error != null) {
+                MessageBox.Show($"[{token}] {e.Error}");
             }
             else {
-                Console.WriteLine("Message sent.");
+                MessageBox.Show("Message sent.");
             }
         }
 
-        public void Send(string address, string text)
+        public static void Send(string address, string text)
         {
             Cursor.Current = Cursors.WaitCursor;
 
+            try {
 
-            var port = int.Parse(ConfigurationManager.AppSettings["MailPort"]);
-            var server = ConfigurationManager.AppSettings["MailServer"];
-            var user = ConfigurationManager.AppSettings["MailUser"];
-            var password = ConfigurationManager.AppSettings["MailPassword"];
-            var senderAddress= ConfigurationManager.AppSettings["MailSenderAddress"];
-            var senderName = ConfigurationManager.AppSettings["MailSenderName"];
-            var subject = ConfigurationManager.AppSettings["MailSubject"];
+                password = ConfigurationManager.AppSettings["MailPassword"];
+                var port = int.Parse(ConfigurationManager.AppSettings["MailPort"]);
+                var server = ConfigurationManager.AppSettings["MailServer"];
+                var user = ConfigurationManager.AppSettings["MailUser"];
+                var senderAddress = ConfigurationManager.AppSettings["MailSenderAddress"];
+                var senderName = ConfigurationManager.AppSettings["MailSenderName"];
+                var subject = ConfigurationManager.AppSettings["MailSubject"];
 
-            var client = new SmtpClient(server, port) {
-                Credentials = new System.Net.NetworkCredential(user, password)
-            };
+                // Set destinations for the e-mail message.
+                MailAddress to = new MailAddress(address);
+                // Specify the e-mail sender.
+                MailAddress from = new MailAddress(senderAddress, senderName, Encoding.UTF8);
 
-            // Specify the e-mail sender.
-            MailAddress from = new MailAddress(senderAddress, senderName, Encoding.UTF8);
-            // Set destinations for the e-mail message.
-            MailAddress to = new MailAddress(address);
-            // Specify the message content.
-            MailMessage message = new MailMessage(from, to) {
-                Body = text,
-                BodyEncoding = Encoding.UTF8,
-                Subject = subject,
-                SubjectEncoding = Encoding.UTF8
-            };
+                if (string.IsNullOrWhiteSpace(password)) {
+                    password = PromptDialog.Prompt("Lösenord för " + user, "Mejl server", "",
+                        PromptDialog.InputType.Password);
+                }
 
-            // Add the alternate body to the message.
+                var client = new SmtpClient(server, port) {
+                    Credentials = new System.Net.NetworkCredential(user, password)
+                };
 
-            AlternateView alternate = AlternateView.CreateAlternateViewFromString(text, new ContentType("text/html"));
-            message.AlternateViews.Add(alternate);
+                // Specify the message content.
+                MailMessage message = new MailMessage(from, to) {
+                    Body = text,
+                    BodyEncoding = Encoding.UTF8,
+                    Subject = subject,
+                    SubjectEncoding = Encoding.UTF8
+                };
 
-            // Include some non-ASCII characters in body and subject.
+                // Add the alternate body to the message.
 
-            // Set the method that is called back when the send operation ends.
-            client.SendCompleted += SendCompletedCallback;
+                AlternateView alternate =
+                    AlternateView.CreateAlternateViewFromString(text, new ContentType("text/html"));
+                message.AlternateViews.Add(alternate);
 
-            // The userState can be any object that allows your callback 
-            // method to identify this send operation.
-            // For this example, the userToken is a string constant.
-            string userState = subject;
-            client.SendAsync(message, userState);
+                // Include some non-ASCII characters in body and subject.
 
-            System.Threading.Thread.Sleep(2000);
-            // Clean up.
-            message.Dispose();
+                // Set the method that is called back when the send operation ends.
+                client.SendCompleted += SendCompletedCallback;
+
+                // The userState can be any object that allows your callback 
+                // method to identify this send operation.
+                // For this example, the userToken is a string constant.
+                string userState = subject;
+                client.SendAsync(message, userState);
+
+                System.Threading.Thread.Sleep(2000);
+                // Clean up.
+                message.Dispose();
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+
             Cursor.Current = Cursors.Default;
         }
    

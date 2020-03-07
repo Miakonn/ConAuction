@@ -2,7 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:ConAuction3.Converters"
-        xmlns:system="clr-namespace:System;assembly=mscorlib"
         Title="ConAuction" Height="900" Width="1400">
 
 
@@ -14,10 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:BoolToVisibilityConverter x:Key="BooleanToInvertedVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible" />
             <converters:BoolToVisibilityConverter x:Key="BooleanToVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed" />
-            <converters:BoolToIntConverter x:Key="BooleanToInt80Converter" TrueValue="80" FalseValue="0" />
             <converters:BoolToIntConverter x:Key="BooleanToInt50Converter" TrueValue="55" FalseValue="0" />
-            <converters:BoolToIntConverter x:Key="BooleanToInt50Inverter" TrueValue="0" FalseValue="50" />
-            <converters:BoolToBoolConverter x:Key="BooleanInverter" TrueValue="False" FalseValue="True" />
             <converters:BoolToColorBrushConverter x:Key="BoolToColorBrushConverter" />
             
         </ResourceDictionary>
@@ -52,7 +48,7 @@
                            IsChecked="{Binding Path=LabelPage3}" >Sida 3</CheckBox>
             </WrapPanel>
 
-            <ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="40" MaxWidth="150" ItemsSource="{Binding OpEnumList}"  IsEditable="False"
+            <ComboBox DockPanel.Dock="Right" Text="Välj mode" MaxHeight="40" MaxWidth="200" ItemsSource="{Binding OpEnumList}"  IsEditable="False"
 					  FontSize="20" FontWeight="Bold" SelectedValue="{Binding CurrentMode, Mode=TwoWay}" Margin="5" Padding="4" TabIndex="1"
 					  DisplayMemberPath="ValueString" SelectedValuePath="ValueMode" SelectedIndex="0" RenderTransformOrigin="0.498,0.603" />
         </DockPanel>
@@ -136,6 +132,9 @@
 
                         <Button DockPanel.Dock="Left" Content="Exportera" Command="{Binding ExportProductsCommand}"  TabIndex="18" Margin="10,5,10,5" 
                                 Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                        <Button DockPanel.Dock="Left" Content="Kvitto" Command="{Binding ReceiptCommand}" TabIndex="18" Margin="10,5,10,5" MinWidth="50"
+                                Visibility="{Binding ModeIsBuyer, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </DockPanel>
                     <Grid DockPanel.Dock="Bottom" Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="10">
                         <Grid.ColumnDefinitions>
@@ -235,7 +234,7 @@
                         <CheckBox DockPanel.Dock="Left" TabIndex="18" IsTabStop="True" VerticalAlignment="Center" Margin="10,5,10,5"
                                   Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" 
                                   IsChecked="{Binding Path=FilterUnsoldOnly}">Bara osålt</CheckBox>
-                        <Button DockPanel.Dock="Left" Content="Sälj" Command="{Binding SellProductCommand}"  TabIndex="18" Margin="10,5,10,5" 
+                        <Button DockPanel.Dock="Left" Content="Sälj" Command="{Binding SellProductCommand}" MinWidth="50" TabIndex="18" Margin="10,5,10,5" 
                                 Visibility="{Binding ModeIsShowing, Converter={StaticResource BooleanToVisibilityConverter}}" >
                             <Button.ToolTip>
                                 <ToolTip>F11</ToolTip>
@@ -352,8 +351,8 @@
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Type}" >
                                     <GridViewColumnHeader Content="Typ" Command="{Binding SortProductCommand}" CommandParameter="Type" />
                                 </GridViewColumn>
-                                <GridViewColumn Width="50" DisplayMemberBinding="{Binding SoldForStr}" >
-                                    <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSortableStr" />
+                                <GridViewColumn Width="70" DisplayMemberBinding="{Binding SoldForStr}" >
+                                    <GridViewColumnHeader Content="Köpt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSortableStr" />
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
@@ -418,7 +417,7 @@
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
                                     <GridViewColumnHeader Content="Not" />
                                 </GridViewColumn>
-                                <GridViewColumn Width="100" DisplayMemberBinding="{Binding BidsStr}" >
+                                <GridViewColumn Width="200" DisplayMemberBinding="{Binding BidsStr}" >
                                     <GridViewColumnHeader Content="Bud" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="120" >

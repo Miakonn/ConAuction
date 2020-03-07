@@ -33,6 +33,7 @@ namespace ConAuction3.ViewModels {
         public MyCommand SellProductCommand { get; }
         public MyCommand UndoSoldProductCommand { get; }
         public MyCommand ExportProductsCommand { get; }
+        public MyCommand ReceiptCommand { get; }
         public MyCommand CancelCommand { get; }
         public MyCommand UpdateCommand { get; }
         public MyCommand GotoProductCommand { get; }
@@ -135,13 +136,15 @@ namespace ConAuction3.ViewModels {
                         }
                     }
                     else if (CurrentMode == OpMode.Buyer) {
-                            if (_selectedCustomer != null) {
-                                ProductsVm.FilterByBuyer(_selectedCustomer.ShortNameOrDefault);
-                            }
-                            else {
-                                ProductsVm.NoFilter();
-                            }
+                        if (_selectedCustomer != null) {
+                            ProductsVm.FilterByBuyer(_selectedCustomer.ShortNameOrDefault);
                         }
+                        else {
+                            ProductsVm.NoFilter();
+                        }
+                        OnPropertyChanged(nameof(SelectedBoughtAmount));
+                        OnPropertyChanged(nameof(SelectedBoughtCount));
+                    }
                     else if (CurrentMode == OpMode.Bidding) {
                         if (_selectedCustomer != null) {
                             BidsVm.FilterByCustomerId(_selectedCustomer.Id);
@@ -162,8 +165,6 @@ namespace ConAuction3.ViewModels {
                 OnPropertyChanged(nameof(StatusObjectCount));
                 OnPropertyChanged(nameof(PayCustomerCanExecute));
                 OnPropertyChanged(nameof(UndoPayCustomerCanExecute));
-                OnPropertyChanged(nameof(SelectedBoughtAmount));
-                OnPropertyChanged(nameof(SelectedBoughtCount));
             }
         }
 
@@ -175,8 +176,10 @@ namespace ConAuction3.ViewModels {
 
                 if (_selectedProduct != null) {
                     OnPropertyChanged(nameof(SelectedProduct));
-                    _selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
-                    OnPropertyChanged(nameof(SelectedCustomer));
+                    if (ModeIsShowing) {
+                        _selectedCustomer = CustomersVm.GetCustomerFromId(_selectedProduct.CustomerId);
+                        OnPropertyChanged(nameof(SelectedCustomer));
+                    }
                 }
                 else {
                     OnPropertyChanged(nameof(SelectedProduct));
@@ -253,10 +256,10 @@ namespace ConAuction3.ViewModels {
         public string SelectedUnsoldCount => SelectedCustomer != null ? ProductsVm.NoOfUnsoldForCustomer(SelectedCustomer.Id).ToString() : "";
 
         [UsedImplicitly]
-        public string SelectedBoughtCount => SelectedCustomer != null ? ProductsVm.NoOfBoughtForCustomer(SelectedCustomer.ShortName).ToString() : "";
+        public string SelectedBoughtCount => SelectedCustomer != null ? ProductsVm.NoOfBoughtForCustomer(SelectedCustomer.ShortNameOrDefault).ToString() : "";
 
         [UsedImplicitly]
-        public string SelectedBoughtAmount => SelectedCustomer != null ? ProductsVm.TotalAmountBoughtForCustomer(SelectedCustomer.ShortName).ToString() : "";
+        public string SelectedBoughtAmount => SelectedCustomer != null ? ProductsVm.TotalAmountBoughtForCustomer(SelectedCustomer.ShortNameOrDefault).ToString() : "";
 
         [UsedImplicitly]
         public string SelectedAmount => SelectedCustomer != null ? ProductsVm.TotalAmountForCustomer(SelectedCustomer.Id).ToString() : "";
@@ -265,7 +268,7 @@ namespace ConAuction3.ViewModels {
         public string SelectedNetAmount => SelectedCustomer != null ? ProductsVm.NetAmountForCustomer(SelectedCustomer.Id).ToString() : "";
 
         [UsedImplicitly]
-        public string SelectedName => SelectedCustomer != null ? SelectedCustomer.NumberAndName : "";
+        public string SelectedName => SelectedCustomer != null ? SelectedCustomer?.NumberAndName : "";
 
         [UsedImplicitly]
         public string VersionStr => "V" + Assembly.GetEntryAssembly()?.GetName().Version;
@@ -376,6 +379,7 @@ namespace ConAuction3.ViewModels {
             SellProductCommand = new MyCommand(SellProduct, SellProduct_CanExecute);
             UndoSoldProductCommand = new MyCommand(UndoSoldProduct, UndoSoldProduct_CanExecute);
             ExportProductsCommand = new MyCommand(ExportProducts, ExportProducts_CanExecute);
+            ReceiptCommand = new MyCommand(Receipt, Receipt_CanExecute);
             SendSmsCommand = new MyCommand(SendSms, SendSms_CanExecute);
             NewBidCommand = new MyCommand(NewBid, NewBid_CanExecute);
             DeleteBidCommand = new MyCommand(DeleteBid, DeleteBid_CanExecute);
@@ -464,8 +468,7 @@ namespace ConAuction3.ViewModels {
             ProductsVm.SortBy("Label");
             BidsVm.SortBy("ProductId");
         }
-
-
+        
         private void TryConnectDataBase() {
             bool fStarted;
             do {
@@ -836,6 +839,25 @@ namespace ConAuction3.ViewModels {
             }
         }
 
+
+        public bool Receipt_CanExecute() {
+            return SelectedCustomer != null;
+        }
+
+        public void Receipt() {
+            if (SelectedCustomer == null) {
+                return;
+            }
+
+            var strReceipt = ProductsVm.ExportReceiptBuyer(SelectedCustomer);
+
+            var webBrowser = new ReceiptBrowserWindow();
+            webBrowser.WebBrowserReceipt.NavigateToString(strReceipt);
+            var result = webBrowser.ShowDialog();
+            if (result.HasValue && result.Value) {
+                SendMail.Send(webBrowser.MailAddress.Text, strReceipt);
+            }
+        }
 
         #endregion
 

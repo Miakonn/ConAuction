@@ -107,59 +107,44 @@ namespace ConAuction3.ViewModels {
             ProductView.Filter = o => o is Product p && !p.IsJumble;
         }
 
-        //public  string ExportCustomerReceipt(this DataTable table, int customerId, string customerName) {
-        //	var foundRows = table.Select("CustomerId = " + customerId + " and ISNULL(Price, 0) > 0");
+        public string ExportReceiptBuyer(Customer buyer) {
+            var strB = new StringBuilder();
+            strB.AppendLine("<!DOCTYPE html> <meta charset=\"UTF-8\"> ");
+            strB.AppendLine("<html>");
+            strB.AppendLine("<body>");
 
-        //	var strB = new StringBuilder();
-        //	strB.AppendLine("<!DOCTYPE html> <meta charset=\"UTF-8\"> ");
-        //	strB.AppendLine("<html>");
-        //	strB.AppendLine("<body>");
+            strB.AppendLine("<h1>KVITTO LinCon-auktionen</h1>");
+            strB.AppendLine("<h2>Linköping " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " </h2>");
+            strB.AppendLine("<h3>Köpare " + buyer.Name + "</h3>");
 
-        //	strB.AppendLine("<h1>LinCons auktion</h1>");
-        //	strB.AppendLine("<h2>Linköping " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " </h2>");
-        //	strB.AppendLine("<h3>" + customerName + "</h3>");
+            strB.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
+            strB.AppendLine("<tr>");
+            strB.AppendLine("<td align='center'>Id</td>");
+            strB.AppendLine("<td align='left'>Namn</td>");
+            strB.AppendLine("<td align='right'>Köpt för</td>");
+            strB.AppendLine("<tr>");
 
-        //	strB.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
-        //	strB.AppendLine("<tr>");
-        //	strB.AppendLine("<td align='center'>Id</td>");
-        //	strB.AppendLine("<td align='left'>Namn</td>");
-        //	strB.AppendLine("<td align='left'>Beskrivning</td>");
-        //	strB.AppendLine("<td align='right'>Sålt för</td>");
-        //	strB.AppendLine("<td align='right'>Avgift</td>");
-        //	strB.AppendLine("<tr>");
+            foreach (Product product in ProductsBoughtByCustomer(buyer.ShortNameOrDefault)) {
+                strB.AppendLine("<tr>");
 
-        //	var costNormal = int.Parse(ConfigurationManager.AppSettings["Cost"]);
-        //	var costFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+                strB.AppendLine("<td align='center'>" + product.Label + "</td>");
+                strB.AppendLine("<td align='left'>" + product.Name + "</td>");
+                strB.AppendLine("<td align='right'>" + product.Price + "</td>");
+                strB.AppendLine("</tr>");
+            }
 
-        //	foreach (DataRow row in foundRows) {
-        //		bool sold = row["Price"].ToString() != "0";
-        //		bool fixedPrice = row["FixedPrice"].ToString() != "0";
+            // table footer & end of html file
+            strB.AppendLine("</table><p>");
 
-        //		strB.AppendLine("<tr>");
+            strB.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
 
-        //		strB.AppendLine("<td align='center'>" + row["Label"] + "</td>");
-        //		strB.AppendLine("<td align='left'>" + row["Name"] + "</td>");
-        //		strB.AppendLine("<td align='left'>" + row["Description"] + "</td>");
-        //		strB.AppendLine("<td align='right'>" + (sold ? row["Price"] : "ej sålt") + "</td>");
-        //		int cost = fixedPrice ? costFixed : costNormal;
-        //		strB.AppendLine("<td align='right'>" + cost +"</td>");
-        //		strB.AppendLine("</tr>");
-        //	}
+            strB.AppendLine("<tr><td>Summa:</td><td align='right'>" + TotalAmountBoughtForCustomer(buyer.ShortNameOrDefault) + " kr </td></tr>");
+            strB.AppendLine("</table>");
+            strB.AppendLine("<h3/>Ansvarig för auktionen: " + ConfigurationManager.AppSettings["MailSenderName"] + " - " + ConfigurationManager.AppSettings["MailSenderAddress"] + "</h3>");
+            strB.AppendLine("</body></html>");
 
-        //	// table footer & end of html file
-        //	strB.AppendLine("</table><p>");
-
-        //	strB.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
-
-        //	strB.AppendLine("<tr><td>Summa:</td><td align='right'>" + table.TotalAmountForCustomer(customerId) + " kr </td></tr>");
-        //	strB.AppendLine("<tr><td>Avgift:</td><td align='right'>" + table.TotalCostForCustomer(customerId) + " kr </td></tr>");
-        //	strB.AppendLine("<tr><td>Netto:</td><td align='right'>" + table.NetAmountForCustomer(customerId) + " kr </td></tr>");
-        //	strB.AppendLine("</table>");
-        //	strB.AppendLine("<h3/>Ansvarig för auktionen: " + ConfigurationManager.AppSettings["MailSenderName"] + " - " +ConfigurationManager.AppSettings["MailSenderAddress"] + "</h3>");
-        //	strB.AppendLine("</body></html>");
-
-        //	return strB.ToString();
-        //}
+            return strB.ToString();
+        }
 
 
         public List<Product> ProductsForCustomer(int customerId) {
@@ -167,6 +152,9 @@ namespace ConAuction3.ViewModels {
         }
 
         public List<Product> ProductsBoughtByCustomer(string customerShortName) {
+            if (string.IsNullOrWhiteSpace(customerShortName)) {
+                return new List<Product>();
+            }
             return _productList.FindAll(p => string.Equals(p.Buyer, customerShortName, StringComparison.CurrentCultureIgnoreCase));
         }
 
