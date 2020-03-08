@@ -140,7 +140,7 @@ namespace ConAuction3.ViewModels {
 
             strB.AppendLine("<tr><td>Summa:</td><td align='right'>" + TotalAmountBoughtForCustomer(buyer.ShortNameOrDefault) + " kr </td></tr>");
             strB.AppendLine("</table>");
-            strB.AppendLine("<h3/>Ansvarig för auktionen: " + ConfigurationManager.AppSettings["MailSenderName"] + " - " + ConfigurationManager.AppSettings["MailSenderAddress"] + "</h3>");
+            strB.AppendLine("<h3/>Ansvarig för auktionen: " + ConfigurationManager.AppSettings["ReceiptResponsible"] + "</h3>");
             strB.AppendLine("</body></html>");
 
             return strB.ToString();

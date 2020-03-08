@@ -92,6 +92,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Utilities\SendMail.cs" />
     <Compile Include="Utilities\SendSMS.cs" />
+    <Compile Include="Utilities\StringHelpers.cs" />
     <Compile Include="ViewModels\BidListVM.cs" />
     <Compile Include="ViewModels\CustomerListVM.cs" />
     <Compile Include="Utilities\MyCommand.cs" />

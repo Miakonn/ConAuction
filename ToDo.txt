@@ -4,10 +4,6 @@
 
 * Lägg till import funktion från excel-arket
 
-* Fixa export av VIP-kunders kvitto
-
-* Fixa budgivares kortnamn.
-
 * Etikettskrivare!
 	+	Lägg till knapp för skriva ut etiketter för alla objekt för en användare?
 	+	Ta bort uppdelningen av tre nummer-listor, utan att äventyra risken för duplikat.

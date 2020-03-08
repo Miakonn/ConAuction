@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ConAuction3.Annotations;
+using ConAuction3.Utilities;
 
 namespace ConAuction3.DataModels {
     public class Product : IComparable {
@@ -18,22 +19,22 @@ namespace ConAuction3.DataModels {
         
         public string Name {
             get => _name;
-            set => _name = value.Length > 45 ? value.Substring(0, 45) : value;
+            set => _name = StringHelpers.SetValueWithLimit(value, 45);
         }
 
         public string Buyer {
             get => _buyer;
-            set => _buyer = value.Length > 15 ? value.Substring(0, 15) : value;
+            set => _buyer = StringHelpers.SetValueWithLimit(value, 15);
         }
 
         public string Description {
             get => _description;
-            set => _description = value.Length > 250 ? value.Substring(0, 250) : value;
+            set => _description = StringHelpers.SetValueWithLimit(value,  250);
         }
 
         public string Note {
             get => _note;
-            set => _note = value.Length > 15 ? value.Substring(0, 15) : value;
+            set => _note = StringHelpers.SetValueWithLimit(value, 15);
         }
 
         public int Price { get; set; }
@@ -83,7 +84,7 @@ namespace ConAuction3.DataModels {
         public string BuyerStr {
             get => Buyer;
             set {
-                Buyer = value.Length > 15 ? value.Substring(0,14) : value; 
+                Buyer = StringHelpers.SetValueWithLimit(value, 15); 
                 DbAccess.Instance.SaveProductBuyerToDb(Id, Buyer);
             }
         }

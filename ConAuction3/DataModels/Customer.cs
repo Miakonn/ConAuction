@@ -1,4 +1,5 @@
 ﻿using ConAuction3.Annotations;
+using ConAuction3.Utilities;
 
 namespace ConAuction3.DataModels {
     public class Customer {
@@ -15,13 +16,35 @@ namespace ConAuction3.DataModels {
         }
 
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Phone { get; set; }
-        public string Note { get; set; }
-		public bool? Finished { get; set; }
-        public bool? Swish { get; set; }
-        public string ShortName { get; set; }
 
+        private string _name;
+        public string Name {
+            get => _name;
+            set => _name = StringHelpers.SetValueWithLimit(value, 45);
+        }
+
+        private string _phone;
+        public string Phone {
+            get => _phone;
+            set => _phone = StringHelpers.SetValueWithLimit(value, 20);
+        }
+
+        private string _note;
+        public string Note {
+            get => _note;
+            set => _note = StringHelpers.SetValueWithLimit(value, 45);
+        }
+
+        private string _shortName;
+        public string ShortName {
+            get => _shortName;
+            set => _shortName =  StringHelpers.SetValueWithLimit(value, 15);
+        }
+
+		public bool? Finished { get; set; }
+
+        public bool? Swish { get; set; }
+        
         public string ShortNameOrDefault => string.IsNullOrWhiteSpace(ShortName) ? "B" + Id : ShortName;
 
         public string NumberAndName => Id + " : " + Name;
