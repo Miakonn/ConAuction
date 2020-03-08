@@ -68,7 +68,7 @@
                              TextChanged="OnTextChanged" MinWidth="100" TabIndex="4" IsTabStop="True" />
                 </StackPanel>
                 <StackPanel Margin="10,5,10,5">
-                    <Label Content="Notering" />
+                    <Label Content="Commentring" />
                     <TextBox Name="Note" TabIndex="5" IsTabStop="True"/>
                 </StackPanel>
             </DockPanel>

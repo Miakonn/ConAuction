@@ -130,6 +130,9 @@
                             </Button.ToolTip>
                         </Button>
 
+                        <Button DockPanel.Dock="Left" Content="Kvitto" Command="{Binding ReceiptCommand}" TabIndex="18" Margin="10,5,10,5" MinWidth="50"
+                                Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
                         <Button DockPanel.Dock="Left" Content="Exportera" Command="{Binding ExportProductsCommand}"  TabIndex="18" Margin="10,5,10,5" 
                                 Visibility="{Binding ModeIsPaying, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
@@ -192,7 +195,7 @@
                                     <GridViewColumnHeader Content="Swish" Command="{Binding SortCustomerCommand}" CommandParameter="SwishFormatted" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
-                                    <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="Note" />
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortCustomerCommand}" CommandParameter="Comment" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="{Binding ModeIsPaying, Converter={StaticResource BooleanToInt50Converter}}" DisplayMemberBinding="{Binding IsFinishedStr}">
                                     <GridViewColumnHeader Content="Utbetalat" Command="{Binding SortCustomerCommand}" CommandParameter="IsFinished" />
@@ -286,7 +289,7 @@
                                     <GridViewColumnHeader Content="Utskriven" Command="{Binding SortProductCommand}" CommandParameter="LabelPrinted" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
-                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Comment" />
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
@@ -321,7 +324,7 @@
                                     <GridViewColumnHeader Content="Utskriven" Command="{Binding SortProductCommand}" CommandParameter="LabelPrinted" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
-                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Comment" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="50" DisplayMemberBinding="{Binding SoldForStr}" >
                                     <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSortableStr" />
@@ -384,7 +387,7 @@
                                     <GridViewColumnHeader Content="LoppisPris" Command="{Binding SortProductCommand}" CommandParameter="FixedPriceSortableStr" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="100" DisplayMemberBinding="{Binding Note}" >
-                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Note" />
+                                    <GridViewColumnHeader Content="Not" Command="{Binding SortProductCommand}" CommandParameter="Comment" />
                                 </GridViewColumn>
                                 <GridViewColumn Width="50" DisplayMemberBinding="{Binding SoldForStr}" >
                                     <GridViewColumnHeader Content="Sålt för" Command="{Binding SortProductCommand}" CommandParameter="PriceSortableStr" />

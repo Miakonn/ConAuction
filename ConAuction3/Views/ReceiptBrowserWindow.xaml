@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ConAuction3.Views"
         mc:Ignorable="d"
-        Title="Kvitto" Height="450" Width="800">
+        Title="Kvitto" Height="650" Width="500">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -30,7 +30,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
-                <Button Content="_Ok" IsDefault="True" Margin="5,5,5,0" Name="btnOk" Height="25" MinWidth="55" VerticalAlignment="Top" Click="BtnOk_Click" />
+                <Button Content="_Skicka" IsDefault="True" Margin="5,5,5,0" Name="btnOk" Height="25" MinWidth="55" VerticalAlignment="Top" Click="BtnOk_Click" />
                 <Button Content="_Cancel" IsCancel="True" Margin="5" Name="btnCancel" MinWidth="55" />
             </StackPanel>
         </Grid>

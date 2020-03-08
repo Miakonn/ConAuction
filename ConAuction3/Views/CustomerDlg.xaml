@@ -27,7 +27,7 @@
 		<TextBox Grid.Row="7" Name="Phone" MinWidth="250" />
         <CheckBox Grid.Row="8" Name="Swish" MinWidth="250" HorizontalAlignment="Left" VerticalAlignment="Center" >Swish</CheckBox>
         <Label Grid.Row="9" Content="Not" />
-        <TextBox Grid.Row="10" Name="Note" MinWidth="250" />
+        <TextBox Grid.Row="10" Name="Comment" MinWidth="250" />
 		<WrapPanel Grid.Row="11" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,15,0,0">
 			<Button IsDefault="True" Name="btnDialogOk" Click="OnClick" MinWidth="60" Margin="0,0,10,0">_Ok</Button>
 			<Button IsCancel="True" MinWidth="60">_Cancel</Button>

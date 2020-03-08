@@ -5,12 +5,12 @@ namespace ConAuction3.DataModels {
     public class Customer {
         public Customer() {}
 
-        public Customer(int id, string name, string shortName, string phone, string note, bool? finished, bool? swish) {
+        public Customer(int id, string name, string shortName, string phone, string comment, bool? finished, bool? swish) {
             Id = id;
             Name = name;
             ShortName = shortName;
             Phone = phone;
-            Note = note;
+            Comment = comment;
 	        Finished = finished;
             Swish = swish;
         }
@@ -29,10 +29,10 @@ namespace ConAuction3.DataModels {
             set => _phone = StringHelpers.SetValueWithLimit(value, 20);
         }
 
-        private string _note;
-        public string Note {
-            get => _note;
-            set => _note = StringHelpers.SetValueWithLimit(value, 45);
+        private string _comment;
+        public string Comment {
+            get => _comment;
+            set => _comment = StringHelpers.SetValueWithLimit(value, 45);
         }
 
         private string _shortName;

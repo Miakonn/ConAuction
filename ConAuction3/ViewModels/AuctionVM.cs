@@ -849,7 +849,7 @@ namespace ConAuction3.ViewModels {
                 return;
             }
 
-            var strReceipt = ProductsVm.ExportReceiptBuyer(SelectedCustomer);
+            var strReceipt = ModeIsPaying ? ProductsVm.CreateReceiptSeller(SelectedCustomer) : ProductsVm.CreateReceiptBuyer(SelectedCustomer);
 
             var webBrowser = new ReceiptBrowserWindow();
             webBrowser.WebBrowserReceipt.NavigateToString(strReceipt);

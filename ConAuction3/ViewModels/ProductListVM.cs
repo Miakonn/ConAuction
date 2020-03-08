@@ -107,7 +107,7 @@ namespace ConAuction3.ViewModels {
             ProductView.Filter = o => o is Product p && !p.IsJumble;
         }
 
-        public string ExportReceiptBuyer(Customer buyer) {
+        public string CreateReceiptBuyer(Customer buyer) { 
             var strB = new StringBuilder();
             strB.AppendLine("<!DOCTYPE html> <meta charset=\"UTF-8\"> ");
             strB.AppendLine("<html>");
@@ -124,7 +124,7 @@ namespace ConAuction3.ViewModels {
             strB.AppendLine("<td align='right'>Köpt för</td>");
             strB.AppendLine("<tr>");
 
-            foreach (Product product in ProductsBoughtByCustomer(buyer.ShortNameOrDefault)) {
+            foreach (var product in ProductsBoughtByCustomer(buyer.ShortNameOrDefault)) {
                 strB.AppendLine("<tr>");
 
                 strB.AppendLine("<td align='center'>" + product.Label + "</td>");
@@ -146,6 +146,57 @@ namespace ConAuction3.ViewModels {
             return strB.ToString();
         }
 
+        public string CreateReceiptSeller(Customer buyer) {
+            var strB = new StringBuilder();
+            strB.AppendLine("<!DOCTYPE html> <meta charset=\"UTF-8\"> ");
+            strB.AppendLine("<html>");
+            strB.AppendLine("<body>");
+
+            strB.AppendLine("<h1>RESULTAT LinCon-auktionen</h1>");
+            strB.AppendLine("<h2>Linköping " + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + " </h2>");
+            strB.AppendLine("<h3>Säljare " + buyer.Name + "</h3>");
+
+            strB.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
+            strB.AppendLine("<tr>");
+            strB.AppendLine("<td align='center'>Id</td>");
+            strB.AppendLine("<td align='left'>Namn</td>");
+            strB.AppendLine("<td align='right'>Sålt för</td>");
+            strB.AppendLine("<td align='right'>Avgift</td>");
+            strB.AppendLine("<tr>");
+
+            var costNormal = int.Parse(ConfigurationManager.AppSettings["Cost"]);
+            var costFixed = int.Parse(ConfigurationManager.AppSettings["CostFixed"]);
+
+            foreach (var product in ProductsForCustomer(buyer.Id)) {
+                strB.AppendLine("<tr>");
+
+                strB.AppendLine("<td align='center'>" + product.Label + "</td>");
+                strB.AppendLine("<td align='left'>" + product.Name + "</td>");
+                strB.AppendLine("<td align='right'>" + (product.IsSold ? product.Price.ToString() : "ej såld") + "</td>");
+                strB.AppendLine("<td align='right'>" + (product.IsJumble ? costFixed : costNormal) + "</td>");
+
+                strB.AppendLine("</tr>");
+            }
+
+            // table footer & end of html file
+            strB.AppendLine("</table><p>");
+
+            strB.AppendLine("<table border='1' cellpadding='5' cellspacing='0'>");
+
+            var sum = TotalAmountForCustomer(buyer.Id);
+            var netSum = NetAmountForCustomer(buyer.Id);
+            var fees = sum - netSum;
+
+            strB.AppendLine("<tr><td>Summa:</td><td align='right'>" + sum + " kr </td></tr>");
+            strB.AppendLine("<tr><td>Avgift:</td><td align='right'>" + fees + " kr </td></tr>");
+            strB.AppendLine("<tr><td>Netto:</td><td align='right'>" + netSum + " kr </td></tr>");
+
+            strB.AppendLine("</table>");
+            strB.AppendLine("<h3/>Ansvarig för auktionen: " + ConfigurationManager.AppSettings["ReceiptResponsible"] + "</h3>");
+            strB.AppendLine("</body></html>");
+
+            return strB.ToString();
+        }
 
         public List<Product> ProductsForCustomer(int customerId) {
             return _productList.FindAll(p => p.CustomerId == customerId);

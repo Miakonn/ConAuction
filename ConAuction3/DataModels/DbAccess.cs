@@ -54,7 +54,7 @@ namespace ConAuction3.DataModels {
                             Name = reader.GetStringOrDefault("name"),
                             ShortName = reader.GetStringOrDefault("shortname"),
                             Phone = reader.GetStringOrDefault("phone"),
-                            Note = reader.GetStringOrDefault("comment"),
+                            Comment = reader.GetStringOrDefault("comment"),
                             Swish = reader.GetBooleanOrDefault("swish"),
                             Finished = reader.GetBooleanOrDefault("finished")
                         };
@@ -82,7 +82,7 @@ namespace ConAuction3.DataModels {
                 command.Parameters.AddWithValue("@Name", customer.Name);
                 command.Parameters.AddWithValue("@ShortName", customer.ShortName);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
-                command.Parameters.AddWithValue("@Comment", customer.Note);
+                command.Parameters.AddWithValue("@Comment", customer.Comment);
                 command.Parameters.AddWithValue("@Swish", customer.Swish);
 
                 command.UpdatedRowSource = UpdateRowSource.None;
@@ -122,7 +122,7 @@ namespace ConAuction3.DataModels {
                 command.Parameters.AddWithValue("@Name", customer.Name);
                 command.Parameters.AddWithValue("@ShortName", customer.ShortName);
                 command.Parameters.AddWithValue("@Phone", customer.Phone);
-                command.Parameters.AddWithValue("@Comment", customer.Note);
+                command.Parameters.AddWithValue("@Comment", customer.Comment);
                 command.Parameters.AddWithValue("@Finished", customer.Finished);
                 command.Parameters.AddWithValue("@Swish", customer.Swish);
                 command.Parameters.AddWithValue("@id", customer.Id);
